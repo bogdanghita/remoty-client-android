@@ -14,3 +14,4 @@ DesktopControlWithAndroid-V2/gradlew.bat
 DesktopControlWithAndroid-V2/import-summary.txt
 DesktopControlWithAndroid-V2/local.properties
 DesktopControlWithAndroid-V2/settings.gradle
+.hgignore
