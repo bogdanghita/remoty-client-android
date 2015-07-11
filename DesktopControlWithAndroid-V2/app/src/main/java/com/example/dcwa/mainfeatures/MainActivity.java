@@ -31,6 +31,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+//test alina
+
 public class MainActivity extends FragmentActivity { 
 	
 	private static Activity activity;
