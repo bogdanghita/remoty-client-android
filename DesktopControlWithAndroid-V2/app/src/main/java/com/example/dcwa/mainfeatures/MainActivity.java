@@ -31,6 +31,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+//hgignore test bogdan
+
 public class MainActivity extends FragmentActivity { 
 	
 	private static Activity activity;
