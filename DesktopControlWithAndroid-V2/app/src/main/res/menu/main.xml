@@ -1,0 +1,44 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.desktopcontrolwithandroid.MainActivity" >
+
+    <item
+        android:id="@+id/action_exit"
+        android:orderInCategory="102"
+        android:showAsAction="never"
+        android:title="@string/action_exit" />
+    
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="101"
+        android:showAsAction="never"
+        android:title="@string/action_about" />
+    
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    
+    <item
+        android:id="@+id/switch_to_pointer_action_bar"
+        android:orderInCategory="99"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_mouse"
+        android:title="@string/switch_to_pointer_control" />
+	
+	<item
+        android:id="@+id/switch_to_shortcut_action_bar"
+        android:orderInCategory="98"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_view_as_grid"
+        android:title="@string/switch_to_shortcut_control" />
+	
+	<item
+        android:id="@+id/switch_to_keyboard_action_bar"
+        android:orderInCategory="97"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_keyboard"
+        android:title="@string/switch_to_keyboard_control" />
+
+</menu>

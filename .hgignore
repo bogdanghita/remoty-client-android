@@ -1,0 +1,16 @@
+
+syntax: glob
+DesktopControlWithAndroid-V2/.gradle/**
+DesktopControlWithAndroid-V2/.idea/**
+DesktopControlWithAndroid-V2/app/build/**
+DesktopControlWithAndroid-V2/app/app.iml
+DesktopControlWithAndroid-V2/app/build.gradle
+DesktopControlWithAndroid-V2/build**
+DesktopControlWithAndroid-V2/gradle**
+DesktopControlWithAndroid-V2/build.gradle
+DesktopControlWithAndroid-V2/DesktopControlWithAndroid-V2.iml
+DesktopControlWithAndroid-V2/gradlew
+DesktopControlWithAndroid-V2/gradlew.bat
+DesktopControlWithAndroid-V2/import-summary.txt
+DesktopControlWithAndroid-V2/local.properties
+DesktopControlWithAndroid-V2/settings.gradle
