@@ -31,9 +31,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity { 
 	
-	private static Activity activity; 
+	private static Activity activity;
 	
 	public static boolean mainConfigurationChanged = false;
 	
