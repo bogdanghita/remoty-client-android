@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_container" >
+    
+
+</FrameLayout>
+<!-- From: file:/D:/Projects%20Courses%20Internships%20and%20Contests/ControlJoy/BitbucketRepos/AndroidRepo/DCWA-V2-GamePad/app/src/main/res/layout/fragment_container.xml -->

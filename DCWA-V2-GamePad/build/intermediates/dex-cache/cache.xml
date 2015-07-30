@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\Bogdan\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
+        <dex dex="D:\Projects Courses Internships and Contests\ControlJoy\BitbucketRepos\AndroidRepo\DCWA-V2-GamePad\app\build\intermediates\pre-dexed\debug\support-annotations-20.0.0-5ee9e1c2d1e0c5dab2124443573a834667e8ef46.jar" />
+    </item>
+    <item
+        jar="D:\Projects Courses Internships and Contests\ControlJoy\BitbucketRepos\AndroidRepo\DCWA-V2-GamePad\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\jars\libs\internal_impl-20.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
+        <dex dex="D:\Projects Courses Internships and Contests\ControlJoy\BitbucketRepos\AndroidRepo\DCWA-V2-GamePad\app\build\intermediates\pre-dexed\debug\internal_impl-20.0.0-72e8b0a68800f4da57a9268eb6809fca1a2e13b0.jar" />
+    </item>
+    <item
+        jar="D:\Projects Courses Internships and Contests\ControlJoy\BitbucketRepos\AndroidRepo\DCWA-V2-GamePad\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0">
+        <dex dex="D:\Projects Courses Internships and Contests\ControlJoy\BitbucketRepos\AndroidRepo\DCWA-V2-GamePad\app\build\intermediates\pre-dexed\debug\classes-f0fd9e06fa02fdb2b1ed28f1dec6e7e171602595.jar" />
+    </item>
+    <item
+        jar="C:\Users\Bogdan\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.2.4\a60a5e993c98c864010053cb901b7eab25306568\gson-2.2.4.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="a60a5e993c98c864010053cb901b7eab25306568">
+        <dex dex="D:\Projects Courses Internships and Contests\ControlJoy\BitbucketRepos\AndroidRepo\DCWA-V2-GamePad\app\build\intermediates\pre-dexed\debug\gson-2.2.4-545818486967a4dd5ffccdfa78fb6e4ce439ad96.jar" />
+    </item>
+
+</items>

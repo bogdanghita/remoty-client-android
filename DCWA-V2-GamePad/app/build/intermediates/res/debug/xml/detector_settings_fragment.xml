@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+	
+  	    <PreferenceCategory android:title="Shotrcuts">
+		<Preference
+			android:title="Layout Configuration"
+			android:summary="@string/layout_configuration_summary"
+			android:enabled="false" />
+	</PreferenceCategory>
+    
+  	<PreferenceCategory android:title="Touchpad">
+  		<Preference
+  		    android:title="Pointer sensitivity"
+  		    android:summary="@string/pointer_sensitivity_summary"
+  		    android:enabled="false" />
+		<Preference
+		    android:title="Scroll sensitivity"
+		    android:summary="@string/scroll_sensitivity_summary"
+		    android:enabled="false" />
+	</PreferenceCategory>
+  	
+  	<PreferenceCategory android:title="Advanced">
+  	    <PreferenceScreen
+  	        android:title="Advanced settings"
+  	        android:summary="@string/advanced_settings_summary" >
+  	        <Preference
+	  		    android:title="Packet lifetime"
+	  		    android:summary="@string/packet_lifetime_summary"
+	  		    android:enabled="false" />
+			<Preference
+			    android:title="Latency"
+			    android:summary="@string/latency_summary"
+			    android:enabled="false" />
+			<Preference
+			    android:title="UDP port"
+			    android:summary="@string/udp_settings_entry_summary"
+			    android:key="detector_udp_port" />
+		</PreferenceScreen>
+	</PreferenceCategory>
+        
+</PreferenceScreen>
+<!-- From: file:/D:/Projects%20Courses%20Internships%20and%20Contests/ControlJoy/BitbucketRepos/AndroidRepo/DCWA-V2-GamePad/app/src/main/res/xml/detector_settings_fragment.xml -->

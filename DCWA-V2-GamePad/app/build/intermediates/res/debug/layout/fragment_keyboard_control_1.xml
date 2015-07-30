@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+	<ScrollView
+
+        android:layout_above="@id/button_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ScrollView1" >
+
+       <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+<!--        	<View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:background="?android:attr/dividerHorizontal" /> -->
+            
+		<View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="?android:attr/dividerHorizontal" />
+           
+	        <EditText
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:id="@+id/keyboard_edit_text" />
+	        
+	 	<View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="?android:attr/dividerHorizontal" />
+
+        </LinearLayout>
+
+    </ScrollView>
+    
+	<CheckBox
+	    android:layout_alignBottom="@id/button_send"
+	    android:layout_alignTop="@id/button_send"
+	    android:layout_alignParentLeft="true"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="Live sending"
+	    android:id="@+id/checkbox_live_sending" />
+		
+	<Button
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentRight="true"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/button_send"
+	    android:id="@+id/button_send" />
+
+</RelativeLayout>
+<!-- From: file:/D:/Projects%20Courses%20Internships%20and%20Contests/ControlJoy/BitbucketRepos/AndroidRepo/DCWA-V2-GamePad/app/src/main/res/layout/fragment_keyboard_control_1.xml -->
