@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.dcwa.settings.SettingsV2Activity"
+    android:orientation="vertical"
+    android:id="@+id/layout_pointer_control" >
+    
+  	<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:orientation="horizontal"
+        android:background="@color/red" >
+    
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:orientation="vertical"
+	        android:background="@color/gray_goose"
+	        android:id="@+id/layout_touch_area" />
+	    
+	  	<View
+	        android:layout_width="5dp"
+	        android:layout_height="match_parent"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginRight="15dp"
+	        android:layout_marginTop="14dp"
+	        android:layout_marginBottom="15dp"
+	        android:background="@color/platinum"
+	        android:id="@+id/view_separator_touch_scroll" />
+	    
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/platinum"
+        android:id="@+id/pointer_fragment_layout_second" >
+		
+	    <Button
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
+	        android:id="@+id/button_left_click" />
+	    
+<!-- 	  	android:style="?android:attr/buttonBarButtonStyle" -->
+	    
+	    <Button
+	       	android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
+	        android:id="@+id/button_right_click" />
+    	
+    </LinearLayout> 
+
+</LinearLayout>
+
+<!-- From: file:/D:/Projects%20Courses%20Internships%20and%20Contests/ControlJoy/BitbucketRepos/AndroidRepo/DCWA-V2-GamePad/app/src/main/res/layout/fragment_pointer_control.xml -->

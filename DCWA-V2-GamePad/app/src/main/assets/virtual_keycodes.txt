@@ -1,0 +1,17 @@
+16
+ButtonA_                    ButtonA_
+ButtonB_                    ButtonB_
+ButtonX_                    ButtonX_
+ButtonY_                    ButtonY_
+ButtonUp_                   ButtonUp_
+ButtonDown_                 ButtonDown_
+ButtonLeft_                 ButtonLeft_
+ButtonRight_                ButtonRight_
+ButtonBack_                 ButtonBack_
+ButtonStart_                ButtonStart_
+ButtonLB_                   ButtonLB_
+ButtonLT_                   ButtonLT_
+ButtonLS_                   ButtonLS_
+ButtonRB_                   ButtonRB_
+ButtonRT_                   ButtonRT_
+ButtonRS_                   ButtonRS_
