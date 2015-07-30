@@ -4,6 +4,7 @@ import java.net.URI;
 
 import com.example.dcwa.auxclasses.EmptyPackage;
 import com.example.dcwa.auxclasses.ISendableAction;
+import com.example.dcwa.auxclasses.Point3D;
 import com.example.dcwa.auxclasses.PointerDisplacement;
 import com.example.dcwa.auxclasses.ScrollClicks;
 import com.example.dcwa.auxclasses.ToastFactory;
@@ -18,10 +19,15 @@ import com.example.desktopcontrolwithandroid.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -31,7 +37,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements SensorEventListener {
 	
 	private static Activity activity;
 	
@@ -63,6 +69,7 @@ public class MainActivity extends FragmentActivity {
 	private static URI motionUri;
 	private static URI scrollUri;
 	private static URI emptyPackageUri;
+	private static URI accUri;
 	
 	private UriFactory uriFactory;
 	public static volatile ToastFactory toast = new ToastFactory();
@@ -71,13 +78,18 @@ public class MainActivity extends FragmentActivity {
 	private final int TOAST_LENGTH_SHORT_DURATION = 2000;
 	
 	public static ISendableAction toSendObject;
+	public static Point3D accPoint;
 	private static EmptyPackage emtyPackage;
 	public static PointerDisplacement displacement;
 	public static ScrollClicks scrollClicks;
 	
 	private static NetworkingThread netThread;
 	private static PostRequestRunnable actionRunnable;
-	
+	private static PostRequestRunnable accRunnable;
+
+	private SensorManager mSensorManager;
+	private Sensor mAccelerometerSensor;
+
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,20 +139,27 @@ public class MainActivity extends FragmentActivity {
         motionUri = uriFactory.Create("PostPointerDisplacement");
         scrollUri = uriFactory.Create("PostScroll");
         emptyPackageUri = uriFactory.Create("PostEmptyPackage");
+		accUri = uriFactory.Create("AccUpdate");
         
         // Starting thread
         netThread = new NetworkingThread();
         netThread.start();
 		actionRunnable = new PostRequestRunnable(this, netThread);
+		accRunnable = new PostRequestRunnable(this, netThread);
 
         // Initializing objects
 		emtyPackage = new EmptyPackage(emptyPackageUri);
 		displacement = new PointerDisplacement(motionUri);
 		scrollClicks = new ScrollClicks(scrollUri);
+		accPoint = new Point3D(accUri);
 		toSendObject = emtyPackage;
 		
 		// Reading settings values from file
 		SettingsActivity.ReadSettingsValues(this);
+
+		// Obtaining accelerometer sensor
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
 	@Override
@@ -171,6 +190,9 @@ public class MainActivity extends FragmentActivity {
 			// Starting handler
 			startSendingRequests();
 		}
+
+		// Registering sensor listener
+		mSensorManager.registerListener(this, mAccelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
 	}
 	
 	@Override
@@ -191,6 +213,9 @@ public class MainActivity extends FragmentActivity {
 		
 		// Canceling toast
 		toast.Cancel();
+
+		// Unregistering sensor listener
+		mSensorManager.unregisterListener(this);
 	}
 	
 	@Override
@@ -337,6 +362,9 @@ public class MainActivity extends FragmentActivity {
                 	
                 	// Sending object
                 	SendObject();
+
+					// Sending accelerometer update
+					SendAccUpdate();
                 	
                     // Sending next message with the specified delay
                     keepConnectionAliveHandler.sendMessageDelayed(keepConnectionAliveHandler.obtainMessage(SEND_REQ_MSG), IN_USE_KEEP_ALIVE_FREQUENCY);
@@ -429,5 +457,32 @@ public class MainActivity extends FragmentActivity {
     	++ requestId;
         requestId %= maxRequestId;
     }
-    
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+		// TODO: ...
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+
+		accPoint.SetDisplacement(event.values[0], event.values[1], event.values[2]);
+	}
+
+	private static void SendAccUpdate() {
+
+		// Setting package id
+		accPoint.SetPackageId(requestId);
+
+		// Setting object to runnable
+		accRunnable.SetObject(accPoint);
+
+		// Sending request
+		netThread.handler.post(accRunnable);
+
+		// Increasing id
+		++ requestId;
+		requestId %= maxRequestId;
+	}
 }
