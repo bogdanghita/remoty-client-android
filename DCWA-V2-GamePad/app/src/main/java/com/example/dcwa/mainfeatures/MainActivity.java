@@ -85,6 +85,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 	
 	private static NetworkingThread netThread;
 	private static PostRequestRunnable actionRunnable;
+	private static PostRequestRunnable accRunnable;
 
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometerSensor;
@@ -144,6 +145,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
         netThread = new NetworkingThread();
         netThread.start();
 		actionRunnable = new PostRequestRunnable(this, netThread);
+		accRunnable = new PostRequestRunnable(this, netThread);
 
         // Initializing objects
 		emtyPackage = new EmptyPackage(emptyPackageUri);
@@ -474,10 +476,10 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 		accPoint.SetPackageId(requestId);
 
 		// Setting object to runnable
-		actionRunnable.SetObject(accPoint);
+		accRunnable.SetObject(accPoint);
 
 		// Sending request
-		netThread.handler.post(actionRunnable);
+		netThread.handler.post(accRunnable);
 
 		// Increasing id
 		++ requestId;
