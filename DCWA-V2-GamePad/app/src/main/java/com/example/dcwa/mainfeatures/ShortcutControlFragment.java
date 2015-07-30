@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -725,27 +726,58 @@ public class ShortcutControlFragment extends Fragment {
 		params.topMargin = startY + yEps;
 		
 		// Creating linear layout to hold the two text views
-		Button newButton = new Button(parentView.getContext());
+		final Button newButton = new Button(parentView.getContext());
 		newButton.setText(name);
 		newButton.setId(layoutId);
 		newButton.setLayoutParams(params);
 		int smallestDim = height < width ? height : width;
 		newButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, smallestDim/SHORTCUT_TEXT_SIZE_RATIO);
 		
-		// Setting onClickListener
-        newButton.setOnClickListener( new View.OnClickListener() {
-        	public void onClick(View v) {
-        		
-        		stringAction.SetText(action);
-        		stringAction.SetPackageId(MainActivity.requestId);
-        		
-        		SendInputAction(stringAction);
-        		
-        		++ MainActivity.requestId;
-                MainActivity.requestId %= MainActivity.maxRequestId;
-        	}
-        });
-		
+//		// Setting onClickListener
+//        newButton.setOnClickListener( new View.OnClickListener() {
+//        	public void onClick(View v) {
+//
+//        		stringAction.SetText(action);
+//        		stringAction.SetPackageId(MainActivity.requestId);
+//
+//        		SendInputAction(stringAction);
+//
+//        		++ MainActivity.requestId;
+//                MainActivity.requestId %= MainActivity.maxRequestId;
+//        	}
+//        });
+
+		newButton.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+
+				String prefix="";
+
+				if( event.getAction() == MotionEvent.ACTION_DOWN) {
+					prefix = "Press&";
+					newButton.setPressed(true);
+				}
+				else if( event.getAction() == MotionEvent.ACTION_UP) {
+					prefix = "Release&";
+					newButton.setPressed(false);
+				}
+				else {
+					return true;
+				}
+
+				stringAction.SetText(prefix + action);
+				stringAction.SetPackageId(MainActivity.requestId);
+
+				SendInputAction(stringAction);
+
+				++ MainActivity.requestId;
+				MainActivity.requestId %= MainActivity.maxRequestId;
+
+				// TODO see what the return value means
+				return true;
+			}
+		});
+
 		parentLayout.addView(newButton);
 	}
 	
