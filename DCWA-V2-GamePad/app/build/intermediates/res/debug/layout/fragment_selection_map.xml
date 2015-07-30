@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/selection_map_fragment_layout" >
-
-</RelativeLayout>
-<!-- From: file:/D:/Projects%20Courses%20Internships%20and%20Contests/ControlJoy/BitbucketRepos/AndroidRepo/DCWA-V2-GamePad/app/src/main/res/layout/fragment_selection_map.xml -->
