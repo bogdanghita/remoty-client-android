@@ -33,14 +33,28 @@ public class TcpSocket {
 		writer = new DataOutputStream(socket.getOutputStream());
 	}
 
-	public void send(byte[] content, int offset, int count) throws IOException {
+	// TODO: think of the flush call
+	public void send(byte[] content) throws IOException {
 
+		writer.writeInt(content.length);
 		writer.flush();
-		writer.write(content, offset, count);
+
+		writer.write(content, 0, content.length);
 		writer.flush();
 	}
 
-	public void receive(byte[] buffer, int size) throws IOException {
+	public byte[] receive() throws IOException {
+
+		int size = reader.readInt();
+
+		byte[] buffer = new byte[size];
+
+		receive(buffer, size);
+
+		return buffer;
+	}
+
+	private void receive(byte[] buffer, int size) throws IOException {
 
 		int cnt = 0;
 		int currentSize = 0;
@@ -61,6 +75,15 @@ public class TcpSocket {
 		}
 
 		Log.d("TIME", "Fragments: " + cnt);
+	}
+
+	public void sendObject(AbstractMessage message) {
+
+	}
+
+	public AbstractMessage receiveObject() {
+
+		return null;
 	}
 
 	public void close() throws IOException {
