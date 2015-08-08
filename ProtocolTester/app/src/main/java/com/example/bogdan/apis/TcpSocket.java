@@ -2,12 +2,14 @@ package com.example.bogdan.apis;
 
 import android.util.Log;
 
+import com.example.bogdan.protocoltester.AbstractMessage;
+import com.example.bogdan.protocoltester.TCPRunnableApiTest;
+import com.google.gson.Gson;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 
 /**
  * Created by Bogdan on 8/6/2015.
@@ -18,6 +20,8 @@ public class TcpSocket {
 	DataInputStream reader;
 	DataOutputStream writer;
 
+	Gson gson;
+
 	// TODO: add functionality for setting the timeout
 	/*
 		NOTE: socket must be already connected!
@@ -25,6 +29,8 @@ public class TcpSocket {
 	public TcpSocket(Socket socket) throws IOException {
 
 		this.socket = socket;
+
+		gson = new Gson();
 
 		socket.setKeepAlive(true);
 		socket.setTcpNoDelay(true);
@@ -77,13 +83,34 @@ public class TcpSocket {
 		Log.d("TIME", "Fragments: " + cnt);
 	}
 
-	public void sendObject(AbstractMessage message) {
+	public void sendObject(AbstractMessage message) throws IOException {
 
+		long start = System.currentTimeMillis();
+
+		String jsonMessage = gson.toJson(message);
+
+		long duration = System.currentTimeMillis() - start;
+		Log.d(TCPRunnableApiTest.TIME, "Serialization : " + duration + " ms");
+
+		byte[] content = jsonMessage.getBytes("UTF-8");
+
+		send(content);
 	}
 
-	public AbstractMessage receiveObject() {
+	public AbstractMessage receiveObject(Class<? extends AbstractMessage> type) throws IOException, ClassNotFoundException {
 
-		return null;
+		byte[] content = receive();
+
+		String jsonContent = new String(content, "UTF-8");
+
+		long start = System.currentTimeMillis();
+
+		AbstractMessage message = gson.fromJson(jsonContent, type);
+
+		long duration = System.currentTimeMillis() - start;
+		Log.d(TCPRunnableApiTest.TIME, "Deserialization : " + duration + " ms");
+
+		return message;
 	}
 
 	public void close() throws IOException {
