@@ -15,7 +15,7 @@ import java.util.Random;
  */
 public class TCPRunnableApiTest implements Runnable {
 
-	private final static String TIME = "TIME";
+	public final static String TIME = "TIME";
 
 	private final static int RECEIVE_TIMEOUT = 2000;
 	private final static int CHUNK_LEN = 20;
@@ -97,6 +97,15 @@ public class TCPRunnableApiTest implements Runnable {
 			e.printStackTrace();
 		}
 
+//		bytesTest();
+
+		objectTest();
+
+//		imageTest();
+	}
+
+	private void bytesTest() {
+
 		int averageDuration, totalDuration = 0;
 		int sampleCnt = 0;
 
@@ -147,5 +156,63 @@ public class TCPRunnableApiTest implements Runnable {
 
 			Log.d(TIME, "Total: " + totalInterval + " ms | Average: " + averageDuration + " ms");
 		}
+	}
+
+	private void objectTest() {
+
+		int averageDuration, totalDuration = 0;
+		int sampleCnt = 0;
+
+		while (true) {
+
+			if (MainActivity.stopFlag) {
+				return;
+			}
+
+			// Sleeping "interval" milliseconds
+			try {
+				Thread.sleep(MainActivity.interval);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			long totalStart = System.currentTimeMillis();
+
+			try {
+				byte[] content = initPacket();
+				send(content);
+			} catch (IOException e) {
+				Log.d(TIME, "SEND ERROR");
+				continue;
+			}
+
+			AbstractMessage message;
+
+			try {
+				message = socket.receiveObject(LargeMessage.class);
+			} catch (IOException | ClassNotFoundException e) {
+				Log.d(TIME, "RECEIVE ERROR");
+				continue;
+			}
+
+			long totalInterval = System.currentTimeMillis() - totalStart;
+
+			try {
+				socket.sendObject(message);
+			} catch (IOException e) {
+				Log.d(TIME, "SEND ERROR");
+				continue;
+			}
+
+			sampleCnt++;
+			totalDuration += totalInterval;
+			averageDuration = totalDuration / sampleCnt;
+
+			Log.d(TIME, "Total: " + totalInterval + " ms | Average: " + averageDuration + " ms");
+		}
+	}
+
+	public void imageTest() {
+
 	}
 }
