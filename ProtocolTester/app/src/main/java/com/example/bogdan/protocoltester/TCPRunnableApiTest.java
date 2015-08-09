@@ -62,25 +62,14 @@ public class TCPRunnableApiTest implements Runnable {
 
 	private void send(byte[] data) throws IOException {
 
-		long sendStart = System.currentTimeMillis();
-
 		socket.send(data);
-
-		long sendInterval = System.currentTimeMillis() - sendStart;
-		Log.d(TIME, "Send: " + sendInterval + " ms");
 	}
 
 	private byte[] receive() throws IOException {
 
 		Log.d(TIME, "Waiting to receive...");
 
-		long receiveStart = System.currentTimeMillis();
-
 		byte[] content = socket.receive();
-
-		long receiveInterval = System.currentTimeMillis() - receiveStart;
-
-		Log.d(TIME, "Receive: " + receiveInterval + " ms | size: " + content.length + " bytes");
 
 		return content;
 	}
@@ -97,9 +86,9 @@ public class TCPRunnableApiTest implements Runnable {
 			e.printStackTrace();
 		}
 
-//		bytesTest();
+		bytesTest();
 
-		objectTest();
+//		objectTest();
 
 //		imageTest();
 	}
