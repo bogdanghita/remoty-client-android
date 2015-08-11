@@ -1,9 +1,10 @@
 package com.example.bogdan.apis;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.example.bogdan.protocoltester.AbstractMessage;
-import com.example.bogdan.protocoltester.TCPRunnableApiTest;
 import com.google.gson.Gson;
 
 import java.io.DataInputStream;
@@ -16,42 +17,44 @@ import java.net.Socket;
  */
 public class TcpSocket {
 
-	Socket socket;
-	DataInputStream reader;
-	DataOutputStream writer;
+	public final static String JSON = "JSON";
 
-	Gson gson;
+	Socket mSocket;
+	DataInputStream mReader;
+	DataOutputStream mWriter;
+
+	Gson mGson;
 
 	// TODO: add functionality for setting the timeout
 	/*
-		NOTE: socket must be already connected!
+		NOTE: mSocket must be already connected!
 	 */
 	public TcpSocket(Socket socket) throws IOException {
 
-		this.socket = socket;
+		this.mSocket = socket;
 
-		gson = new Gson();
+		mGson = new Gson();
 
 		socket.setKeepAlive(true);
 		socket.setTcpNoDelay(true);
 
-		reader = new DataInputStream(socket.getInputStream());
-		writer = new DataOutputStream(socket.getOutputStream());
+		mReader = new DataInputStream(socket.getInputStream());
+		mWriter = new DataOutputStream(socket.getOutputStream());
 	}
 
 	// TODO: think of the flush call
 	public void send(byte[] content) throws IOException {
 
-		writer.writeInt(content.length);
-		writer.flush();
+		mWriter.writeInt(content.length);
+		mWriter.flush();
 
-		writer.write(content, 0, content.length);
-		writer.flush();
+		mWriter.write(content, 0, content.length);
+		mWriter.flush();
 	}
 
 	public byte[] receive() throws IOException {
 
-		int size = reader.readInt();
+		int size = mReader.readInt();
 
 		byte[] buffer = new byte[size];
 
@@ -65,12 +68,12 @@ public class TcpSocket {
 		int cnt = 0;
 		int currentSize = 0;
 
-		// TODO: run a test and check when reader returns -1
+		// TODO: run a test and check when mReader returns -1
 		while (currentSize != size) {
 
 			cnt++;
 
-			int bytes_read = reader.read(buffer, currentSize, size - currentSize);
+			int bytes_read = mReader.read(buffer, currentSize, size - currentSize);
 
 			// TODO: think what to do in this case
 			if (bytes_read == -1) {
@@ -87,17 +90,17 @@ public class TcpSocket {
 
 		long start = System.currentTimeMillis();
 
-		String jsonMessage = gson.toJson(message);
+		String jsonMessage = mGson.toJson(message);
 
 		long duration = System.currentTimeMillis() - start;
-		Log.d(TCPRunnableApiTest.TIME, "Serialization : " + duration + " ms");
+		Log.d(JSON, "Serialization : " + duration + " ms");
 
 		byte[] content = jsonMessage.getBytes("UTF-8");
 
 		send(content);
 	}
 
-	public AbstractMessage receiveObject(Class<? extends AbstractMessage> type) throws IOException, ClassNotFoundException {
+	public <T extends AbstractMessage> T receiveObject(Class<T> type) throws IOException, ClassNotFoundException {
 
 		byte[] content = receive();
 
@@ -105,16 +108,24 @@ public class TcpSocket {
 
 		long start = System.currentTimeMillis();
 
-		AbstractMessage message = gson.fromJson(jsonContent, type);
+		T message = mGson.fromJson(jsonContent, type);
 
 		long duration = System.currentTimeMillis() - start;
-		Log.d(TCPRunnableApiTest.TIME, "Deserialization : " + duration + " ms");
+		Log.d(JSON, "Deserialization : " + duration + " ms");
 
 		return message;
 	}
 
+	// Receives image directly from the network (it seems Android can receive only images in .png format using this method)
+	public Bitmap receiveBitmap() {
+
+		Bitmap bitmap = BitmapFactory.decodeStream(mReader);
+
+		return bitmap;
+	}
+
 	public void close() throws IOException {
 
-		socket.close();
+		mSocket.close();
 	}
 }

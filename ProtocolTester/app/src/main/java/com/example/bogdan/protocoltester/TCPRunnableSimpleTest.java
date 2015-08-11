@@ -58,13 +58,13 @@ public class TCPRunnableSimpleTest implements Runnable {
 		socket.setKeepAlive(true);
 		socket.setTcpNoDelay(true);
 
-//		socket = new Socket(ip, port);
-//		socket.setSoTimeout(RECEIVE_TIMEOUT);
+//		mSocket = new Socket(ip, port);
+//		mSocket.setSoTimeout(RECEIVE_TIMEOUT);
 
 //		udpMessenger = new UDPMessenger(ip, port, RECEIVE_TIMEOUT, 9000);
 //		udpMessenger.setSocketTimeout(RECEIVE_TIMEOUT);
 
-//		reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//		reader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
 		reader = new DataInputStream(socket.getInputStream());
 		writer = new DataOutputStream(socket.getOutputStream());
 	}
