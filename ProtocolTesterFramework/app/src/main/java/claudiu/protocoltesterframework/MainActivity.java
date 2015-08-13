@@ -1,38 +1,29 @@
 package claudiu.protocoltesterframework;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    public static final String FRAMEWORK = "frametag";
+    public static final String REMOTE_IP = "192.168.1.3";
+    public static final int REMOTE_PORT = 9000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+        Log.d(FRAMEWORK, "Starting app...");
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        TesterRunnable runnable = new TesterRunnable();
+        Thread thread = new Thread(runnable);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        //Add as many tests as you like.
+        runnable.addTest(new DummyTest());
 
-        return super.onOptionsItemSelected(item);
+        thread.start();
     }
 }
