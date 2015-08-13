@@ -1,6 +1,7 @@
 package com.example.bogdan.protocoltester;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,7 +17,10 @@ public class MainActivity extends Activity {
 
 	private final static String PROTOCOL_TESTER = "PROTOCOL TESTER";
 
+	public static ScreenView mBallDrawerView;
+
 	private TextView displayValue;
+
 	private final int[] values = {1, 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 500, 1000, 2000, 3000, 4000, 5000};
 	private int currentIndex;
 	public static int interval;
@@ -84,6 +88,8 @@ public class MainActivity extends Activity {
 
 		mainLayout.addView(seekBar);
 
+		actionRunnable = new TCPRunnableApiTest(this);
+
 		final Button startButton = new Button(this);
 		startButton.setText("Start");
 		startButton.setOnClickListener(new View.OnClickListener() {
@@ -94,13 +100,21 @@ public class MainActivity extends Activity {
 
 				startButton.setEnabled(false);
 
-				actionRunnable = new TCPRunnableApiTest();
 				netThread = new Thread(actionRunnable);
 				netThread.start();
 			}
 		});
 
 		mainLayout.addView(startButton);
+
+		// Adding ball drawer view
+		mBallDrawerView = new ScreenView(this);
+		mBallDrawerView.setBackgroundColor(Color.LTGRAY);
+
+		LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.MATCH_PARENT);
+
+		mainLayout.addView(mBallDrawerView, viewParams);
 	}
 
 	@Override
@@ -114,7 +128,7 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
+		// as you specify a parent mActivity in AndroidManifest.xml.
 		int id = item.getItemId();
 
 		//noinspection SimplifiableIfStatement
