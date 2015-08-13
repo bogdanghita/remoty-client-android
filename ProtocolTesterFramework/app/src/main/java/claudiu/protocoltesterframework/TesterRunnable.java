@@ -22,12 +22,13 @@ public class TesterRunnable implements Runnable {
         Log.d(MainActivity.FRAMEWORK, "Running tests...");
 
         for (AbstractTest itTest : mTests) {
-
+            Log.d(MainActivity.FRAMEWORK, "Connecting...");
             Socket socket = new Socket(MainActivity.REMOTE_IP, MainActivity.REMOTE_PORT);
+            Log.d(MainActivity.FRAMEWORK, "Connected!");
 
             itTest.runTests(socket);
 
-            itTest.GetResults();
+            itTest.getResults();
         }
     }
 
