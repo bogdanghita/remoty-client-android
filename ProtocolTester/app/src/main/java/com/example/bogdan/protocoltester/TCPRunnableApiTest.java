@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.bogdan.apis.TcpSocket;
 
@@ -20,7 +21,8 @@ public class TCPRunnableApiTest implements Runnable {
 
 	public final static String TIME = "TIME";
 
-	private final static int RECEIVE_TIMEOUT = 2000;
+	private final static int ACCEPT_TIMEOUT = 0;
+	private final static int READ_TIMEOUT = 20000;
 	private final static int CHUNK_LEN = 20;
 
 	int mLocalport = 9000;
@@ -29,9 +31,9 @@ public class TCPRunnableApiTest implements Runnable {
 	ServerSocket mServerSocket;
 	TcpSocket mSocket;
 
-	Activity mActivity;
+	MainActivity mActivity;
 
-	public TCPRunnableApiTest(Activity activity) {
+	public TCPRunnableApiTest(MainActivity activity) {
 		this.mActivity = activity;
 	}
 
@@ -49,9 +51,15 @@ public class TCPRunnableApiTest implements Runnable {
 
 		mServerSocket = new ServerSocket(mLocalport);
 
+		// Setting accept timeout (0 represents infinite timeout)
+		mServerSocket.setSoTimeout(ACCEPT_TIMEOUT);
+
 		Socket s = mServerSocket.accept();
 
-		mSocket = new TcpSocket(s);
+		mSocket = new TcpSocket(s, READ_TIMEOUT);
+
+		mSocket.setKeepAlive(true);
+		mSocket.setTcpNoDelay(true);
 	}
 
 	private byte[] initPacket() throws SocketException {
@@ -99,11 +107,10 @@ public class TCPRunnableApiTest implements Runnable {
 
 		try {
 			init();
-		} catch (SocketException e) {
-			e.printStackTrace();
-			return;
 		} catch (IOException e) {
 			e.printStackTrace();
+			mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+			return;
 		}
 
 //		bytesTest();
@@ -111,6 +118,16 @@ public class TCPRunnableApiTest implements Runnable {
 //		objectTest();
 
 		imageTest();
+
+		try {
+			mSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+			return;
+		}
+
+		mActivity.showToast("Communication terminated. You can close the app.");
 	}
 
 	private void bytesTest() {
@@ -129,6 +146,8 @@ public class TCPRunnableApiTest implements Runnable {
 				Thread.sleep(MainActivity.interval);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+				return;
 			}
 
 			long totalStart = System.currentTimeMillis();
@@ -138,7 +157,8 @@ public class TCPRunnableApiTest implements Runnable {
 				send(content);
 			} catch (IOException e) {
 				Log.d(TIME, "SEND ERROR");
-				continue;
+				mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+				return;
 			}
 
 			byte[] data;
@@ -147,7 +167,8 @@ public class TCPRunnableApiTest implements Runnable {
 				data = receive();
 			} catch (IOException e) {
 				Log.d(TIME, "RECEIVE ERROR");
-				continue;
+				mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+				return;
 			}
 
 			long totalInterval = System.currentTimeMillis() - totalStart;
@@ -156,7 +177,8 @@ public class TCPRunnableApiTest implements Runnable {
 				send(data);
 			} catch (IOException e) {
 				Log.d(TIME, "SEND ERROR");
-				continue;
+				mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+				return;
 			}
 
 			sampleCnt++;
@@ -183,6 +205,8 @@ public class TCPRunnableApiTest implements Runnable {
 				Thread.sleep(MainActivity.interval);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+				return;
 			}
 
 			long totalStart = System.currentTimeMillis();
@@ -192,7 +216,8 @@ public class TCPRunnableApiTest implements Runnable {
 				send(content);
 			} catch (IOException e) {
 				Log.d(TIME, "SEND ERROR");
-				continue;
+				mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+				return;
 			}
 
 			LargeMessage message;
@@ -201,7 +226,8 @@ public class TCPRunnableApiTest implements Runnable {
 				message = mSocket.receiveObject(LargeMessage.class);
 			} catch (IOException | ClassNotFoundException e) {
 				Log.d(TIME, "RECEIVE ERROR");
-				continue;
+				mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+				return;
 			}
 
 			long totalInterval = System.currentTimeMillis() - totalStart;
@@ -210,7 +236,8 @@ public class TCPRunnableApiTest implements Runnable {
 				mSocket.sendObject(message);
 			} catch (IOException e) {
 				Log.d(TIME, "SEND ERROR");
-				continue;
+				mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+				return;
 			}
 
 			sampleCnt++;
@@ -224,12 +251,14 @@ public class TCPRunnableApiTest implements Runnable {
 	public void imageTest() {
 
 		try {
-			mSocket.send("mama".getBytes("UTF-8"));
+			mSocket.send("READY".getBytes("UTF-8"));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.d(TIME, "SEND ERROR");
+			mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+			return;
 		}
 
-		while(true) {
+		while (true) {
 
 			if (MainActivity.stopFlag) {
 				return;
@@ -243,13 +272,16 @@ public class TCPRunnableApiTest implements Runnable {
 				data = receive();
 			} catch (IOException e) {
 				Log.d(TIME, "RECEIVE ERROR");
+				mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
 				return;
 			}
 
 			try {
 				mSocket.send("mama".getBytes("UTF-8"));
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.d(TIME, "SEND ERROR");
+				mActivity.showToast(e.getClass().toString() + " | " + e.getMessage());
+				return;
 			}
 
 			long start2 = System.currentTimeMillis();

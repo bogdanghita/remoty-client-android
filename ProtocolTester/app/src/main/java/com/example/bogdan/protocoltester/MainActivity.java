@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -153,5 +154,15 @@ public class MainActivity extends Activity {
 		}
 
 		Log.d(PROTOCOL_TESTER, "Thread stopped.");
+	}
+
+	public void showToast(final String message) {
+
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 }
