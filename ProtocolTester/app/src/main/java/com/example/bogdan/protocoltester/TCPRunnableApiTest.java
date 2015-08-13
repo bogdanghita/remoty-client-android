@@ -1,5 +1,8 @@
 package com.example.bogdan.protocoltester;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.example.bogdan.apis.TcpSocket;
@@ -20,11 +23,17 @@ public class TCPRunnableApiTest implements Runnable {
 	private final static int RECEIVE_TIMEOUT = 2000;
 	private final static int CHUNK_LEN = 20;
 
-	int localport = 9000;
-	int id = 0;
+	int mLocalport = 9000;
+	int mId = 0;
 
-	ServerSocket serverSocket;
-	TcpSocket socket;
+	ServerSocket mServerSocket;
+	TcpSocket mSocket;
+
+	Activity mActivity;
+
+	public TCPRunnableApiTest(Activity activity) {
+		this.mActivity = activity;
+	}
 
 	public byte[] generateBigData(int size) {
 		byte[] result = new byte[size];
@@ -38,38 +47,49 @@ public class TCPRunnableApiTest implements Runnable {
 
 	private void init() throws IOException {
 
-		serverSocket = new ServerSocket(localport);
+		mServerSocket = new ServerSocket(mLocalport);
 
-		Socket s = serverSocket.accept();
+		Socket s = mServerSocket.accept();
 
-		socket = new TcpSocket(s);
+		mSocket = new TcpSocket(s);
 	}
 
 	private byte[] initPacket() throws SocketException {
 
 		byte[] content = new byte[CHUNK_LEN];
 
-		byte[] message = ("Hello Roxy - " + id).getBytes();
+		byte[] message = ("Hello Roxy - " + mId).getBytes();
 
 		for (int i = 0; i < message.length; i++) {
 			content[i] = message[i];
 		}
 
-		id++;
+		mId++;
 
 		return content;
 	}
 
 	private void send(byte[] data) throws IOException {
 
-		socket.send(data);
+		long sendStart = System.currentTimeMillis();
+
+		mSocket.send(data);
+
+		long sendInterval = System.currentTimeMillis() - sendStart;
+		Log.d(TIME, "Send: " + sendInterval + " ms");
 	}
 
 	private byte[] receive() throws IOException {
 
 		Log.d(TIME, "Waiting to receive...");
 
-		byte[] content = socket.receive();
+		long receiveStart = System.currentTimeMillis();
+
+		byte[] content = mSocket.receive();
+
+		long receiveInterval = System.currentTimeMillis() - receiveStart;
+
+		Log.d(TIME, "Receive: " + receiveInterval + " ms | size: " + content.length + " bytes");
 
 		return content;
 	}
@@ -86,11 +106,11 @@ public class TCPRunnableApiTest implements Runnable {
 			e.printStackTrace();
 		}
 
-		bytesTest();
+//		bytesTest();
 
 //		objectTest();
 
-//		imageTest();
+		imageTest();
 	}
 
 	private void bytesTest() {
@@ -175,10 +195,10 @@ public class TCPRunnableApiTest implements Runnable {
 				continue;
 			}
 
-			AbstractMessage message;
+			LargeMessage message;
 
 			try {
-				message = socket.receiveObject(LargeMessage.class);
+				message = mSocket.receiveObject(LargeMessage.class);
 			} catch (IOException | ClassNotFoundException e) {
 				Log.d(TIME, "RECEIVE ERROR");
 				continue;
@@ -187,7 +207,7 @@ public class TCPRunnableApiTest implements Runnable {
 			long totalInterval = System.currentTimeMillis() - totalStart;
 
 			try {
-				socket.sendObject(message);
+				mSocket.sendObject(message);
 			} catch (IOException e) {
 				Log.d(TIME, "SEND ERROR");
 				continue;
@@ -203,5 +223,61 @@ public class TCPRunnableApiTest implements Runnable {
 
 	public void imageTest() {
 
+		try {
+			mSocket.send("mama".getBytes("UTF-8"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		while(true) {
+
+			if (MainActivity.stopFlag) {
+				return;
+			}
+
+			long start = System.currentTimeMillis();
+
+			byte[] data;
+
+			try {
+				data = receive();
+			} catch (IOException e) {
+				Log.d(TIME, "RECEIVE ERROR");
+				return;
+			}
+
+			try {
+				mSocket.send("mama".getBytes("UTF-8"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			long start2 = System.currentTimeMillis();
+
+			Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+//			Bitmap bitmap2 = mSocket.receiveBitmap();
+
+			displayImage(bitmap);
+
+			long duration = System.currentTimeMillis() - start2;
+			Log.d(TIME, "Decode + display: " + duration + " ms | " + data.length + " bytes");
+
+			duration = System.currentTimeMillis() - start;
+			Log.d(TIME, "Duration: " + duration + " ms | " + data.length + " bytes");
+
+//			Log.d(TIME, "Duration: " + duration + " ms");
+		}
+
+	}
+
+	public void displayImage(final Bitmap bitmap) {
+
+		mActivity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				MainActivity.mBallDrawerView.updateScreen(bitmap);
+			}
+		});
 	}
 }
