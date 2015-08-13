@@ -1,5 +1,7 @@
 package claudiu.protocoltesterframework;
 
+import android.util.Log;
+
 import java.io.IOException;
 
 /**
@@ -13,7 +15,6 @@ public class DummyTest extends AbstractTest {
     }
 
     @Override
-    public void GetResults() {
-
+    public void getResults() {
     }
 }

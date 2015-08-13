@@ -1,13 +1,14 @@
 package claudiu.protocoltesterframework;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     public static final String FRAMEWORK = "frametag";
+
     public static final String REMOTE_IP = "192.168.1.3";
     public static final int REMOTE_PORT = 9000;
 
@@ -22,7 +23,8 @@ public class MainActivity extends ActionBarActivity {
         Thread thread = new Thread(runnable);
 
         //Add as many tests as you like.
-        runnable.addTest(new DummyTest());
+        //runnable.addTest(new DummyTest());
+        runnable.addTest(new BigDataTest());
 
         thread.start();
     }
