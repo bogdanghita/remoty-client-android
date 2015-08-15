@@ -1,4 +1,5 @@
 package claudiu.protocoltesterframework;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -9,121 +10,194 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Created by Bogdan on 8/6/2015.
  */
 public class TcpSocket {
 
-    public final static String JSON = "JSON";
+	public final static String JSON = "JSON";
+	private final static String IMPOSSIBLE = "Impossible just happened.";
 
-    Socket mSocket;
-    DataInputStream mReader;
-    DataOutputStream mWriter;
+	private Socket mSocket;
+	private DataInputStream mReader;
+	private DataOutputStream mWriter;
 
-    Gson mGson;
+	private Gson mGson;
 
-    // TODO: add functionality for setting the timeout
-	/*
-		NOTE: mSocket must be already connected!
+	/**
+	 * @param socket  socket connected to a remote host address and port
+	 * @param timeout read timeout in milliseconds (0 means no timeout)
+	 * @throws IOException
 	 */
-    public TcpSocket(Socket socket) throws IOException {
+	public TcpSocket(Socket socket, int timeout) throws IOException {
 
-        this.mSocket = socket;
+		this.mSocket = socket;
 
-        mGson = new Gson();
+		socket.setSoTimeout(timeout);
 
-        socket.setKeepAlive(true);
-        socket.setTcpNoDelay(true);
+		mReader = new DataInputStream(socket.getInputStream());
+		mWriter = new DataOutputStream(socket.getOutputStream());
 
-        mReader = new DataInputStream(socket.getInputStream());
-        mWriter = new DataOutputStream(socket.getOutputStream());
-    }
+		mGson = new Gson();
+	}
 
-    // TODO: think of the flush call
-    public void send(byte[] content) throws IOException {
+	/**
+	 * Sets this socket's read timeout
+	 *
+	 * @param timeout read timeout in milliseconds (0 means no timeout)
+	 * @throws SocketException
+	 */
+	public void setTimeout(int timeout) throws SocketException {
+		mSocket.setSoTimeout(timeout);
+	}
 
-        mWriter.writeInt(content.length);
-        mWriter.flush();
+	/**
+	 * Sets this socket's SO_KEEPALIVE option.
+	 *
+	 * @param keepAlive
+	 * @throws SocketException
+	 */
+	public void setKeepAlive(boolean keepAlive) throws SocketException {
 
-        mWriter.write(content, 0, content.length);
-        mWriter.flush();
-    }
+		mSocket.setKeepAlive(keepAlive);
+	}
 
-    public byte[] receive() throws IOException {
+	/**
+	 * Sets this socket's TCP_NODELAY option
+	 *
+	 * @param on
+	 * @throws SocketException
+	 */
+	public void setTcpNoDelay(boolean on) throws SocketException {
 
-        int size = mReader.readInt();
+		mSocket.setTcpNoDelay(true);
+	}
 
-        byte[] buffer = new byte[size];
+	/**
+	 * Closes the socket
+	 *
+	 * @throws IOException
+	 */
+	public void close() throws IOException {
 
-        receive(buffer, size);
+		if (!mSocket.isClosed()) {
+			mSocket.close();
+		}
 
-        return buffer;
-    }
+		mReader.close();
+		mWriter.close();
+	}
 
-    private void receive(byte[] buffer, int size) throws IOException {
+	/**
+	 * Sends a message in the form of byte array
+	 *
+	 * @param content the content to be sent
+	 * @throws IOException
+	 */
+	public void send(byte[] content) throws IOException {
 
-        int cnt = 0;
-        int currentSize = 0;
+		mWriter.writeInt(content.length);
+		mWriter.flush();
 
-        // TODO: run a runTests and check when mReader returns -1
-        while (currentSize != size) {
+		mWriter.write(content, 0, content.length);
+		mWriter.flush();
+	}
 
-            cnt++;
+	/**
+	 * Receives a message in the form of byte array
+	 *
+	 * @return the content received
+	 * @throws IOException
+	 */
+	public byte[] receive() throws IOException {
 
-            int bytes_read = mReader.read(buffer, currentSize, size - currentSize);
+		int size = mReader.readInt();
 
-            // TODO: think what to do in this case
-            if (bytes_read == -1) {
-                continue;
-            }
+		byte[] buffer = new byte[size];
 
-            currentSize += bytes_read;
-        }
+		receive(buffer, size);
 
-        Log.d("TIME", "Fragments: " + cnt);
-    }
+		return buffer;
+	}
 
-    public void sendObject(AbstractMessage message) throws IOException {
+	private void receive(byte[] buffer, int size) throws IOException {
 
-        long start = System.currentTimeMillis();
+		int cnt = 0;
+		int currentSize = 0;
 
-        String jsonMessage = mGson.toJson(message);
+		while (currentSize != size) {
 
-        long duration = System.currentTimeMillis() - start;
-        Log.d(JSON, "Serialization : " + duration + " ms");
+			cnt++;
 
-        byte[] content = jsonMessage.getBytes("UTF-8");
+			int bytes_read = mReader.read(buffer, currentSize, size - currentSize);
 
-        send(content);
-    }
+			/* This should not happen. Even Android Studio marks any breakpoint inside this if statement as invalid. */
+			if (bytes_read == -1) {
+				throw new IOException(IMPOSSIBLE);
+			}
 
-    public <T extends AbstractMessage> T receiveObject(Class<T> type) throws IOException, ClassNotFoundException {
+			currentSize += bytes_read;
+		}
 
-        byte[] content = receive();
+		Log.d("TIME", "Fragments: " + cnt);
+	}
 
-        String jsonContent = new String(content, "UTF-8");
+	/**
+	 * Sends an object of type AbstractMessage or any subclass of it
+	 *
+	 * @param message the object to be sent
+	 * @throws IOException
+	 */
+	public void sendObject(AbstractMessage message) throws IOException {
 
-        long start = System.currentTimeMillis();
+		long start = System.currentTimeMillis();
 
-        T message = mGson.fromJson(jsonContent, type);
+		String jsonMessage = mGson.toJson(message);
 
-        long duration = System.currentTimeMillis() - start;
-        Log.d(JSON, "Deserialization : " + duration + " ms");
+		long duration = System.currentTimeMillis() - start;
+		Log.d(JSON, "Serialization : " + duration + " ms");
 
-        return message;
-    }
+		byte[] content = jsonMessage.getBytes("UTF-8");
 
-    // Receives image directly from the network (it seems Android can receive only images in .png format using this method)
-    public Bitmap receiveBitmap() {
+		send(content);
+	}
 
-        Bitmap bitmap = BitmapFactory.decodeStream(mReader);
+	/**
+	 * Receives a message of type AbstractMessage or any subclass of it
+	 *
+	 * @param type the type of the message that is received
+	 * @param <T>  the type of the message that is received
+	 * @return the object received
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public <T extends AbstractMessage> T receiveObject(Class<T> type) throws IOException, ClassNotFoundException {
 
-        return bitmap;
-    }
+		byte[] content = receive();
 
-    public void close() throws IOException {
+		String jsonContent = new String(content, "UTF-8");
 
-        mSocket.close();
-    }
+		long start = System.currentTimeMillis();
+
+		T message = mGson.fromJson(jsonContent, type);
+
+		long duration = System.currentTimeMillis() - start;
+		Log.d(JSON, "Deserialization : " + duration + " ms");
+
+		return message;
+	}
+
+	/**
+	 * Receives image directly from the network (it seems Android can receive only images in .png format using this method)
+	 *
+	 * @return the image received
+	 */
+	public Bitmap receiveBitmap() {
+
+		Bitmap bitmap = BitmapFactory.decodeStream(mReader);
+
+		return bitmap;
+	}
 }

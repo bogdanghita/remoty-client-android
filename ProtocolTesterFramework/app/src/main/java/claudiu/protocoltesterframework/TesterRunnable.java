@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +24,26 @@ public class TesterRunnable implements Runnable {
 
         for (AbstractTest itTest : mTests) {
             Log.d(MainActivity.FRAMEWORK, "Connecting...");
-            Socket socket = new Socket(MainActivity.REMOTE_IP, MainActivity.REMOTE_PORT);
+            Socket socket;
+            while (true) {
+                try {
+                    socket = new Socket(MainActivity.REMOTE_IP, MainActivity.REMOTE_PORT);
+                } catch (IOException e) {
+                    continue;
+                }
+                break;
+            }
             Log.d(MainActivity.FRAMEWORK, "Connected!");
 
-            itTest.runTests(socket);
+            Log.d(MainActivity.FRAMEWORK, "Send buffer before: " + socket.getSendBufferSize());
+            //socket.setSendBufferSize(5243000);
+            //Log.d(MainActivity.FRAMEWORK, "Send buffer after: " + socket.getSendBufferSize());
 
+            Log.d(MainActivity.FRAMEWORK, "Receive buffer before: " + socket.getReceiveBufferSize());
+            //socket.setReceiveBufferSize(5243000);
+            //Log.d(MainActivity.FRAMEWORK, "Receive buffer after: " + socket.getReceiveBufferSize());
+
+            itTest.runTests(socket);
             itTest.getResults();
         }
     }
