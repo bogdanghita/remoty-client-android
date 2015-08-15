@@ -22,7 +22,7 @@ public class TCPRunnableApiTest implements Runnable {
 	public final static String TIME = "TIME_TAG";
 
 	private final static int ACCEPT_TIMEOUT = 0;
-	private final static int READ_TIMEOUT = 20000;
+	private final static int READ_TIMEOUT = 2000;
 	private final static int CHUNK_LEN = 20;
 
 	int mLocalport = 9000;
@@ -56,7 +56,9 @@ public class TCPRunnableApiTest implements Runnable {
 
 		Socket s = mServerSocket.accept();
 
-		mSocket = new TcpSocket(s, READ_TIMEOUT);
+		mSocket = new TcpSocket(s);
+
+		mSocket.setTimeout(READ_TIMEOUT);
 
 		mSocket.setKeepAlive(true);
 		mSocket.setTcpNoDelay(true);
