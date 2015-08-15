@@ -9,7 +9,7 @@ public class MainActivity extends Activity {
 
     public static final String FRAMEWORK = "frametag";
 
-    public static final String REMOTE_IP = "192.168.1.3";
+    public static final String REMOTE_IP = "192.168.1.6";
     public static final int REMOTE_PORT = 9000;
 
     @Override
@@ -24,7 +24,9 @@ public class MainActivity extends Activity {
 
         //Add as many tests as you like.
         //runnable.addTest(new DummyTest());
-        runnable.addTest(new BigDataTest());
+        //runnable.addTest(new BigDataTest());
+        //runnable.addTest(new ParallelTest());
+        runnable.addTest(new NoDelayTest());
 
         thread.start();
     }
