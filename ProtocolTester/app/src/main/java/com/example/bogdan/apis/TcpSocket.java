@@ -28,16 +28,15 @@ public class TcpSocket {
 
 	private Gson mGson;
 
+	// TODO: Add documentation for the default timeout (the value and what it means)
+
 	/**
-	 * @param socket  socket connected to a remote host address and port
-	 * @param timeout read timeout in milliseconds (0 means no timeout)
+	 * @param socket socket connected to a remote host address and port
 	 * @throws IOException
 	 */
-	public TcpSocket(Socket socket, int timeout) throws IOException {
+	public TcpSocket(Socket socket) throws IOException {
 
 		this.mSocket = socket;
-
-		socket.setSoTimeout(timeout);
 
 		mReader = new DataInputStream(socket.getInputStream());
 		mWriter = new DataOutputStream(socket.getOutputStream());
