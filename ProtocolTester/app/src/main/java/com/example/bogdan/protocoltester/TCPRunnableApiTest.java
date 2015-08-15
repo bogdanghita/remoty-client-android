@@ -19,7 +19,7 @@ import java.util.Random;
  */
 public class TCPRunnableApiTest implements Runnable {
 
-	public final static String TIME = "TIME";
+	public final static String TIME = "TIME_TAG";
 
 	private final static int ACCEPT_TIMEOUT = 0;
 	private final static int READ_TIMEOUT = 20000;
@@ -113,11 +113,11 @@ public class TCPRunnableApiTest implements Runnable {
 			return;
 		}
 
-//		bytesTest();
+		bytesTest();
 
 //		objectTest();
 
-		imageTest();
+//		imageTest();
 
 		try {
 			mSocket.close();
