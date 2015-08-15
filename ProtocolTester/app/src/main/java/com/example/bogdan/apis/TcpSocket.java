@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.example.bogdan.protocoltester.AbstractMessage;
+import com.example.bogdan.protocoltester.TCPRunnableApiTest;
 import com.google.gson.Gson;
 
 import java.io.DataInputStream;
@@ -142,7 +143,7 @@ public class TcpSocket {
 			currentSize += bytes_read;
 		}
 
-		Log.d("TIME", "Fragments: " + cnt);
+		Log.d(TCPRunnableApiTest.TIME, "Fragments: " + cnt);
 	}
 
 	/**
