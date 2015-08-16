@@ -12,10 +12,14 @@ import java.net.SocketException;
 public abstract class AbstractTest {
 
     protected int mRepeats = 10;
-    protected int[] sleepingTime = {1, 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500};
+    protected int[] mSleepingTime;
     protected final static int NO_TIMEOUT = 0;
 
     protected TcpSocket mTCPSocket;
+
+    public AbstractTest() {
+        mSleepingTime = new int[]{1, 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500};
+    }
 
     protected void changeParams() throws SocketException {
     }
@@ -28,13 +32,13 @@ public abstract class AbstractTest {
     public void runTests(Socket socket) throws IOException {
         connect(socket);
         changeParams();
-        for (int index = 0; index < sleepingTime.length; index++) {
-            Log.d(MainActivity.FRAMEWORK, "Delay: " + sleepingTime[index] + " ms");
+        for (int index = 0; index < mSleepingTime.length; index++) {
+            Log.d(MainActivity.FRAMEWORK, "Delay: " + mSleepingTime[index] + " ms");
             for (int repeat = 0; repeat < mRepeats; repeat++) {
                 test();
                 Log.d(MainActivity.FRAMEWORK, "Test number: " + (repeat + 1));
 //                try {
-//                    Thread.sleep(sleepingTime[index]);
+//                    Thread.sleep(mSleepingTime[index]);
 //                } catch (InterruptedException e) {
 //                    e.printStackTrace();
 //                }
@@ -48,7 +52,7 @@ public abstract class AbstractTest {
 
     public void connect(Socket socket) throws IOException {
         Log.d(MainActivity.FRAMEWORK, "Creating TCP socket...");
-        mTCPSocket = new TcpSocket(socket,NO_TIMEOUT);
+        mTCPSocket = new TcpSocket(socket, NO_TIMEOUT);
         Log.d(MainActivity.FRAMEWORK, "TCP socket created!");
     }
 
