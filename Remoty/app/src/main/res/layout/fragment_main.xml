@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_drive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Drive"
+            android:onClick="buttonDrive"/>
+
+        <Button
+            android:id="@+id/button_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Score"
+            android:onClick="buttonScore"/>
+
+        <Button
+            android:id="@+id/button_connect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Connect"
+            android:onClick="buttonConnect"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_subscribe"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:text="Subscribe"
+            android:onClick="buttonSubscribe"/>
+
+        <Button
+            android:id="@+id/button_help"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:text="Help"
+            android:onClick="buttonHelp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
