@@ -8,12 +8,13 @@ import java.net.SocketException;
 /**
  * Created by Claudiu on 13/Aug/2015.
  */
-public class NoDelayTest extends AbstractTest {
-    private final int parallels = 10;
+public class TcpParametersTest extends AbstractTest {
+    private final int parallels = 3;
 
     @Override
     protected void changeParams() throws SocketException {
         mRepeats = 10;
+        mSleepingTime = new int[]{5000};
         mTCPSocket.setKeepAlive(true);
         mTCPSocket.setTcpNoDelay(true);
         mTCPSocket.setTimeout(10000);
