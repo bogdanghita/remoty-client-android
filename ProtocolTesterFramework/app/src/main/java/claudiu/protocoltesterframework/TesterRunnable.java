@@ -19,7 +19,7 @@ public class TesterRunnable implements Runnable {
         mTests.add(abstractTest);
     }
 
-    public void runTests() throws IOException {
+    public void runTests() throws IOException, ClassNotFoundException {
         Log.d(MainActivity.FRAMEWORK, "Running tests...");
 
         for (AbstractTest itTest : mTests) {
@@ -35,14 +35,6 @@ public class TesterRunnable implements Runnable {
             }
             Log.d(MainActivity.FRAMEWORK, "Connected!");
 
-            Log.d(MainActivity.FRAMEWORK, "Send buffer before: " + socket.getSendBufferSize());
-            //socket.setSendBufferSize(5243000);
-            //Log.d(MainActivity.FRAMEWORK, "Send buffer after: " + socket.getSendBufferSize());
-
-            Log.d(MainActivity.FRAMEWORK, "Receive buffer before: " + socket.getReceiveBufferSize());
-            //socket.setReceiveBufferSize(5243000);
-            //Log.d(MainActivity.FRAMEWORK, "Receive buffer after: " + socket.getReceiveBufferSize());
-
             itTest.runTests(socket);
             itTest.getResults();
         }
@@ -53,6 +45,8 @@ public class TesterRunnable implements Runnable {
         try {
             runTests();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

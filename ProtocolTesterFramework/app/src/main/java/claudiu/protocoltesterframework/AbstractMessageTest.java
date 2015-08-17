@@ -8,22 +8,24 @@ import java.net.SocketException;
 /**
  * Created by Claudiu on 13/Aug/2015.
  */
-public class BigDataTest extends AbstractTest {
+public class AbstractMessageTest extends AbstractTest {
+
     @Override
     protected void changeParams() throws SocketException {
-        mRepeats = 5;
-        mTcpSocket.setKeepAlive(false);
-        //mTcpSocket.setKeepAlive(true);
-        //mTcpSocket.setTcpNoDelay(false);
+        mRepeats = 1;
+        mSleepingTime = new int[]{0};
+        mTcpSocket.setKeepAlive(true);
         mTcpSocket.setTcpNoDelay(true);
-        mTcpSocket.setTimeout(10000);
     }
 
     @Override
-    public void test() throws IOException {
-        byte[] message = mTcpSocket.receive();
+    public void test() throws IOException, ClassNotFoundException {
+        LargeMessage message = mTcpSocket.receiveObject(LargeMessage.class);
         Log.d(MainActivity.FRAMEWORK, "Message sent.");
-        mTcpSocket.send(message);
+
+        //message.data[0]=0;
+
+        mTcpSocket.sendObject(message);
         Log.d(MainActivity.FRAMEWORK, "Message received.");
     }
 

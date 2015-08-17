@@ -14,11 +14,11 @@ public class ParallelTest extends AbstractTest {
     @Override
     protected void changeParams() throws SocketException {
         mRepeats = 10;
-        //mTCPSocket.setKeepAlive(false);
-        mTCPSocket.setKeepAlive(true);
-        //mTCPSocket.setTcpNoDelay(false);
-        mTCPSocket.setTcpNoDelay(true);
-        mTCPSocket.setTimeout(10000);
+        //mTcpSocket.setKeepAlive(false);
+        mTcpSocket.setKeepAlive(true);
+        //mTcpSocket.setTcpNoDelay(false);
+        mTcpSocket.setTcpNoDelay(true);
+        mTcpSocket.setTimeout(10000);
     }
 
     @Override
@@ -26,11 +26,11 @@ public class ParallelTest extends AbstractTest {
         byte[] message = new byte[0];
 
         for (int i = 0; i < parallels; i++)
-            message = mTCPSocket.receive();
+            message = mTcpSocket.receive();
         Log.d(MainActivity.FRAMEWORK, "Message sent.");
 
         for (int i = 0; i < parallels; i++)
-            mTCPSocket.send(message);
+            mTcpSocket.send(message);
         Log.d(MainActivity.FRAMEWORK, "Message received.");
     }
 
