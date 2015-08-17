@@ -17,187 +17,209 @@ import java.net.SocketException;
  */
 public class TcpSocket {
 
-	public final static String JSON = "JSON";
-	private final static String IMPOSSIBLE = "Impossible just happened.";
+    public final static String JSON = "JSON";
+    private final static String IMPOSSIBLE = "Impossible just happened.";
 
-	private Socket mSocket;
-	private DataInputStream mReader;
-	private DataOutputStream mWriter;
+    private Socket mSocket;
+    private DataInputStream mReader;
+    private DataOutputStream mWriter;
 
-	private Gson mGson;
+    private Gson mGson;
 
-	/**
-	 * @param socket  socket connected to a remote host address and port
-	 * @param timeout read timeout in milliseconds (0 means no timeout)
-	 * @throws IOException
-	 */
-	public TcpSocket(Socket socket, int timeout) throws IOException {
+    /**
+     * Default values for a {@link Socket} are:<p>
+     * - setTimeout(0); it means infinite timeout<p>
+     * - setKeepAlive(false); connection can enter an idle state<p>
+     * - setTcpNoDelay(false); packages are compressed into a larger package before they are sent
+     * - setSentBufferSize(1048576); send buffer has 1 MB<p>
+     * - setReceiveBufferSize(1048576); receive buffer has 1 MB<p>
+     *
+     * @param socket socket connected to a remote host address and port
+     * @throws IOException
+     */
+    public TcpSocket(Socket socket) throws IOException {
 
-		this.mSocket = socket;
+        this.mSocket = socket;
 
-		socket.setSoTimeout(timeout);
+        mReader = new DataInputStream(socket.getInputStream());
+        mWriter = new DataOutputStream(socket.getOutputStream());
 
-		mReader = new DataInputStream(socket.getInputStream());
-		mWriter = new DataOutputStream(socket.getOutputStream());
+        mGson = new Gson();
+    }
 
-		mGson = new Gson();
-	}
+    /**
+     * Sets this socket's read timeout.
+     *
+     * @param timeout read timeout in milliseconds (0 means no timeout)
+     * @throws SocketException
+     */
+    public void setTimeout(int timeout) throws SocketException {
+        mSocket.setSoTimeout(timeout);
+    }
 
-	/**
-	 * Sets this socket's read timeout
-	 *
-	 * @param timeout read timeout in milliseconds (0 means no timeout)
-	 * @throws SocketException
-	 */
-	public void setTimeout(int timeout) throws SocketException {
-		mSocket.setSoTimeout(timeout);
-	}
+    /**
+     * Sets this socket's SO_KEEPALIVE option.
+     *
+     * @param keepAlive
+     * @throws SocketException
+     */
+    public void setKeepAlive(boolean keepAlive) throws SocketException {
 
-	/**
-	 * Sets this socket's SO_KEEPALIVE option.
-	 *
-	 * @param keepAlive
-	 * @throws SocketException
-	 */
-	public void setKeepAlive(boolean keepAlive) throws SocketException {
+        mSocket.setKeepAlive(keepAlive);
+    }
 
-		mSocket.setKeepAlive(keepAlive);
-	}
+    /**
+     * Sets this socket's TCP_NODELAY option.
+     *
+     * @param on
+     * @throws SocketException
+     */
+    public void setTcpNoDelay(boolean on) throws SocketException {
 
-	/**
-	 * Sets this socket's TCP_NODELAY option
-	 *
-	 * @param on
-	 * @throws SocketException
-	 */
-	public void setTcpNoDelay(boolean on) throws SocketException {
+        mSocket.setTcpNoDelay(true);
+    }
 
-		mSocket.setTcpNoDelay(true);
-	}
+    /**
+     * Sets this socket's send buffer size.
+     * @param bufferSize
+     */
+    public void setSendBufferSize(int bufferSize) throws SocketException {
 
-	/**
-	 * Closes the socket
-	 *
-	 * @throws IOException
-	 */
-	public void close() throws IOException {
+        mSocket.setSendBufferSize(bufferSize);
+    }
 
-		if (!mSocket.isClosed()) {
-			mSocket.close();
-		}
+    /**
+     * Sets this socket's receive buffer size.
+     * @param bufferSize
+     */
+    public void setReceiveBufferSize(int bufferSize) throws SocketException {
 
-		mReader.close();
-		mWriter.close();
-	}
+        mSocket.setReceiveBufferSize(bufferSize);
+    }
 
-	/**
-	 * Sends a message in the form of byte array
-	 *
-	 * @param content the content to be sent
-	 * @throws IOException
-	 */
-	public void send(byte[] content) throws IOException {
+    /**
+     * Closes the socket.
+     *
+     * @throws IOException
+     */
+    public void close() throws IOException {
 
-		mWriter.writeInt(content.length);
-		mWriter.flush();
+        if (!mSocket.isClosed()) {
+            mSocket.close();
+        }
 
-		mWriter.write(content, 0, content.length);
-		mWriter.flush();
-	}
+        mReader.close();
+        mWriter.close();
+    }
 
-	/**
-	 * Receives a message in the form of byte array
-	 *
-	 * @return the content received
-	 * @throws IOException
-	 */
-	public byte[] receive() throws IOException {
+    /**
+     * Sends a message in the form of byte array.
+     *
+     * @param content the content to be sent
+     * @throws IOException
+     */
+    public void send(byte[] content) throws IOException {
 
-		int size = mReader.readInt();
+        mWriter.writeInt(content.length);
+        mWriter.flush();
 
-		byte[] buffer = new byte[size];
+        mWriter.write(content, 0, content.length);
+        mWriter.flush();
+    }
 
-		receive(buffer, size);
+    /**
+     * Receives a message in the form of byte array.
+     *
+     * @return the content received
+     * @throws IOException
+     */
+    public byte[] receive() throws IOException {
 
-		return buffer;
-	}
+        int size = mReader.readInt();
 
-	private void receive(byte[] buffer, int size) throws IOException {
+        byte[] buffer = new byte[size];
 
-		int cnt = 0;
-		int currentSize = 0;
+        receive(buffer, size);
 
-		while (currentSize != size) {
+        return buffer;
+    }
 
-			cnt++;
+    private void receive(byte[] buffer, int size) throws IOException {
 
-			int bytes_read = mReader.read(buffer, currentSize, size - currentSize);
+        int cnt = 0;
+        int currentSize = 0;
+
+        while (currentSize != size) {
+
+            cnt++;
+
+            int bytes_read = mReader.read(buffer, currentSize, size - currentSize);
 
 			/* This should not happen. Even Android Studio marks any breakpoint inside this if statement as invalid. */
-			if (bytes_read == -1) {
-				throw new IOException(IMPOSSIBLE);
-			}
+            if (bytes_read == -1) {
+                throw new IOException(IMPOSSIBLE);
+            }
 
-			currentSize += bytes_read;
-		}
+            currentSize += bytes_read;
+        }
 
-		Log.d("TIME", "Fragments: " + cnt);
-	}
+        //Log.d("Tag", "Fragments: " + cnt);
+    }
 
-	/**
-	 * Sends an object of type AbstractMessage or any subclass of it
-	 *
-	 * @param message the object to be sent
-	 * @throws IOException
-	 */
-	public void sendObject(AbstractMessage message) throws IOException {
+    /**
+     * Sends an object of type AbstractMessage or any subclass of it.
+     *
+     * @param message the object to be sent
+     * @throws IOException
+     */
+    public void sendObject(AbstractMessage message) throws IOException {
 
-		long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
-		String jsonMessage = mGson.toJson(message);
+        String jsonMessage = mGson.toJson(message);
 
-		long duration = System.currentTimeMillis() - start;
-		Log.d(JSON, "Serialization : " + duration + " ms");
+        long duration = System.currentTimeMillis() - start;
+        Log.d(JSON, "Serialization : " + duration + " ms");
 
-		byte[] content = jsonMessage.getBytes("UTF-8");
+        byte[] content = jsonMessage.getBytes("UTF-8");
 
-		send(content);
-	}
+        send(content);
+    }
 
-	/**
-	 * Receives a message of type AbstractMessage or any subclass of it
-	 *
-	 * @param type the type of the message that is received
-	 * @param <T>  the type of the message that is received
-	 * @return the object received
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	public <T extends AbstractMessage> T receiveObject(Class<T> type) throws IOException, ClassNotFoundException {
+    /**
+     * Receives a message of type AbstractMessage or any subclass of it.
+     *
+     * @param type the type of the message that is received
+     * @param <T>  the type of the message that is received
+     * @return the object received
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public <T extends AbstractMessage> T receiveObject(Class<T> type) throws IOException, ClassNotFoundException {
 
-		byte[] content = receive();
+        byte[] content = receive();
 
-		String jsonContent = new String(content, "UTF-8");
+        String jsonContent = new String(content, "UTF-8");
 
-		long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
-		T message = mGson.fromJson(jsonContent, type);
+        T message = mGson.fromJson(jsonContent, type);
 
-		long duration = System.currentTimeMillis() - start;
-		Log.d(JSON, "Deserialization : " + duration + " ms");
+        long duration = System.currentTimeMillis() - start;
+        Log.d(JSON, "Deserialization : " + duration + " ms");
 
-		return message;
-	}
+        return message;
+    }
 
-	/**
-	 * Receives image directly from the network (it seems Android can receive only images in .png format using this method)
-	 *
-	 * @return the image received
-	 */
-	public Bitmap receiveBitmap() {
+    /**
+     * Receives image directly from the network (it seems Android can receive only images in .png format using this method).
+     *
+     * @return the image received
+     */
+    public Bitmap receiveBitmap() {
 
-		Bitmap bitmap = BitmapFactory.decodeStream(mReader);
+        Bitmap bitmap = BitmapFactory.decodeStream(mReader);
 
-		return bitmap;
-	}
+        return bitmap;
+    }
 }

@@ -13,9 +13,9 @@ public abstract class AbstractTest {
 
     protected int mRepeats = 10;
     protected int[] mSleepingTime;
-    protected final static int NO_TIMEOUT = 0;
 
-    protected TcpSocket mTCPSocket;
+    protected TcpSocket mTcpSocket;
+    protected Socket mSocket;
 
     public AbstractTest() {
         mSleepingTime = new int[]{1, 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500};
@@ -27,9 +27,10 @@ public abstract class AbstractTest {
     /**
      * @throws IOException for easy use of send and receive
      */
-    public abstract void test() throws IOException;
+    public abstract void test() throws IOException, ClassNotFoundException;
 
-    public void runTests(Socket socket) throws IOException {
+    public void runTests(Socket socket) throws IOException, ClassNotFoundException {
+        mSocket=socket;
         connect(socket);
         changeParams();
         for (int index = 0; index < mSleepingTime.length; index++) {
@@ -37,11 +38,6 @@ public abstract class AbstractTest {
             for (int repeat = 0; repeat < mRepeats; repeat++) {
                 test();
                 Log.d(MainActivity.FRAMEWORK, "Test number: " + (repeat + 1));
-//                try {
-//                    Thread.sleep(mSleepingTime[index]);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
             }
         }
         disconnect();
@@ -52,11 +48,11 @@ public abstract class AbstractTest {
 
     public void connect(Socket socket) throws IOException {
         Log.d(MainActivity.FRAMEWORK, "Creating TCP socket...");
-        mTCPSocket = new TcpSocket(socket, NO_TIMEOUT);
+        mTcpSocket = new TcpSocket(socket);
         Log.d(MainActivity.FRAMEWORK, "TCP socket created!");
     }
 
     public void disconnect() throws IOException {
-        mTCPSocket.close();
+        mTcpSocket.close();
     }
 }
