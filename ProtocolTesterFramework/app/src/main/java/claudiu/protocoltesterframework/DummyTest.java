@@ -1,7 +1,5 @@
 package claudiu.protocoltesterframework;
 
-import android.util.Log;
-
 import java.io.IOException;
 
 /**
@@ -10,8 +8,8 @@ import java.io.IOException;
 public class DummyTest extends AbstractTest {
     @Override
     public void test() throws IOException {
-        byte[] message=mTCPSocket.receive();
-        mTCPSocket.send(message);
+        byte[] message= mTcpSocket.receive();
+        mTcpSocket.send(message);
     }
 
     @Override

@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
         //runnable.addTest(new BigDataTest());
         //runnable.addTest(new ParallelTest());
         runnable.addTest(new TcpParametersTest());
+        //runnable.addTest(new AbstractMessageTest());
 
         thread.start();
     }
