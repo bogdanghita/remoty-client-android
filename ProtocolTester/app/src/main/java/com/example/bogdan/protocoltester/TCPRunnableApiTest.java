@@ -115,11 +115,11 @@ public class TCPRunnableApiTest implements Runnable {
 			return;
 		}
 
-		bytesTest();
+//		bytesTest();
 
 //		objectTest();
 
-//		imageTest();
+		imageTest();
 
 		try {
 			mSocket.close();
