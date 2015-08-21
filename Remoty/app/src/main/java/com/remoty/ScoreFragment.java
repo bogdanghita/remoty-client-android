@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 /**
  * Created by Bogdan on 8/17/2015.
  */
-public class ScoreFragment extends Fragment {
+public class ScoreFragment extends LiveDataTransferFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
