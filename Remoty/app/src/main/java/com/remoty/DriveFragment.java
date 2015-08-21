@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 /**
  * Created by Bogdan on 8/17/2015.
  */
-public class DriveFragment extends Fragment {
+public class DriveFragment extends LiveDataTransferFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -20,4 +20,6 @@ public class DriveFragment extends Fragment {
 
 		return parentView;
 	}
+
+
 }
