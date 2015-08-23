@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.remoty.R;
-import com.remoty.services.MyTimer;
+import com.remoty.services.TaskScheduler;
 
 
 public class MainActivity extends DebugActivity {
@@ -36,29 +36,11 @@ public class MainActivity extends DebugActivity {
             getFragmentManager().beginTransaction().add(R.id.activity_main, mainFragment).addToBackStack(null).commit();
         }
 
-        MyTimer timer = new MyTimer();
+        // TEST
 
-        timer.start(new Runnable() {
-            @Override
-            public void run() {
+        testTaskScheduler();
 
-                Log.d(MyTimer.TAG_TIMER, "Message executed. Time: " + System.currentTimeMillis());
-            }
-        }, 10);
-
-        for (int i = 10; i <= 100; i += 10) {
-
-            timer.setInterval(i);
-            Log.d(MyTimer.TAG_TIMER, "Changed interval to: " + i);
-
-            try {
-                Thread.sleep(i);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        timer.stop();
+        // END_TEST
     }
 
     @Override
@@ -90,7 +72,6 @@ public class MainActivity extends DebugActivity {
         super.onDestroy();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -105,12 +86,6 @@ public class MainActivity extends DebugActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        // TODO: see what the comment is saying
-        //noinspection SimplifiableIfStatement
-//		if (id == R.id.action_settings) {
-//			return true;
-//		}
-
         switch (id) {
             case R.id.action_love:
                 break;
@@ -118,17 +93,14 @@ public class MainActivity extends DebugActivity {
                 break;
             case R.id.action_settings:
                 break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        // TODO: see what return value means
-        // EDIT: I think it tells that if the item click was handled by this method (it is useful since
-        // fragments also have this method and is is also called after this one is). Research and confirm this.
-
-        // TODO: See if this is ok, and why I put it like this
-        // EDIT: I think that this is ok as the method should return true in the switch cases and if no
-        // case matches, then the method should return whatever the super implementation wants. Not sure,
-        // confirm this.
-        return super.onOptionsItemSelected(item);
+        // This tells that the item click was handled by this method (it is useful since fragments
+        // also have this method and it is also called). If the action was not handled then the
+        // default case of the switch returned the result of the super implementation.
+        return true;
     }
 
     @Override
@@ -194,4 +166,46 @@ public class MainActivity extends DebugActivity {
 
     }
 
+    // TEST METHODS
+
+    public void testTaskScheduler() {
+
+        TaskScheduler timer = new TaskScheduler();
+
+        timer.start(new Runnable() {
+            @Override
+            public void run() {
+
+                Log.d(TaskScheduler.TAG_TIMER, "Message executed. Time: " + System.currentTimeMillis());
+            }
+        }, 10);
+
+        for (int i = 1; i <= 100; i += 10) {
+
+            timer.setInterval(i);
+            Log.d(TaskScheduler.TAG_TIMER, "Changed interval to: " + i);
+
+            if (i == 1) {
+                i = 0;
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        timer.setInterval(200);
+        Log.d(TaskScheduler.TAG_TIMER, "Changed interval to: " + 200);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        timer.stop();
+    }
+
+    // END TEST METHODS
 }
