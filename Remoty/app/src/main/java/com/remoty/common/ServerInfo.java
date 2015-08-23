@@ -6,4 +6,8 @@ package com.remoty.common;
 public class ServerInfo {
 
     // TODO: ...
+
+    public ServerInfo(String ip, int port, String name){
+
+    }
 }
