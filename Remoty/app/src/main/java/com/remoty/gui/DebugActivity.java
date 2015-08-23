@@ -1,6 +1,5 @@
-package com.remoty;
+package com.remoty.gui;
 
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
