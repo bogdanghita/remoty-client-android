@@ -9,13 +9,22 @@ public class TaskScheduler {
 
     public final static String TAG_TIMER = "TIMER";
 
-    private SchedulerThread mThread;
+    private SchedulerThread mThread = null;
 
     public void setInterval(long interval) {
 
         if (mThread != null) {
             mThread.setInterval(interval);
         }
+    }
+
+    /**
+     *
+     * @return - true if the scheduler is running and false otherwise
+     */
+    public boolean isRunning() {
+
+        return mThread != null;
     }
 
     /**

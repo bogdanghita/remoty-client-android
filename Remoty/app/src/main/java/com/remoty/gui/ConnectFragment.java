@@ -77,8 +77,8 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 
         // NOTE: onResume() is always called immediately after onStart()
 
-//        serverDetection.subscribe(this);
-//        serverDetection.init();
+        serverDetection.subscribe(this);
+        serverDetection.init();
     }
 
     @Override
@@ -86,9 +86,9 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
         super.onResume();
 
         // Start sending detection and state check messages
-//        serverDetection.start();
+        serverDetection.start();
 
-        buttonTest();
+//        buttonTest();
     }
 
     @Override
@@ -118,13 +118,11 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
             @Override
             public void run() {
 
-                // TODO: update available servers list
-
                 serversLayout.removeAllViews();
 
                 for (ServerInfo server : servers) {
 
-                    Button button = createServerButton("SERVER");
+                    Button button = createServerButton(server.ip);
 
                     serversLayout.addView(button);
                 }
@@ -148,7 +146,7 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 
         button.setLayoutParams(params);
 
-        button.setText("SERVER");
+        button.setText(content);
 
         return button;
     }
@@ -158,9 +156,9 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
     private void buttonTest() {
 
         List<ServerInfo> servers = new LinkedList<>();
-        servers.add(new ServerInfo());
-        servers.add(new ServerInfo());
-        servers.add(new ServerInfo());
+        servers.add(new ServerInfo("192.168.1.1", 3, "Server1"));
+        servers.add(new ServerInfo("192.168.1.2", 5, "Server2"));
+        servers.add(new ServerInfo("666.666.666.666", 9999, "THIS IS SPARTA!"));
 
         update(servers);
     }

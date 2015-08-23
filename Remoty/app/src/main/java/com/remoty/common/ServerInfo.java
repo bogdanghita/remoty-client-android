@@ -7,12 +7,17 @@ import android.os.Bundle;
  */
 public class ServerInfo {
 
-    // TODO: ...
+    public String ip;
+    public int port;
+    public String name;
 
-    public ServerInfo(String ip, int port, String name){
+    public ServerInfo(String ip, int port, String name) {
 
+        this.ip = ip;
+        this.port = port;
+        this.name = name;
     }
-    
+
     /**
      * @param info   - the info to be saved.
      * @param bundle - the Bundle where the info will be saved.
