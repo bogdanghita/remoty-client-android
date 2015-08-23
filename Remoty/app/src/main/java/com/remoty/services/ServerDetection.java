@@ -14,16 +14,21 @@ import java.util.List;
 public class ServerDetection {
 
     private final static int DETECT_SERVER_MSG = 1000;
+    private final static long DETECTION_INTERVAL = 1000;
 
     private List<IDetectionListener> listeners;
 
-    private List<ServerInfo> servers;
+    MyTimer timer;
+
+    DetectionRunnable detectionRunnable;
 
     public void ServerDetection() {
 
         listeners = new LinkedList<>();
 
-        servers = new LinkedList<>();
+        timer = new MyTimer();
+
+        detectionRunnable = new DetectionRunnable();
     }
 
     public void subscribe(IDetectionListener listener) {
@@ -36,18 +41,41 @@ public class ServerDetection {
         listeners.remove(listener);
     }
 
-    private void notifyListeners(List<ServerInfo> servers) {
-
-        for (IDetectionListener listener : listeners) {
-            listener.update(servers);
-        }
-    }
+//    private void notifyListeners(List<ServerInfo> servers) {
+//
+//        for (IDetectionListener listener : listeners) {
+//            listener.update(servers);
+//        }
+//    }
 
     public void start() {
 
+        timer.start(detectionRunnable, DETECTION_INTERVAL);
     }
 
     public void stop() {
 
+        timer.stop();
+    }
+}
+
+class DetectionRunnable implements Runnable {
+
+    @Override
+    public void run() {
+
+        // Broadcast (UDP)
+
+        // New connections (fresh TCP)
+
+        // Ping all (TCP)
+
+        // notify
+
+    }
+
+    private void notifyListeners(List<ServerInfo> servers) {
+
+        // TODO: ...
     }
 }
