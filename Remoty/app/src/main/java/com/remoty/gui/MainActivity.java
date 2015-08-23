@@ -1,10 +1,14 @@
-package com.remoty;
+package com.remoty.gui;
 
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.remoty.R;
+import com.remoty.services.MyTimer;
 
 
 public class MainActivity extends DebugActivity {
@@ -25,12 +29,36 @@ public class MainActivity extends DebugActivity {
         setContentView(R.layout.fragment_container);
 
         // Checking if activity was restored from a previous state
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
 
             // Adding main fragment
             MainFragment mainFragment = new MainFragment();
             getFragmentManager().beginTransaction().add(R.id.activity_main, mainFragment).addToBackStack(null).commit();
         }
+
+        MyTimer timer = new MyTimer();
+
+        timer.start(new Runnable() {
+            @Override
+            public void run() {
+
+                Log.d(MyTimer.TAG_TIMER, "Message executed. Time: " + System.currentTimeMillis());
+            }
+        }, 10);
+
+        for (int i = 10; i <= 100; i += 10) {
+
+            timer.setInterval(i);
+            Log.d(MyTimer.TAG_TIMER, "Changed interval to: " + i);
+
+            try {
+                Thread.sleep(i);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        timer.stop();
     }
 
     @Override

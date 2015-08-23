@@ -1,4 +1,4 @@
-package com.remoty;
+package com.remoty.gui;
 
 import android.app.Activity;
 import android.app.Fragment;
