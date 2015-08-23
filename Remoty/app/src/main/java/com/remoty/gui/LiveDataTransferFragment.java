@@ -1,8 +1,7 @@
-package com.remoty;
+package com.remoty.gui;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,7 @@ public class LiveDataTransferFragment extends DebugFragment {
 
         // NOTE: onResume() is always called immediately after onStart()
 
-        // 1. ask the Communication manager about the connection info (port to notify the server that
+        // 1. ask the Communication Manager about the connection info (port to notify the server that
         // it wants to start data transfer - let's call it notification port/socket)
         // 2. if there is info about a selected (and potentially connected) server, send the notification
         // you want to start data transfer

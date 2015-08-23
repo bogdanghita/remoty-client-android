@@ -1,4 +1,4 @@
-package com.remoty;
+package com.remoty.gui;
 
 /**
  * Created by Bogdan on 8/22/2015.
