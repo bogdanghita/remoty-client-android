@@ -4,11 +4,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.remoty.R;
+import com.remoty.common.ConnectionManager;
 import com.remoty.common.ServerInfo;
 import com.remoty.services.IDetectionListener;
+import com.remoty.services.ServerDetection;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -25,25 +30,26 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
         - if a server does not respond remove it from the list and close the connection
 
     When user chooses a server to connect to:
-    1. stop detection and state check messages
-    2. close the connected TCP socket with the server
-    3. notify the Communication Manager and set the connection info
-    4. close fragment?
+    1. notify the Communication Manager and set the connection info
+    2. close fragment?
 
     If the connection to the network is lost:
     - not sure if UDP knows about it
     - TCP should behave like a server did not respond and the list will become empty
      */
 
-
-    // TODO: ...
     /*
+    TODO: see what's with this comment
         3. receive form server the data that will be used further
      - when such a notification is received, the server creates sockets for data transfer messages
      and sends the info about them back to the client (this will happen when the client wants to start
      data transfer - in LiveDataTransferFragment's onStart() method)
      - for every client there will be a different set of sockets (as the connection in TCP is 1 to 1)
      */
+
+    ServerDetection serverDetection;
+
+    LinearLayout serversLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,7 +58,17 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 
         View parentView = inflater.inflate(R.layout.fragment_connect, container, false);
 
+        serversLayout = (LinearLayout) parentView.findViewById(R.id.servers_layout);
+
         return parentView;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // TODO: Make a factory for all services like this one
+        serverDetection = new ServerDetection();
     }
 
     @Override
@@ -61,8 +77,8 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 
         // NOTE: onResume() is always called immediately after onStart()
 
-        // UDP sockets should be ready to send
-        // TCP sockets do not exist at this point (because they are cleared in onStop)
+//        serverDetection.subscribe(this);
+//        serverDetection.init();
     }
 
     @Override
@@ -70,6 +86,9 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
         super.onResume();
 
         // Start sending detection and state check messages
+//        serverDetection.start();
+
+        buttonTest();
     }
 
     @Override
@@ -77,7 +96,8 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
         super.onPause();
 
         // Stop sending detection and state check messages
-        // All sockets should remain open; TCP sockets should remain connected
+        serverDetection.stop();
+        serverDetection.unsubscribe(this);
     }
 
     @Override
@@ -87,8 +107,7 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
         // NOTE: activity might be destroyed (and might also be recreated -> savedInstanceState) after this,
         // or it might be restarted (onRestart -> on Start)
 
-        // TCP connections should be closed
-        // All sockets should be closed and cleaned (TCP and UDP)
+        serverDetection.clear();
     }
 
     @Override
@@ -100,7 +119,51 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
             public void run() {
 
                 // TODO: update available servers list
+
+                serversLayout.removeAllViews();
+
+                for (ServerInfo server : servers) {
+
+                    Button button = createServerButton("SERVER");
+
+                    serversLayout.addView(button);
+                }
             }
         });
     }
+
+    private void serverSelected(ServerInfo server) {
+
+        // Notifying the ConnectionManager
+        ConnectionManager.setConnection(server);
+
+        // TODO: maybe close the fragment and open a pending fragment? Don't know, it's about UX.
+    }
+
+    private Button createServerButton(String content) {
+
+        Button button = new Button(serversLayout.getContext());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        button.setLayoutParams(params);
+
+        button.setText("SERVER");
+
+        return button;
+    }
+
+    // TEST
+
+    private void buttonTest() {
+
+        List<ServerInfo> servers = new LinkedList<>();
+        servers.add(new ServerInfo());
+        servers.add(new ServerInfo());
+        servers.add(new ServerInfo());
+
+        update(servers);
+    }
+
+    // END TEST
 }

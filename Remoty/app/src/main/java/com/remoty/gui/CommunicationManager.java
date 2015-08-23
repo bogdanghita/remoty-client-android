@@ -26,4 +26,6 @@ public class CommunicationManager {
     persist the info about the connection even if the app is closed and then restored (from a
     previous session). Don't know if it should persist other info or objects; we shall see...
      */
+
+
 }
