@@ -10,14 +10,14 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Created by Bogdan on 8/23/2015.
  */
-public class TimerThread extends LooperThread {
+public class SchedulerThread extends LooperThread {
 
     private LooperThread mThread;
 
     private Runnable mRunnable;
     private AtomicLong mInterval = new AtomicLong();
 
-    public TimerThread(Runnable runnable, long interval) {
+    public SchedulerThread(Runnable runnable, long interval) {
 
         this.mRunnable = runnable;
         this.mInterval.set(interval);
@@ -28,7 +28,7 @@ public class TimerThread extends LooperThread {
         mInterval.set(interval);
 
         if (handler != null) {
-            ((TimerHandler) handler).setInterval(interval);
+            ((SchedulerHandler) handler).setInterval(interval);
         }
     }
 
@@ -40,13 +40,13 @@ public class TimerThread extends LooperThread {
         mThread = new LooperThread();
         mThread.start();
 
-        handler = new TimerHandler(mThread, mRunnable, mInterval.longValue());
+        handler = new SchedulerHandler(mThread, mRunnable, mInterval.longValue());
 
         // Sleeping until the handler of mThread is created
         while (mThread.handler == null) {
         }
 
-        handler.sendMessage(handler.obtainMessage(TimerHandler.TIMER_MSG));
+        handler.sendMessage(handler.obtainMessage(SchedulerHandler.MSG_SCHEDULE));
 
         Looper.loop();
     }
@@ -57,28 +57,28 @@ public class TimerThread extends LooperThread {
 
         mThread.quit();
 
-        Log.d(MyTimer.TAG_TIMER, "mThread quit. Waiting for mThread to join.");
+        Log.d(TaskScheduler.TAG_TIMER, "mThread quit. Waiting for mThread to join.");
 
         try {
             mThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
-            Log.d(MyTimer.TAG_TIMER, e.getClass().getName() + " | " + "exception on join()");
+            Log.d(TaskScheduler.TAG_TIMER, e.getClass().getName() + " | " + "exception on join()");
         }
 
-        Log.d(MyTimer.TAG_TIMER, "mThread finished.");
+        Log.d(TaskScheduler.TAG_TIMER, "mThread finished.");
     }
 }
 
-class TimerHandler extends Handler {
+class SchedulerHandler extends Handler {
 
-    public final static int TIMER_MSG = 1000;
+    public final static int MSG_SCHEDULE = 1000;
 
     LooperThread mThread;
     Runnable mRunnable;
     private AtomicLong mInterval = new AtomicLong();
 
-    public TimerHandler(LooperThread thread, Runnable runnable, long interval) {
+    public SchedulerHandler(LooperThread thread, Runnable runnable, long interval) {
 
         this.mThread = thread;
         this.mRunnable = runnable;
@@ -93,9 +93,15 @@ class TimerHandler extends Handler {
     @Override
     public void handleMessage(Message msg) {
 
-        this.sendMessageDelayed(this.obtainMessage(TIMER_MSG), mInterval.longValue());
-        Log.d(MyTimer.TAG_TIMER, "Sent with delay: " + mInterval);
+        if (msg.what == MSG_SCHEDULE) {
 
-        mThread.handler.post(mRunnable);
+            this.sendMessageDelayed(this.obtainMessage(MSG_SCHEDULE), mInterval.longValue());
+            Log.d(TaskScheduler.TAG_TIMER, "Sent with delay: " + mInterval);
+
+            mThread.handler.post(mRunnable);
+            
+        } else {
+            super.handleMessage(msg);
+        }
     }
 }

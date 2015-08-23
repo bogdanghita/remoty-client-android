@@ -1,8 +1,5 @@
 package com.remoty.services;
 
-import android.os.Handler;
-import android.os.Message;
-
 import com.remoty.common.ServerInfo;
 
 import java.util.LinkedList;
@@ -18,7 +15,7 @@ public class ServerDetection {
 
     private List<IDetectionListener> listeners;
 
-    MyTimer timer;
+    TaskScheduler timer;
 
     DetectionRunnable detectionRunnable;
 
@@ -26,7 +23,7 @@ public class ServerDetection {
 
         listeners = new LinkedList<>();
 
-        timer = new MyTimer();
+        timer = new TaskScheduler();
 
         detectionRunnable = new DetectionRunnable();
     }
