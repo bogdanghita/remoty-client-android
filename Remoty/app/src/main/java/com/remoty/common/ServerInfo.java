@@ -9,6 +9,10 @@ public class ServerInfo {
 
     // TODO: ...
 
+    public ServerInfo(String ip, int port, String name){
+
+    }
+    
     /**
      * @param info   - the info to be saved.
      * @param bundle - the Bundle where the info will be saved.
