@@ -1,5 +1,7 @@
 package com.remoty.services;
 
+import android.util.Log;
+
 import com.remoty.common.ServerInfo;
 import com.remoty.common.TcpSocket;
 
@@ -13,6 +15,8 @@ import java.util.concurrent.ExecutionException;
  * Created by Claudiu on 8/24/2015.
  */
 class DetectionRunnable implements Runnable {
+
+    public final static int ASYNC_TASK_GET_TIMEOUT = 1000;
 
     private List<IDetectionListener> listeners;
 
@@ -48,6 +52,8 @@ class DetectionRunnable implements Runnable {
 
         List<ServerPinger> serverPingers = new ArrayList<>();
         List<ServerInfo> serverInfos = new ArrayList<>();
+
+        Log.d("DETECTION","Started pingAll().");
 
         for (TcpSocket server : servers) {
             ServerPinger serverPinger = new ServerPinger(server);

@@ -22,12 +22,12 @@ import java.util.List;
  */
 class Broadcaster {
 
-    private static int tcpPort = 10000;
+    private final static int tcpPort = 10000;
 
-    public static int udpPortServer = 9001;
+    public final static int udpPortServer = 9001;
 
-    private final int ACCEPT_TIMEOUT = 5000;
-
+    private final static int BROADCAST_RESPONSE_TIMEOUT = 500;
+    private final static int PING_RESPONSE_TIMEOUT = 500;
 
     private final String MSG_CODE = "REQUEST_RECEIVED";
     private final String MSG_DELIM = "%-%";
@@ -105,16 +105,16 @@ class Broadcaster {
     public List<TcpSocket> acceptServers() {
 
         // RECEIVE PART
-        Log.d("SECOND_STEP", "Done looping over all network interfaces. Waiting for a reply...");
+        Log.d("SECOND_STEP", "Done looping over all network interfaces. Waiting for replies...");
 
-        ArrayList<TcpSocket> serverList = new ArrayList<TcpSocket>();
+        ArrayList<TcpSocket> serverList = new ArrayList<>();
 
         // Resetting receive timeout flag
         receiveTimeoutExceeded = false;
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(tcpPort);
-            serverSocket.setSoTimeout(ACCEPT_TIMEOUT);
+            serverSocket.setSoTimeout(BROADCAST_RESPONSE_TIMEOUT);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -128,6 +128,13 @@ class Broadcaster {
             // Appending server to list
             if (server != null) {
                 serverList.add(server);
+
+                // Setting timeout. TODO: Think if this should be done in other part of the code
+                try {
+                    server.setTimeout(PING_RESPONSE_TIMEOUT);
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -136,8 +143,12 @@ class Broadcaster {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         // Closing the port
         datagramSocket.close();
+
+        Log.d("SECOND_STEP", "Stopped waiting for replies. Returning servers list.");
+
         return serverList;
     }
 
