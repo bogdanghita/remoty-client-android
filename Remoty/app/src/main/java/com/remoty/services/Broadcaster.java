@@ -26,7 +26,7 @@ class Broadcaster {
 
     public static int udpPortServer = 9001;
 
-    private final int ACCEPT_TIMEOUT = 250;
+    private final int ACCEPT_TIMEOUT = 5000;
 
 
     private final String MSG_CODE = "REQUEST_RECEIVED";
@@ -56,8 +56,8 @@ class Broadcaster {
             e1.printStackTrace();
         }
 
-        // Sending packet on the 255.255.255.255 address
-        SendMessageOnDefaultAddress();
+//        // Sending packet on the 255.255.255.255 address
+//        SendMessageOnDefaultAddress();
 
         // Broadcasting the message over all the network interfaces
         Enumeration<NetworkInterface> interfaces = null;
