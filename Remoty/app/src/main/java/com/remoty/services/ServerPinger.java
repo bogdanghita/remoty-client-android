@@ -1,6 +1,7 @@
 package com.remoty.services;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.remoty.common.AbstractMessage;
 import com.remoty.common.ServerInfo;
@@ -29,20 +30,28 @@ public class ServerPinger extends AsyncTask<Void, Void, ServerInfo> {
     @Override
     protected ServerInfo doInBackground(Void... params) {
 
+        Log.d("DETECTION", "Sending ping.");
+
         try {
             server.sendObject(new AbstractMessage());
         } catch (IOException e) {
             return null;
         }
 
+        Log.d("DETECTION", "Waiting to receive ping response.");
+
         AbstractMessage message = null;
         try {
             message = server.receiveObject(AbstractMessage.class);
         } catch (IOException e) {
+            e.printStackTrace();
             return null;
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
             return null;
         }
+
+        Log.d("DETECTION", "Ping response received successfully. Returning response.");
 
         InetAddress inetAddress = null;
 //            inetAddress = server.getInetAddress();
