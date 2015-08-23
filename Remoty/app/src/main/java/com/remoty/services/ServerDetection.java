@@ -10,7 +10,6 @@ import java.util.List;
  */
 public class ServerDetection {
 
-    private final static int DETECT_SERVER_MSG = 1000;
     private final static long DETECTION_INTERVAL = 1000;
 
     private List<IDetectionListener> listeners;
@@ -45,15 +44,24 @@ public class ServerDetection {
 //        }
 //    }
 
-    public void start() {
+    public void init() {
 
         timer.start(detectionRunnable, DETECTION_INTERVAL);
     }
 
+    public void start() {
+
+    }
+
     public void stop() {
+
+    }
+
+    public void clear() {
 
         timer.stop();
     }
+
 }
 
 class DetectionRunnable implements Runnable {

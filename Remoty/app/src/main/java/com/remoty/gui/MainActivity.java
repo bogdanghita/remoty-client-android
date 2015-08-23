@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.remoty.R;
+import com.remoty.common.ConnectionManager;
+import com.remoty.common.ServerInfo;
 import com.remoty.services.TaskScheduler;
 
 
@@ -38,9 +40,34 @@ public class MainActivity extends DebugActivity {
 
         // TEST
 
-        testTaskScheduler();
+//        testTaskScheduler();
 
         // END_TEST
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // TODO: handle the situation when there is no connection info.
+
+        // Restoring the connection info from the saved instance
+        ServerInfo connectionInfo = ServerInfo.retrieveFromBundle(savedInstanceState);
+        ConnectionManager.setConnection(connectionInfo);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        // TODO: handle the situation when there is no connection info.
+
+        // Saving the connection info to the bundle
+        ServerInfo connectionInfo = ConnectionManager.getConnection();
+        ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
