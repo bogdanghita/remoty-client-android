@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class ServerDetection {
 
-    private final static long DETECTION_INTERVAL = 1000;
+    private final static long DETECTION_INTERVAL = 5000;
 
     private List<IDetectionListener> listeners;
 
@@ -59,19 +59,21 @@ public class ServerDetection {
         if (detectionRunnable != null)
             detectionRunnable.clear();
 
-        detectionRunnable = new DetectionRunnable();
+        detectionRunnable = new DetectionRunnable(listeners);
     }
 
     public void start() {
 
-//        if (!timer.isRunning())
-        timer.start(detectionRunnable, DETECTION_INTERVAL);
+        if (!timer.isRunning()) {
+            timer.start(detectionRunnable, DETECTION_INTERVAL);
+        }
     }
 
     public void stop() {
 
-//        if (timer.isRunning())
-        timer.stop();
+        if (timer.isRunning()) {
+            timer.stop();
+        }
     }
 
     public void clear() {

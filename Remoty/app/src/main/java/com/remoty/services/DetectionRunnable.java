@@ -19,9 +19,9 @@ class DetectionRunnable implements Runnable {
     List<TcpSocket> serverSockets;
     Broadcaster broadcaster;
 
-    public DetectionRunnable() {
+    public DetectionRunnable(List<IDetectionListener> listeners) {
 
-        listeners = new LinkedList<>();
+        this.listeners = listeners;
 
         serverSockets = new ArrayList<TcpSocket>();
         broadcaster = new Broadcaster();
