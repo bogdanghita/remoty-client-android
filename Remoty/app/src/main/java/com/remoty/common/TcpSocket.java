@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -48,6 +49,15 @@ public class TcpSocket {
     }
 
     /**
+     * Gets this socket's {@link InetAddress}.
+     *
+     * @return internal {@link InetAddress}
+     */
+    public InetAddress getInetAddress() {
+        return mSocket.getInetAddress();
+    }
+
+    /**
      * Sets this socket's read timeout.
      *
      * @param timeout read timeout in milliseconds (0 means no timeout)
@@ -81,6 +91,7 @@ public class TcpSocket {
 
     /**
      * Sets this socket's send buffer size.
+     *
      * @param bufferSize
      */
     public void setSendBufferSize(int bufferSize) throws SocketException {
@@ -90,6 +101,7 @@ public class TcpSocket {
 
     /**
      * Sets this socket's receive buffer size.
+     *
      * @param bufferSize
      */
     public void setReceiveBufferSize(int bufferSize) throws SocketException {

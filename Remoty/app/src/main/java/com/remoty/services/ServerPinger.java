@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.remoty.common.AbstractMessage;
+import com.remoty.common.PingMessage;
+import com.remoty.common.PingResponseMessage;
 import com.remoty.common.ServerInfo;
 import com.remoty.common.TcpSocket;
 
@@ -33,16 +35,18 @@ public class ServerPinger extends AsyncTask<Void, Void, ServerInfo> {
         Log.d("DETECTION", "Sending ping.");
 
         try {
-            server.sendObject(new AbstractMessage());
+            PingMessage pingMessage = new PingMessage();
+            // TODO: Set parameters when there are any.
+            server.sendObject(pingMessage);
         } catch (IOException e) {
             return null;
         }
 
         Log.d("DETECTION", "Waiting to receive ping response.");
 
-        AbstractMessage message = null;
+        PingResponseMessage pingResponseMessage = null;
         try {
-            message = server.receiveObject(AbstractMessage.class);
+            pingResponseMessage = server.receiveObject(PingResponseMessage.class);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -53,13 +57,11 @@ public class ServerPinger extends AsyncTask<Void, Void, ServerInfo> {
 
         Log.d("DETECTION", "Ping response received successfully. Returning response.");
 
-        InetAddress inetAddress = null;
-//            inetAddress = server.getInetAddress();
-        String ip = "123.321.123.321";
-//            ip = inetAddress.toString();
-        String hostName = "Me";
-//            hostName = message.hostName;
+        InetAddress inetAddress = server.getInetAddress();
+        String ip = inetAddress.getHostAddress();
+        int tcpPort = pingResponseMessage.tcpPort;
+        String hostName = pingResponseMessage.hostName;
 
-        return new ServerInfo(ip, (int) message.id, hostName);
+        return new ServerInfo(ip, tcpPort, hostName);
     }
 }
