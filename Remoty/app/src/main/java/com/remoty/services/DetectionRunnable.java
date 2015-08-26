@@ -74,6 +74,7 @@ public class DetectionRunnable implements Runnable {
 				serverInfo = serverPinger.get(MainActivity.ASYNC_TASK_GET_TIMEOUT, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException | ExecutionException | TimeoutException e) {
 				e.printStackTrace();
+				serverInfo=null;
 				// Nothing to be done here. The following code solves the problem
 			}
 

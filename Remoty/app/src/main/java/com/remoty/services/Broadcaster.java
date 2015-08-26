@@ -158,6 +158,8 @@ public class Broadcaster {
 		TcpSocket tcpSocket = null;
 		try {
 			tcpSocket = new TcpSocket(socket);
+            tcpSocket.setKeepAlive(true);
+            tcpSocket.setTcpNoDelay(true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
