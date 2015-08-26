@@ -122,7 +122,7 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 
                 for (ServerInfo server : servers) {
 
-                    Button button = createServerButton(server.ip);
+                    Button button = createServerButton(server.name, server.ip, server.port);
 
                     serversLayout.addView(button);
                 }
@@ -138,7 +138,7 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
         // TODO: maybe close the fragment and open a pending fragment? Don't know, it's about UX.
     }
 
-    private Button createServerButton(String content) {
+    private Button createServerButton(String hostname, String ip, int port) {
 
         Button button = new Button(serversLayout.getContext());
 
@@ -146,7 +146,9 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 
         button.setLayoutParams(params);
 
-        button.setText(content);
+        String text = hostname + " - " + ip + ":" + port;
+
+        button.setText(text);
 
         return button;
     }
