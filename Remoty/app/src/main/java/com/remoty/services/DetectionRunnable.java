@@ -1,7 +1,6 @@
 package com.remoty.services;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.remoty.common.ServerInfo;
 import com.remoty.common.TcpSocket;
@@ -28,7 +27,7 @@ public class DetectionRunnable implements Runnable {
 
 		this.listeners = listeners;
 
-		serverSockets = new ArrayList<TcpSocket>();
+		serverSockets = new ArrayList<>();
 		broadcaster = new Broadcaster();
 	}
 
@@ -36,7 +35,7 @@ public class DetectionRunnable implements Runnable {
 	public void run() {
 
 		// TODO: This is not good... This method is called every 5 seconds. And every 5 seconds
-		// there is created a new socket in the accept servers method
+		// a new socket is created in the accept servers method
 
 		// Broadcast (UDP)
 		broadcaster.broadcast();

@@ -66,7 +66,7 @@ public class Broadcaster {
 			Log.d("INTERFACES", "Current interface: " + networkInterface.getName());
 
 			// Checking if current interface is a loopback interface and if it is up
-			if (CheckInterface(networkInterface) == false) {
+			if (checkInterface(networkInterface) == false) {
 				continue;
 			}
 
@@ -86,7 +86,7 @@ public class Broadcaster {
 				}
 
 				// Sending message to the current address
-				SendBroadcastMessage(networkInterface, interfaceAddress, broadcast);
+				sendBroadcastMessage(networkInterface, interfaceAddress, broadcast);
 			}
 		}
 
@@ -115,7 +115,7 @@ public class Broadcaster {
 		while (receiveTimeoutExceeded == false) {
 
 			// Processing one response
-			TcpSocket server = Accept(serverSocket);
+			TcpSocket server = accept(serverSocket);
 
 			// Appending server to list
 			if (server != null) {
@@ -145,7 +145,7 @@ public class Broadcaster {
 		return serverList;
 	}
 
-	private TcpSocket Accept(ServerSocket serverSocket) {
+	private TcpSocket accept(ServerSocket serverSocket) {
 
 		Socket socket = null;
 		try {
@@ -167,6 +167,7 @@ public class Broadcaster {
 		return tcpSocket;
 	}
 
+	// TODO: Think if this is useful
 //	private void SendMessageOnDefaultAddress() {
 //
 //		byte[] TO_SEND_DATA = "DISCOVER_SERVER_REQUEST".getBytes();
@@ -182,7 +183,7 @@ public class Broadcaster {
 //		Log.d("DEFAULT_BROADCAST", "Request packet sent to: 255.255.255.255 (DEFAULT)");
 //	}
 
-	private boolean CheckInterface(NetworkInterface networkInterface) {
+	private boolean checkInterface(NetworkInterface networkInterface) {
 
 		boolean interfaceIsLoopback = false, interfaceIsUp = false;
 		try {
@@ -202,7 +203,7 @@ public class Broadcaster {
 		}
 	}
 
-	private void SendBroadcastMessage(NetworkInterface networkInterface, InterfaceAddress interfaceAddress, InetAddress broadcast) {
+	private void sendBroadcastMessage(NetworkInterface networkInterface, InterfaceAddress interfaceAddress, InetAddress broadcast) {
 
 		// Sending the broadcast packet
 		// Creating packet that will be sent through the DatagramSocket on the current broadcast address
