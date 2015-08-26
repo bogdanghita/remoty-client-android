@@ -15,6 +15,8 @@ import com.remoty.services.TaskScheduler;
 
 public class MainActivity extends DebugActivity {
 
+    public static final String TAG_SERVICES = "SERVICES";
+
     // TODO: think if we want the action bar in all fragments
     // TODO: also do some research on the action bar and AppCompatActivity
 
