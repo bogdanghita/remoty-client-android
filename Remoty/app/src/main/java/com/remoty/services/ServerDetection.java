@@ -1,26 +1,7 @@
 package com.remoty.services;
 
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.remoty.common.AbstractMessage;
-import com.remoty.common.ServerInfo;
-import com.remoty.common.TcpSocket;
-
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Bogdan on 8/22/2015.

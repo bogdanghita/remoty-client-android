@@ -3,14 +3,12 @@ package com.remoty.services;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.remoty.common.AbstractMessage;
-import com.remoty.common.PingMessage;
-import com.remoty.common.PingResponseMessage;
+import com.remoty.common.Message;
 import com.remoty.common.ServerInfo;
 import com.remoty.common.TcpSocket;
+import com.remoty.gui.MainActivity;
 
 import java.io.IOException;
-import java.net.InetAddress;
 
 /**
  * Created by Claudiu on 8/24/2015.
@@ -32,21 +30,20 @@ public class ServerPinger extends AsyncTask<Void, Void, ServerInfo> {
     @Override
     protected ServerInfo doInBackground(Void... params) {
 
-        Log.d("DETECTION", "Sending ping.");
+        Log.d(MainActivity.TAG_SERVICES, "Sending ping to " + server.getInetAddress());
 
         try {
-            PingMessage pingMessage = new PingMessage();
-            // TODO: Set parameters when there are any.
+            Message.AbstractMessage pingMessage = new Message.AbstractMessage();
             server.sendObject(pingMessage);
         } catch (IOException e) {
             return null;
         }
 
-        Log.d("DETECTION", "Waiting to receive ping response.");
+        Log.d(MainActivity.TAG_SERVICES, "Waiting to receive ping response from " + server.getInetAddress().getHostAddress());
 
-        PingResponseMessage pingResponseMessage = null;
+        Message.HostInfoMessage pingResponseMessage;
         try {
-            pingResponseMessage = server.receiveObject(PingResponseMessage.class);
+            pingResponseMessage = server.receiveObject(Message.HostInfoMessage.class);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -55,12 +52,11 @@ public class ServerPinger extends AsyncTask<Void, Void, ServerInfo> {
             return null;
         }
 
-        Log.d("DETECTION", "Ping response received successfully. Returning response.");
+        Log.d(MainActivity.TAG_SERVICES, "Ping response received successfully from " + server.getInetAddress().getHostAddress());
 
-        InetAddress inetAddress = server.getInetAddress();
-        String ip = inetAddress.getHostAddress();
-        int tcpPort = pingResponseMessage.tcpPort;
-        String hostName = pingResponseMessage.hostName;
+        String ip = server.getInetAddress().getHostAddress();
+        int tcpPort = pingResponseMessage.port;
+        String hostName = pingResponseMessage.hostname;
 
         return new ServerInfo(ip, tcpPort, hostName);
     }

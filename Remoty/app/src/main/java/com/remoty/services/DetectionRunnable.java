@@ -1,9 +1,11 @@
 package com.remoty.services;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.remoty.common.ServerInfo;
 import com.remoty.common.TcpSocket;
+import com.remoty.gui.MainActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,100 +16,106 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Claudiu on 8/24/2015.
  */
-class DetectionRunnable implements Runnable {
+public class DetectionRunnable implements Runnable {
 
-    public final static int ASYNC_TASK_GET_TIMEOUT = 1000;
+	public final static int ASYNC_TASK_GET_TIMEOUT = 1000;
 
-    private List<IDetectionListener> listeners;
+	private List<IDetectionListener> listeners;
 
-    List<TcpSocket> serverSockets;
-    Broadcaster broadcaster;
+	List<TcpSocket> serverSockets;
+	Broadcaster broadcaster;
 
-    public DetectionRunnable(List<IDetectionListener> listeners) {
+	public DetectionRunnable(List<IDetectionListener> listeners) {
 
-        this.listeners = listeners;
+		this.listeners = listeners;
 
-        serverSockets = new ArrayList<TcpSocket>();
-        broadcaster = new Broadcaster();
-    }
+		serverSockets = new ArrayList<TcpSocket>();
+		broadcaster = new Broadcaster();
+	}
 
-    @Override
-    public void run() {
+	@Override
+	public void run() {
 
-        // Broadcast (UDP)
-        broadcaster.broadcast();
+		// TODO: This is not good... This method is called every 5 seconds. And every 5 seconds
+		// there is created a new socket in the accept servers method
 
-        // New connections (fresh TCP)
-        List<TcpSocket> newServers = broadcaster.acceptServers();
-        serverSockets.addAll(newServers);
+		// Broadcast (UDP)
+		broadcaster.broadcast();
 
-        // Ping all (TCP)
-        List<ServerInfo> results = pingAll(serverSockets);
+		// New connections (fresh TCP)
+		List<TcpSocket> newServers = broadcaster.acceptServers();
+		serverSockets.addAll(newServers);
 
-        // notify
-        notifyListeners(results);
-    }
+		// Ping all (TCP)
+		List<ServerInfo> results = pingAll(serverSockets);
 
-    private List<ServerInfo> pingAll(List<TcpSocket> servers) {
+		// notify
+		notifyListeners(results);
+	}
 
-        List<ServerPinger> serverPingers = new ArrayList<>();
-        List<ServerInfo> serverInfos = new ArrayList<>();
+	private List<ServerInfo> pingAll(List<TcpSocket> servers) {
 
-        Log.d("DETECTION","Started pingAll().");
+		List<ServerPinger> serverPingers = new ArrayList<>();
+		List<ServerInfo> serverInfos = new ArrayList<>();
 
-        for (TcpSocket server : servers) {
-            ServerPinger serverPinger = new ServerPinger(server);
-            serverPinger.execute();
+		Log.d(MainActivity.TAG_SERVICES, "Started pingAll().");
 
-            serverPingers.add(serverPinger);
-        }
+		for (TcpSocket server : servers) {
+			ServerPinger serverPinger = new ServerPinger(server);
+			serverPinger.execute();
 
-        for (ServerPinger serverPinger : serverPingers) {
+			serverPingers.add(serverPinger);
+		}
 
-            ServerInfo serverInfo = null;
+		for (ServerPinger serverPinger : serverPingers) {
 
-            try {
-                serverInfo = serverPinger.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+			ServerInfo serverInfo = null;
 
-            if (serverInfo != null) {
-                serverInfos.add(serverInfo);
-            } else {
-                TcpSocket server = serverPinger.getTcpSocket();
-                try {
-                    server.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                servers.remove(server);
-            }
-        }
+			try {
+				serverInfo = serverPinger.get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				continue;
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+				continue;
+			}
 
-        return serverInfos;
-    }
+			if (serverInfo != null) {
+				serverInfos.add(serverInfo);
+			} else {
+				TcpSocket server = serverPinger.getTcpSocket();
+				try {
+					server.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					continue;
+				}
+				servers.remove(server);
+			}
+		}
 
-    public void clear() {
+		return serverInfos;
+	}
 
-        for (TcpSocket server : serverSockets) {
+	public void clear() {
 
-            try {
-                server.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+		for (TcpSocket server : serverSockets) {
 
-        serverSockets.clear();
-    }
+			try {
+				server.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
-    private void notifyListeners(List<ServerInfo> servers) {
+		serverSockets.clear();
+	}
 
-        for (IDetectionListener listener : listeners) {
-            listener.update(servers);
-        }
-    }
+	private void notifyListeners(List<ServerInfo> servers) {
+
+		for (IDetectionListener listener : listeners) {
+			listener.update(servers);
+		}
+	}
 }
