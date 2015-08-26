@@ -9,16 +9,15 @@ import com.remoty.gui.MainActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Claudiu on 8/24/2015.
  */
 public class DetectionRunnable implements Runnable {
-
-	public final static int ASYNC_TASK_GET_TIMEOUT = 1000;
 
 	private List<IDetectionListener> listeners;
 
@@ -72,13 +71,10 @@ public class DetectionRunnable implements Runnable {
 			ServerInfo serverInfo = null;
 
 			try {
-				serverInfo = serverPinger.get();
-			} catch (InterruptedException e) {
+				serverInfo = serverPinger.get(MainActivity.ASYNC_TASK_GET_TIMEOUT, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException | ExecutionException | TimeoutException e) {
 				e.printStackTrace();
-				continue;
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-				continue;
+				// Nothing to be done here. The following code solves the problem
 			}
 
 			if (serverInfo != null) {
@@ -89,7 +85,7 @@ public class DetectionRunnable implements Runnable {
 					server.close();
 				} catch (IOException e) {
 					e.printStackTrace();
-					continue;
+					// Nothing to be done here. The server should be removed.
 				}
 				servers.remove(server);
 			}

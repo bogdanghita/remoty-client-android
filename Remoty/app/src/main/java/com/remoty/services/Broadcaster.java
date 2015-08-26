@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.remoty.common.Message;
 import com.remoty.common.TcpSocket;
+import com.remoty.gui.MainActivity;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,21 +27,12 @@ import java.util.List;
 public class Broadcaster {
 
 	private final static int tcpPort = 10000;
-
 	public final static int udpPortServer = 9001;
-
-	private final static int BROADCAST_RESPONSE_TIMEOUT = 500;
-	private final static int PING_RESPONSE_TIMEOUT = 500;
-
-	private final String MSG_CODE = "REQUEST_RECEIVED";
-	private final String MSG_DELIM = "%-%";
 
 	private DatagramSocket datagramSocket;
 	private DatagramPacket datagramPacket;
 
 	private boolean receiveTimeoutExceeded = false;
-
-	private final byte[] TO_SEND_DATA = "DISCOVER_SERVER_REQUEST".getBytes();
 
 	public void broadcast() {
 
@@ -113,9 +105,10 @@ public class Broadcaster {
 		ServerSocket serverSocket = null;
 		try {
 			serverSocket = new ServerSocket(tcpPort);
-			serverSocket.setSoTimeout(BROADCAST_RESPONSE_TIMEOUT);
+			serverSocket.setSoTimeout(MainActivity.BROADCAST_RESPONSE_TIMEOUT);
 		} catch (IOException e) {
 			e.printStackTrace();
+			// TODO: take action
 		}
 
 		// Waiting for server responses until one receive exceeds its timeout
@@ -130,7 +123,7 @@ public class Broadcaster {
 
 				// Setting timeout. TODO: Think if this should be done in other part of the code
 				try {
-					server.setTimeout(PING_RESPONSE_TIMEOUT);
+					server.setTimeout(MainActivity.PING_RESPONSE_TIMEOUT);
 				} catch (SocketException e) {
 					e.printStackTrace();
 				}
@@ -141,6 +134,7 @@ public class Broadcaster {
 			serverSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+			// TODO: take action
 		}
 
 		// Closing the port
@@ -171,18 +165,20 @@ public class Broadcaster {
 		return tcpSocket;
 	}
 
-	private void SendMessageOnDefaultAddress() {
-
-		// Creating packet that will be sent through the DatagramSocket
-		try {
-			datagramPacket = new DatagramPacket(TO_SEND_DATA, TO_SEND_DATA.length, InetAddress.getByName("255.255.255.255"), udpPortServer);
-			datagramSocket.send(datagramPacket);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Log.d("EXCEPTION", "Unable to send to: 255.255.255.255 (DEFAULT)");
-		}
-		Log.d("DEFAULT_BROADCAST", "Request packet sent to: 255.255.255.255 (DEFAULT)");
-	}
+//	private void SendMessageOnDefaultAddress() {
+//
+//		byte[] TO_SEND_DATA = "DISCOVER_SERVER_REQUEST".getBytes();
+//
+//		// Creating packet that will be sent through the DatagramSocket
+//		try {
+//			datagramPacket = new DatagramPacket(TO_SEND_DATA, TO_SEND_DATA.length, InetAddress.getByName("255.255.255.255"), udpPortServer);
+//			datagramSocket.send(datagramPacket);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			Log.d("EXCEPTION", "Unable to send to: 255.255.255.255 (DEFAULT)");
+//		}
+//		Log.d("DEFAULT_BROADCAST", "Request packet sent to: 255.255.255.255 (DEFAULT)");
+//	}
 
 	private boolean CheckInterface(NetworkInterface networkInterface) {
 

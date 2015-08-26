@@ -5,6 +5,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+import com.remoty.gui.MainActivity;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -46,7 +48,7 @@ public class SchedulerThread extends LooperThread {
         while (mThread.handler == null) {
         }
 
-        handler.sendMessage(handler.obtainMessage(SchedulerHandler.MSG_SCHEDULE));
+        handler.sendMessage(handler.obtainMessage(MainActivity.MSG_SCHEDULE));
 
         Looper.loop();
     }

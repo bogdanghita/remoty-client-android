@@ -15,6 +15,14 @@ import com.remoty.services.TaskScheduler;
 
 public class MainActivity extends DebugActivity {
 
+    public final static int ASYNC_TASK_GET_TIMEOUT = 5000;
+    public final static int BROADCAST_RESPONSE_TIMEOUT = 1000;
+    public final static int PING_RESPONSE_TIMEOUT = 1000;
+
+    public final static long DETECTION_INTERVAL = 5000;
+
+    public final static int MSG_SCHEDULE = 1000;
+
     public static final String TAG_SERVICES = "SERVICES";
 
     // TODO: think if we want the action bar in all fragments

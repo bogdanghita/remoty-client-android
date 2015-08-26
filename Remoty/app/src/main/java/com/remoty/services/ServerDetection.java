@@ -1,5 +1,7 @@
 package com.remoty.services;
 
+import com.remoty.gui.MainActivity;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,8 +9,6 @@ import java.util.List;
  * Created by Bogdan on 8/22/2015.
  */
 public class ServerDetection {
-
-    private final static long DETECTION_INTERVAL = 5000;
 
     private List<IDetectionListener> listeners;
 
@@ -46,7 +46,7 @@ public class ServerDetection {
     public void start() {
 
         if (!timer.isRunning()) {
-            timer.start(detectionRunnable, DETECTION_INTERVAL);
+            timer.start(detectionRunnable, MainActivity.DETECTION_INTERVAL);
         }
     }
 
