@@ -1,5 +1,7 @@
 package com.remoty.common;
 
+import com.remoty.common.datatypes.ServerInfo;
+
 /**
  * Created by Bogdan on 8/23/2015.
  */

@@ -1,4 +1,4 @@
-package com.remoty.services;
+package com.remoty.services.threading;
 
 import android.os.Handler;
 import android.os.Message;
