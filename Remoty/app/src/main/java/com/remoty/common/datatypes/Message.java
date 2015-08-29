@@ -1,4 +1,4 @@
-package com.remoty.common;
+package com.remoty.common.datatypes;
 
 /**
  * Created by Bogdan on 8/8/2015.

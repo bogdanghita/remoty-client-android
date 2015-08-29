@@ -9,9 +9,9 @@ import android.widget.LinearLayout;
 
 import com.remoty.R;
 import com.remoty.common.ConnectionManager;
-import com.remoty.common.ServerInfo;
-import com.remoty.services.IDetectionListener;
-import com.remoty.services.ServerDetection;
+import com.remoty.common.datatypes.ServerInfo;
+import com.remoty.services.detection.IDetectionListener;
+import com.remoty.services.detection.ServerDetection;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,8 +22,8 @@ import java.util.List;
 public class ConnectFragment extends DebugFragment implements IDetectionListener {
 
     /*
-    There will be two types of messages:
-    1. UDP broadcast messages; the response of the server should be a TCP connect
+	There will be two types of messages:
+    1. UDP sendDetectionMessage messages; the response of the server should be a TCP connect
     2. TCP state check for servers already discovered (using the connection created on the response)
         - response should be the data for future communication (the port it listens for data transfer
      start notifications - same for all clients)
@@ -47,123 +47,123 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
      - for every client there will be a different set of sockets (as the connection in TCP is 1 to 1)
      */
 
-    ServerDetection serverDetection;
+	ServerDetection serverDetection;
 
-    LinearLayout serversLayout;
+	LinearLayout serversLayout;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        setHasOptionsMenu(true);
+		setHasOptionsMenu(true);
 
-        View parentView = inflater.inflate(R.layout.fragment_connect, container, false);
+		View parentView = inflater.inflate(R.layout.fragment_connect, container, false);
 
-        serversLayout = (LinearLayout) parentView.findViewById(R.id.servers_layout);
+		serversLayout = (LinearLayout) parentView.findViewById(R.id.servers_layout);
 
-        return parentView;
-    }
+		return parentView;
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        // TODO: Make a factory for all services like this one
-        serverDetection = new ServerDetection();
-    }
+		// TODO: Make a factory for all services like this one
+		serverDetection = new ServerDetection();
+	}
 
-    @Override
-    public void onStart() {
-        super.onStart();
+	@Override
+	public void onStart() {
+		super.onStart();
 
-        // NOTE: onResume() is always called immediately after onStart()
+		// NOTE: onResume() is always called immediately after onStart()
 
-        serverDetection.subscribe(this);
-        serverDetection.init();
-    }
+		serverDetection.subscribe(this);
+		serverDetection.init();
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
+	@Override
+	public void onResume() {
+		super.onResume();
 
-        // Start sending detection and state check messages
-        serverDetection.start();
+		// Start sending detection and state check messages
+		serverDetection.start();
 
 //        buttonTest();
-    }
+	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
+	@Override
+	public void onPause() {
+		super.onPause();
 
-        // Stop sending detection and state check messages
-        serverDetection.stop();
-        serverDetection.unsubscribe(this);
-    }
+		// Stop sending detection and state check messages
+		serverDetection.stop();
+		serverDetection.unsubscribe(this);
+	}
 
-    @Override
-    public void onStop() {
-        super.onStop();
+	@Override
+	public void onStop() {
+		super.onStop();
 
-        // NOTE: activity might be destroyed (and might also be recreated -> savedInstanceState) after this,
-        // or it might be restarted (onRestart -> on Start)
+		// NOTE: activity might be destroyed (and might also be recreated -> savedInstanceState) after this,
+		// or it might be restarted (onRestart -> on Start)
 
-        serverDetection.clear();
-    }
+		serverDetection.clear();
+	}
 
-    @Override
-    public void update(final List<ServerInfo> servers) {
+	@Override
+	public void update(final List<ServerInfo> servers) {
 
-        // This is called from another thread so we need to ensure it is executed on the UI thread
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+		// This is called from another thread so we need to ensure it is executed on the UI thread
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
 
-                serversLayout.removeAllViews();
+				serversLayout.removeAllViews();
 
-                for (ServerInfo server : servers) {
+				for (ServerInfo server : servers) {
 
-                    Button button = createServerButton(server.name, server.ip, server.port);
+					Button button = createServerButton(server.name, server.ip, server.port);
 
-                    serversLayout.addView(button);
-                }
-            }
-        });
-    }
+					serversLayout.addView(button);
+				}
+			}
+		});
+	}
 
-    private void serverSelected(ServerInfo server) {
+	private void serverSelected(ServerInfo server) {
 
-        // Notifying the ConnectionManager
-        ConnectionManager.setConnection(server);
+		// Notifying the ConnectionManager
+		ConnectionManager.setConnection(server);
 
-        // TODO: maybe close the fragment and open a pending fragment? Don't know, it's about UX.
-    }
+		// TODO: maybe close the fragment and open a pending fragment? Don't know, it's about UX.
+	}
 
-    private Button createServerButton(String hostname, String ip, int port) {
+	private Button createServerButton(String hostname, String ip, int port) {
 
-        Button button = new Button(serversLayout.getContext());
+		Button button = new Button(serversLayout.getContext());
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        button.setLayoutParams(params);
+		button.setLayoutParams(params);
 
-        String text = hostname + " - " + ip + ":" + port;
+		String text = hostname + " - " + ip + ":" + port;
 
-        button.setText(text);
+		button.setText(text);
 
-        return button;
-    }
+		return button;
+	}
 
-    // TEST
+	// TEST
 
-    private void buttonTest() {
+	private void buttonTest() {
 
-        List<ServerInfo> servers = new LinkedList<>();
-        servers.add(new ServerInfo("192.168.1.1", 3, "Server1"));
-        servers.add(new ServerInfo("192.168.1.2", 5, "Server2"));
-        servers.add(new ServerInfo("666.666.666.666", 9999, "THIS IS SPARTA!"));
+		List<ServerInfo> servers = new LinkedList<>();
+		servers.add(new ServerInfo("192.168.1.1", 3, "Server1"));
+		servers.add(new ServerInfo("192.168.1.2", 5, "Server2"));
+		servers.add(new ServerInfo("666.666.666.666", 9999, "THIS IS SPARTA!"));
 
-        update(servers);
-    }
+		update(servers);
+	}
 
-    // END TEST
+	// END TEST
 }

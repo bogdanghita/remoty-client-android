@@ -9,240 +9,255 @@ import android.view.View;
 
 import com.remoty.R;
 import com.remoty.common.ConnectionManager;
-import com.remoty.common.ServerInfo;
-import com.remoty.services.TaskScheduler;
+import com.remoty.common.datatypes.ServerInfo;
+import com.remoty.services.threading.TaskScheduler;
 
 
 public class MainActivity extends DebugActivity {
 
-    public final static int ASYNC_TASK_GET_TIMEOUT = 600;
-    public final static int BROADCAST_RESPONSE_TIMEOUT = 500;
-    public final static int PING_RESPONSE_TIMEOUT = 500;
+	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
+	public final static int DETECTION_RESPONSE_TIMEOUT = 500;
+	public final static int PING_RESPONSE_TIMEOUT = 500;
 
-    public final static long DETECTION_INTERVAL = 2000;
+	public final static long DETECTION_INTERVAL = 2000;
 
-    public final static int MSG_SCHEDULE = 1000;
+	public final static int LOCAL_DETECTION_RESPONSE_PORT = 10000;
+	public final static int REMOTE_DETECTION_PORT = 9001;
 
-    public static final String TAG_SERVICES = "SERVICES";
+	public final static int MSG_SCHEDULE = 1000;
 
-    // TODO: think if we want the action bar in all fragments
-    // TODO: also do some research on the action bar and AppCompatActivity
+	public static final String TAG_SERVICES = "SERVICES";
 
-    // TODO: think of a status entry in connect page (so that the user knows its connection state and host if connected)
+	// TODO: Don't forget about the join that blocks the UI when detection closes (see if it is still doing it and make a decision)
 
-    // TODO: get more details on the thing with "in some cases the fragment is called with the empty constructor"
+	// TODO: think if we want the action bar in all fragments
+	// TODO: also do some research on the action bar and AppCompatActivity
 
-    // TODO: create a Communication Manager somewhere, and ensure the info about the connection state is not lost on activity restart
+	// TODO: think of a status entry in connect page (so that the user knows its connection state and host if connected)
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	// TODO: get more details on the thing with "in some cases the fragment is called with the empty constructor"
 
-        setContentView(R.layout.fragment_container);
+	// TODO: create a Communication Manager somewhere, and ensure the info about the connection state is not lost on activity restart
 
-        // Checking if activity was restored from a previous state
-        if (savedInstanceState == null) {
+	// TODO: Solve the addToBackStack() problem
 
-            // Adding main fragment
-            MainFragment mainFragment = new MainFragment();
-            getFragmentManager().beginTransaction().add(R.id.activity_main, mainFragment).addToBackStack(null).commit();
-        }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        // TEST
+		setContentView(R.layout.fragment_container);
 
-//        testTaskScheduler();
+		// Checking if activity was restored from a previous state
+		if (savedInstanceState == null) {
 
-        // END_TEST
-    }
+			// Adding main fragment
+			MainFragment mainFragment = new MainFragment();
+			getFragmentManager().beginTransaction().add(R.id.activity_main, mainFragment).commit();
+		}
+	}
 
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Always call the superclass so it can restore the view hierarchy
-        super.onRestoreInstanceState(savedInstanceState);
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		// Always call the superclass so it can restore the view hierarchy
+		super.onRestoreInstanceState(savedInstanceState);
 
-        // TODO: handle the situation when there is no connection info.
+		// TODO: handle the situation when there is no connection info.
 
-        // Restoring the connection info from the saved instance
-        ServerInfo connectionInfo = ServerInfo.retrieveFromBundle(savedInstanceState);
-        ConnectionManager.setConnection(connectionInfo);
-    }
+		// Restoring the connection info from the saved instance
+		ServerInfo connectionInfo = ServerInfo.retrieveFromBundle(savedInstanceState);
+		ConnectionManager.setConnection(connectionInfo);
+	}
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
 
-        // TODO: handle the situation when there is no connection info.
+		// TODO: handle the situation when there is no connection info.
 
-        // Saving the connection info to the bundle
-        ServerInfo connectionInfo = ConnectionManager.getConnection();
-        ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
+		// Saving the connection info to the bundle
+		ServerInfo connectionInfo = ConnectionManager.getConnection();
+		ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
 
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
-    }
+		// Always call the superclass so it can save the view hierarchy state
+		super.onSaveInstanceState(savedInstanceState);
+	}
 
-    @Override
-    public void onStart() {
-        super.onStart();
+	@Override
+	public void onStart() {
+		super.onStart();
 
-    }
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
+	@Override
+	public void onResume() {
+		super.onResume();
 
-    }
+	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
+	@Override
+	public void onPause() {
+		super.onPause();
 
-    }
+	}
 
-    @Override
-    public void onStop() {
-        super.onStop();
+	@Override
+	public void onStop() {
+		super.onStop();
 
-    }
+	}
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_main, menu);
+		return true;
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
 
-        switch (id) {
-            case R.id.action_love:
-                break;
-            case R.id.action_share:
-                break;
-            case R.id.action_settings:
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+		switch (id) {
+			case R.id.action_love:
+				break;
+			case R.id.action_share:
+				break;
+			case R.id.action_settings:
+				break;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 
-        // This tells that the item click was handled by this method (it is useful since fragments
-        // also have this method and it is also called). If the action was not handled then the
-        // default case of the switch returned the result of the super implementation.
-        return true;
-    }
+		// This tells that the item click was handled by this method (it is useful since fragments
+		// also have this method and it is also called). If the action was not handled then the
+		// default case of the switch returned the result of the super implementation.
+		return true;
+	}
 
-    @Override
-    public void onBackPressed() {
+	@Override
+	public void onBackPressed() {
 
         /* Forcing back stack pop (it seems that the back stack is not popped automatically, although
-        it should be). TODO: check how this behaves on multiple devices */
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-        }
-    }
+		it should be). TODO: check how this behaves on multiple devices */
+		if (getFragmentManager().getBackStackEntryCount() > 0) {
+			getFragmentManager().popBackStack();
+		}
+		else {
+			super.onBackPressed();
+		}
+	}
 
-    public void buttonDrive(View view) {
+	public void buttonDrive(View view) {
 
-        DriveFragment driveFragment = new DriveFragment();
+		DriveFragment driveFragment = new DriveFragment();
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-        transaction.replace(R.id.activity_main, driveFragment);
+		transaction.replace(R.id.activity_main, driveFragment);
 
-        transaction.addToBackStack(null);
+		transaction.addToBackStack(null);
 
-        transaction.commit();
-    }
+		transaction.commit();
+	}
 
-    public void buttonScore(View view) {
+	public void buttonScore(View view) {
 
-        ScoreFragment scoreFragment = new ScoreFragment();
+		ScoreFragment scoreFragment = new ScoreFragment();
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-        transaction.replace(R.id.activity_main, scoreFragment);
+		transaction.replace(R.id.activity_main, scoreFragment);
 
-        transaction.addToBackStack(null);
+		transaction.addToBackStack(null);
 
-        transaction.commit();
-    }
+		transaction.commit();
+	}
 
-    public void buttonConnect(View view) {
+	public void buttonConnect(View view) {
 
-        ConnectFragment connectFragment = new ConnectFragment();
+		openConnectPage();
+	}
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+	public void buttonSubscribe(View view) {
 
-        transaction.replace(R.id.activity_main, connectFragment);
+	}
 
-        transaction.addToBackStack(null);
+	public void buttonHelp(View view) {
 
-        transaction.commit();
-    }
+	}
 
-    public void buttonSubscribe(View view) {
+	public void buttonManualConnection(View view) {
 
-    }
+	}
 
-    public void buttonHelp(View view) {
+	/**
+	 * // TODO: Make this accessible from any place in the application
+	 * Opens the connect page. It is called either when the user navigates to it or when the connection is lost.
+	 * For future uses: adapt the content of this method to the component type of the connect page.
+	 */
+	private void openConnectPage() {
 
-    }
+		ConnectFragment connectFragment = new ConnectFragment();
 
-    public void buttonManualConnection(View view) {
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-    }
+		transaction.replace(R.id.activity_main, connectFragment);
 
-    // TEST METHODS
+		transaction.addToBackStack(null);
 
-    public void testTaskScheduler() {
+		transaction.commit();
+	}
 
-        TaskScheduler timer = new TaskScheduler();
 
-        timer.start(new Runnable() {
-            @Override
-            public void run() {
+	// TEST METHODS
 
-                Log.d(TaskScheduler.TAG_TIMER, "Message executed. Time: " + System.currentTimeMillis());
-            }
-        }, 10);
+	public void testTaskScheduler() {
 
-        for (int i = 1; i <= 100; i += 10) {
+		TaskScheduler timer = new TaskScheduler();
 
-            timer.setInterval(i);
-            Log.d(TaskScheduler.TAG_TIMER, "Changed interval to: " + i);
+		timer.start(new Runnable() {
+			@Override
+			public void run() {
 
-            if (i == 1) {
-                i = 0;
-            }
+				Log.d(TaskScheduler.TAG_TIMER, "Message executed. Time: " + System.currentTimeMillis());
+			}
+		}, 10);
 
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+		for (int i = 1; i <= 100; i += 10) {
 
-        timer.setInterval(200);
-        Log.d(TaskScheduler.TAG_TIMER, "Changed interval to: " + 200);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+			timer.setInterval(i);
+			Log.d(TaskScheduler.TAG_TIMER, "Changed interval to: " + i);
 
-        timer.stop();
-    }
+			if (i == 1) {
+				i = 0;
+			}
 
-    // END TEST METHODS
+			try {
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		timer.setInterval(200);
+		Log.d(TaskScheduler.TAG_TIMER, "Changed interval to: " + 200);
+		try {
+			Thread.sleep(1000);
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		timer.stop();
+	}
+
+	// END TEST METHODS
 }

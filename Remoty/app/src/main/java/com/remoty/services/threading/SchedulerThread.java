@@ -1,8 +1,6 @@
-package com.remoty.services;
+package com.remoty.services.threading;
 
-import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 
 import com.remoty.gui.MainActivity;
