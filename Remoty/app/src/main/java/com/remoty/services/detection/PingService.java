@@ -66,7 +66,7 @@ public class PingService {
 
 	private List<ServerInfo> receivePingResponses() {
 
-		boolean listChangedFlag = true;
+		boolean listChangedFlag = false;
 
 		for (PingAsyncTask ping : pingTaskList) {
 
@@ -82,7 +82,8 @@ public class PingService {
 				serverInfo = null;
 			}
 
-			// Checking if a response was received. If true adding server info to the list
+			// Checking if a response was received.
+			// If true adding server info to the list, else removing it from the list.
 			if (serverInfo == null) {
 
 				TcpSocket socket = ping.getSocket();
@@ -100,15 +101,15 @@ public class PingService {
 
 					// Nothing to be done here...
 				}
+
+				listChangedFlag = true;
 			}
 			else if (!serverInfoMap.containsKey(serverInfo.ip)) {
 
 				// Adding server to the list
 				serverInfoMap.put(serverInfo.ip, serverInfo);
-			}
-			else {
 
-				listChangedFlag = false;
+				listChangedFlag = true;
 			}
 		}
 
