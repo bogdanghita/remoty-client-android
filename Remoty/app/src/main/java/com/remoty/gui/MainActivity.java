@@ -41,6 +41,8 @@ public class MainActivity extends DebugActivity {
 
 	// TODO: Solve the addToBackStack() problem
 
+	// TODO: Implement logic for opening the connect page when connection is lost (see openConnectPage())
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,7 +65,8 @@ public class MainActivity extends DebugActivity {
 
 		// TODO: handle the situation when there is no connection info.
 
-		// Restoring the connection info from the saved instance
+		// Restoring the connection info from the saved instance. If there was no connection then
+		// the it is set to null (returned by retrieveFromBundle())
 		ServerInfo connectionInfo = ServerInfo.retrieveFromBundle(savedInstanceState);
 		ConnectionManager.setConnection(connectionInfo);
 	}
@@ -74,8 +77,11 @@ public class MainActivity extends DebugActivity {
 		// TODO: handle the situation when there is no connection info.
 
 		// Saving the connection info to the bundle
-		ServerInfo connectionInfo = ConnectionManager.getConnection();
-		ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
+		if(ConnectionManager.hasConnection()) {
+
+			ServerInfo connectionInfo = ConnectionManager.getConnection();
+			ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
+		}
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
@@ -198,7 +204,7 @@ public class MainActivity extends DebugActivity {
 	}
 
 	/**
-	 * // TODO: Make this accessible from any place in the application
+	 * // TODO: Make this accessible from any place in the application or do something intelligent for our purpose
 	 * Opens the connect page. It is called either when the user navigates to it or when the connection is lost.
 	 * For future uses: adapt the content of this method to the component type of the connect page.
 	 */

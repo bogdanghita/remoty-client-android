@@ -7,6 +7,10 @@ import android.os.Bundle;
  */
 public class ServerInfo implements Comparable<ServerInfo> {
 
+	private final static String KEY_IP = "KEY_SERVERINFO_IP";
+	private final static String KEY_PORT = "KEY_SERVERINFO_PORT";
+	private final static String KEY_NAME = "KEY_SERVERINFO_NAME";
+
 	public String ip;
 	public int port;
 	public String name;
@@ -16,24 +20,6 @@ public class ServerInfo implements Comparable<ServerInfo> {
 		this.ip = ip;
 		this.port = port;
 		this.name = name;
-	}
-
-	/**
-	 * @param info   - the info to be saved.
-	 * @param bundle - the Bundle where the info will be saved.
-	 */
-	public static void saveToBundle(ServerInfo info, Bundle bundle) {
-
-	}
-
-	/**
-	 * @param bundle - the Bundle to retrieve the info from.
-	 * @return - the info retrieved from the Bundle and null if the Bundle does not contain the ServerInfo data.
-	 */
-	public static ServerInfo retrieveFromBundle(Bundle bundle) {
-
-//		throw new UnsupportedOperationException("No implemented yet.");
-		return null;
 	}
 
 	@Override
@@ -64,5 +50,34 @@ public class ServerInfo implements Comparable<ServerInfo> {
 		}
 
 		return name.compareTo(object.name);
+	}
+
+	/**
+	 * @param info   - the info to be saved.
+	 * @param bundle - the Bundle where the info will be saved.
+	 */
+	public static void saveToBundle(ServerInfo info, Bundle bundle) {
+
+		bundle.putString(KEY_IP, info.ip);
+		bundle.putInt(KEY_PORT, info.port);
+		bundle.putString(KEY_NAME, info.name);
+	}
+
+	/**
+	 * @param bundle - the Bundle to retrieve the info from.
+	 * @return - the info retrieved from the Bundle and null if the Bundle does not contain the ServerInfo data.
+	 */
+	public static ServerInfo retrieveFromBundle(Bundle bundle) {
+
+		// Checking if the bundle has the required data
+		if(!bundle.containsKey(KEY_IP) || !bundle.containsKey(KEY_PORT) || !bundle.containsKey(KEY_NAME)) {
+			return null;
+		}
+
+		String ip = bundle.getString(KEY_IP);
+		int port = bundle.getInt(KEY_PORT);
+		String name = bundle.getString(KEY_NAME);
+
+		return new ServerInfo(ip, port, name);
 	}
 }
