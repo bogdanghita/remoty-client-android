@@ -32,7 +32,8 @@ public class ServerInfo implements Comparable<ServerInfo> {
 	 */
 	public static ServerInfo retrieveFromBundle(Bundle bundle) {
 
-		throw new UnsupportedOperationException("No implemented yet.");
+//		throw new UnsupportedOperationException("No implemented yet.");
+		return null;
 	}
 
 	@Override
