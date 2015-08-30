@@ -3,8 +3,8 @@ package com.remoty.services.detection;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.remoty.common.datatypes.Message;
-import com.remoty.common.datatypes.ServerInfo;
+import com.remoty.common.Message;
+import com.remoty.common.ServerInfo;
 import com.remoty.services.networking.TcpSocket;
 import com.remoty.gui.MainActivity;
 

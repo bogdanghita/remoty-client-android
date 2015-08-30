@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.remoty.R;
 import com.remoty.common.ConnectionManager;
-import com.remoty.common.datatypes.ServerInfo;
+import com.remoty.common.ServerInfo;
 import com.remoty.services.threading.TaskScheduler;
 
 
@@ -196,10 +196,6 @@ public class MainActivity extends DebugActivity {
 	}
 
 	public void buttonHelp(View view) {
-
-	}
-
-	public void buttonManualConnection(View view) {
 
 	}
 

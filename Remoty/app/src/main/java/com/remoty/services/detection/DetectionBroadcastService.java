@@ -3,7 +3,7 @@ package com.remoty.services.detection;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.remoty.common.datatypes.Message;
+import com.remoty.common.Message;
 import com.remoty.gui.MainActivity;
 
 import java.io.IOException;

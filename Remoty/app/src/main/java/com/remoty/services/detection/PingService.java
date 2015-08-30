@@ -2,13 +2,13 @@ package com.remoty.services.detection;
 
 import android.util.Log;
 
-import com.remoty.common.datatypes.ServerInfo;
+import com.remoty.common.ConnectionManager;
+import com.remoty.common.ServerInfo;
 import com.remoty.services.networking.TcpSocket;
 import com.remoty.gui.MainActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -79,32 +79,25 @@ public class PingService {
 			catch (InterruptedException | ExecutionException | TimeoutException e) {
 				e.printStackTrace();
 
+				// Marking this connection as lost if a timeout or other exception occurs
 				serverInfo = null;
 			}
 
-			// Checking if a response was received.
-			// If true adding server info to the list, else removing it from the list.
-			if (serverInfo == null) {
+			// Checking if there is a response
+			// NOTE: PingAsyncTask will return null if there is a receive problem.
+			if(serverInfo == null) {
 
-				TcpSocket socket = ping.getSocket();
-
-				// Removing socket and server info from the lists
-				sockets.remove(socket);
-				serverInfoMap.remove(socket.getInetAddress().getHostAddress());
-
-				// Closing socket
-				try {
-					socket.close();
-				}
-				catch (IOException e) {
-					e.printStackTrace();
-
-					// Nothing to be done here...
-				}
+				// Removing server and notifying the ConnectionManager if necessary
+				handleNoResponse(ping);
 
 				listChangedFlag = true;
+
+				continue;
 			}
-			else if (!serverInfoMap.containsKey(serverInfo.ip)) {
+
+			// If this is a new server (it should be as the servers do not respond to broadcast messages
+			// from already discovered clients) adding it to the list.
+			if (!serverInfoMap.containsKey(serverInfo.ip)) {
 
 				// Adding server to the list
 				serverInfoMap.put(serverInfo.ip, serverInfo);
@@ -114,10 +107,42 @@ public class PingService {
 		}
 
 		// If there are changes returning a sorted list with the info about the servers. Otherwise returning null.
-		return listChangedFlag ? generateSortedList() : null;
+		return listChangedFlag ? createServerInfoList() : null;
 	}
 
-	private List<ServerInfo> generateSortedList() {
+	/**
+	 * Closing socket and removing server from the list. Also checking if this server was the current
+	 * selected one (selected by the user in the connect page) and notifying the ConnectionManager.
+	 */
+	private void handleNoResponse(PingAsyncTask ping) {
+
+		TcpSocket socket = ping.getSocket();
+		String serverIp = socket.getInetAddress().getHostAddress();
+
+		// Removing socket and server info from the lists
+		sockets.remove(socket);
+		serverInfoMap.remove(serverIp);
+
+		//  Notifying the ConnectionManager if this server was the current selected one
+		if(ConnectionManager.hasConnection() && ConnectionManager.getConnection().ip.equals(serverIp)) {
+			ConnectionManager.clearConnection();
+		}
+
+		// Closing socket
+		try {
+			socket.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+
+			// Nothing to be done here...
+		}
+	}
+
+	/**
+	 * Creating a sorted list with the info about the servers
+	 */
+	private List<ServerInfo> createServerInfoList() {
 
 		List<ServerInfo> serverInfoList = new LinkedList<>();
 

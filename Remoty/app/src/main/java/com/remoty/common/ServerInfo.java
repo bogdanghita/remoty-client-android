@@ -1,4 +1,4 @@
-package com.remoty.common.datatypes;
+package com.remoty.common;
 
 import android.os.Bundle;
 
