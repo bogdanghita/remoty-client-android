@@ -73,15 +73,30 @@ public class DetectionResponseService {
 
 			// Appending server to list
 			if (server != null) {
-				socketList.add(server);
-
 				// Setting timeout. TODO: Think if this should be done in other part of the code
 				try {
 					server.setTimeout(MainActivity.PING_RESPONSE_TIMEOUT);
 				}
 				catch (SocketException e) {
 					e.printStackTrace();
+
+					// TODO: Make this prettier.
+					// Closing socket
+					try {
+						server.close();
+					}
+					catch (IOException e1) {
+						e1.printStackTrace();
+
+						// Nothing to be done here...
+					}
+
+					// This server is broken. Continue accepting other servers.
+					continue;
 				}
+
+				// Adding server to the list.
+				socketList.add(server);
 			}
 		}
 

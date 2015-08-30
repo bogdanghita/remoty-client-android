@@ -29,6 +29,12 @@ public class MainActivity extends DebugActivity {
 
 	public static final String TAG_SERVICES = "SERVICES";
 
+	public final static String LIFECYCLE = "LIFECYCLE";
+
+	public static final String DETECTION = "DETECTION";
+
+	public static final String BROADCAST = "BROADCAST";
+
 	// TODO: Don't forget about the join that blocks the UI when detection closes (see if it is still doing it and make a decision)
 
 	// TODO: think if we want the action bar in all fragments

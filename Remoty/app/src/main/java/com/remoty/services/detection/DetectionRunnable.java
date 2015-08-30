@@ -1,7 +1,10 @@
 package com.remoty.services.detection;
 
+import android.util.Log;
+
 import com.remoty.common.IDetectionListener;
 import com.remoty.common.ServerInfo;
+import com.remoty.gui.MainActivity;
 import com.remoty.services.networking.TcpSocket;
 
 import java.io.IOException;
@@ -34,6 +37,7 @@ public class DetectionRunnable implements Runnable {
 
 	@Override
 	public void run() {
+		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION, "New detection cycle.");
 
 		// Sending detection messages on the sendDetectionMessage address
 		broadcastService.sendDetectionMessage();
@@ -54,6 +58,8 @@ public class DetectionRunnable implements Runnable {
 		if (results != null) {
 			notifyListeners(results);
 		}
+
+		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION, "Detection cycle finished.");
 	}
 
 	/**
