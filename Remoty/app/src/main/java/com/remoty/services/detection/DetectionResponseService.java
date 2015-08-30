@@ -21,6 +21,7 @@ public class DetectionResponseService {
 
 	private ServerSocket acceptSocket = null;
 
+	// TODO: if this is called multiple times it is not good. Handle this inside or put a NOTE
 	public void init() {
 
 		acceptTimeoutExceeded = false;
@@ -41,6 +42,7 @@ public class DetectionResponseService {
 		return acceptSocket != null;
 	}
 
+	// TODO: if this is called multiple times or before init() it is not good. Handle this inside or put a NOTE
 	public void close() {
 
 		try {

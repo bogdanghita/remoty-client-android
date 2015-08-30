@@ -26,4 +26,18 @@ public class Message {
 
 		public String hostname;
 	}
+
+	public static class AccelerometerMessage extends AbstractMessage {
+
+		public float x, y, z;
+	}
+
+	public static class SimulationInfoMessage extends AbstractMessage {
+
+		public int userId;
+
+		public int mousePort;
+		public int keyPort;
+		public int accelerometerPort;
+	}
 }
