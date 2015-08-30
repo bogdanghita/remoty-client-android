@@ -50,8 +50,6 @@ public class MainActivity extends DebugActivity {
 
 	// TODO: Implement logic for opening the connect page when connection is lost (see openConnectPage())
 
-	// TODO: Investigate and solve the problem of the static members (ConnectionManager) not destroyed after onDestroy()
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
