@@ -20,6 +20,7 @@ public class MainActivity extends DebugActivity {
 	public final static int PING_RESPONSE_TIMEOUT = 500;
 
 	public final static long DETECTION_INTERVAL = 2000;
+	public final static long ACCELEROMETER_INTERVAL = 20;
 
 	public final static int LOCAL_DETECTION_RESPONSE_PORT = 10000;
 	public final static int REMOTE_DETECTION_PORT = 9001;
@@ -43,6 +44,8 @@ public class MainActivity extends DebugActivity {
 
 	// TODO: Implement logic for opening the connect page when connection is lost (see openConnectPage())
 
+	// TODO: Investigate and solve the problem of the static members (ConnectionManager) not destroyed after onDestroy()
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,8 +66,6 @@ public class MainActivity extends DebugActivity {
 		// Always call the superclass so it can restore the view hierarchy
 		super.onRestoreInstanceState(savedInstanceState);
 
-		// TODO: handle the situation when there is no connection info.
-
 		// Restoring the connection info from the saved instance. If there was no connection then
 		// the it is set to null (returned by retrieveFromBundle())
 		ServerInfo connectionInfo = ServerInfo.retrieveFromBundle(savedInstanceState);
@@ -74,10 +75,8 @@ public class MainActivity extends DebugActivity {
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 
-		// TODO: handle the situation when there is no connection info.
-
 		// Saving the connection info to the bundle
-		if(ConnectionManager.hasConnection()) {
+		if (ConnectionManager.hasConnection()) {
 
 			ServerInfo connectionInfo = ConnectionManager.getConnection();
 			ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
@@ -200,7 +199,10 @@ public class MainActivity extends DebugActivity {
 	}
 
 	/**
-	 * // TODO: Make this accessible from any place in the application or do something intelligent for our purpose
+	 * NOTE: Maybe sometimes we will not want to disconnect from the server but just warn the user that
+	 * something is not ok with the connection
+	 * TODO: Open connect page when the connection is lost
+	 * TODO: Subscribe MainActivity to the ConnectionManager and do the job there
 	 * Opens the connect page. It is called either when the user navigates to it or when the connection is lost.
 	 * For future uses: adapt the content of this method to the component type of the connect page.
 	 */
