@@ -26,7 +26,7 @@ public class DetectionBroadcastService {
 
 	public void sendDetectionMessage() {
 
-		Log.d("FIRST_STEP", "Starting server discovery");
+		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.BROADCAST, "New detection cycle.");
 
 		// Opening a random port to send the packet (initializing socket)
 		try {
@@ -54,7 +54,7 @@ public class DetectionBroadcastService {
 
 			// Obtaining current interface
 			NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
-			Log.d("INTERFACES", "Current interface: " + networkInterface.getName());
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.BROADCAST, "Current interface: " + networkInterface.getName());
 
 			// Checking if current interface is a loopback interface and if it is up
 			if (checkInterface(networkInterface) == false) {
@@ -65,14 +65,14 @@ public class DetectionBroadcastService {
 			// If the sendDetectionMessage address is valid, sending request
 			for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
 
-				Log.d("INTERFACE_ADDRESS_ITER", "Interface: " + networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString());
+				Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.BROADCAST, "Interface: " + networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString());
 
 				// Obtaining the sendDetectionMessage address of the current interface
 				InetAddress broadcast = interfaceAddress.getBroadcast();
 
 				// Checking if the sendDetectionMessage address is valid
 				if (broadcast == null) {
-					Log.d("ADDRESS_CHECK", "Interface: " + networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString() + " - Broadcast address is null");
+					Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.BROADCAST, "Interface: " + networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString() + " - Broadcast address is null");
 					continue;
 				}
 
@@ -97,7 +97,7 @@ public class DetectionBroadcastService {
 
 		// If current interface is down or if it is loopback: continue
 		if (interfaceIsLoopback || !interfaceIsUp) {
-			Log.d("INTERFACE_CHECK", "Interface: " + networkInterface.getName() + " - is loopback or down");
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.BROADCAST, "Interface: " + networkInterface.getName() + " - is loopback or down");
 
 			return false;
 		}
@@ -121,7 +121,7 @@ public class DetectionBroadcastService {
 		}
 		catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			Log.d("SENDING_PACKET", "Abort. Serialization exception.");
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.BROADCAST, "Abort. Serialization exception.");
 			return;
 		}
 
@@ -131,12 +131,12 @@ public class DetectionBroadcastService {
 		}
 		catch (IOException e) {
 			e.printStackTrace();
-			Log.d("SENDING_PACKET", "Interface: " + networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString() +
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.BROADCAST, "Interface: " + networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString() +
 					" - Unable to send packet to" + broadcastAddress.getHostAddress() + " - Interface: " + networkInterface.getDisplayName());
 		}
 
 		// Displaying success message
-		Log.d("SENDING_PACKET", "Interface: " + networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString() +
+		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.BROADCAST, "Interface: " + networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString() +
 				" - Request packet sent to: " + broadcastAddress.getHostAddress() + " - Interface: " + networkInterface.getDisplayName());
 	}
 
@@ -151,8 +151,8 @@ public class DetectionBroadcastService {
 //			datagramSocket.send(datagramPacket);
 //		} catch (Exception e) {
 //			e.printStackTrace();
-//			Log.d("EXCEPTION", "Unable to send to: 255.255.255.255 (DEFAULT)");
+//			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.BROADCAST, "Unable to send to: 255.255.255.255 (DEFAULT)");
 //		}
-//		Log.d("DEFAULT_BROADCAST", "Request packet sent to: 255.255.255.255 (DEFAULT)");
+//		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.BROADCAST, "Request packet sent to: 255.255.255.255 (DEFAULT)");
 //	}
 }

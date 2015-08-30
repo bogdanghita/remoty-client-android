@@ -111,12 +111,18 @@ public class TcpSocket {
 	}
 
 	/**
-	 * Closes the socket.
+	 * Closes the socket. All data is transferred before closing the connection.
 	 *
 	 * @throws IOException
 	 */
 	public void close() throws IOException {
 
+		// This is the proper way to fully close a TCP Socket.
+		mSocket.shutdownInput();
+		mSocket.shutdownOutput();
+
+		// TODO: See if isClosed() is necessary.
+		// isClosed() tells you whether you have closed this socket. Until you have, it returns false.
 		if (!mSocket.isClosed()) {
 			mSocket.close();
 		}
