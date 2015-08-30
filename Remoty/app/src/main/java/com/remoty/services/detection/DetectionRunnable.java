@@ -1,6 +1,7 @@
 package com.remoty.services.detection;
 
-import com.remoty.common.datatypes.ServerInfo;
+import com.remoty.common.IDetectionListener;
+import com.remoty.common.ServerInfo;
 import com.remoty.services.networking.TcpSocket;
 
 import java.io.IOException;

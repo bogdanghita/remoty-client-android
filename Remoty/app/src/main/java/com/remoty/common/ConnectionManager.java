@@ -1,6 +1,7 @@
 package com.remoty.common;
 
-import com.remoty.common.datatypes.ServerInfo;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Bogdan on 8/23/2015.
@@ -8,6 +9,30 @@ import com.remoty.common.datatypes.ServerInfo;
 public class ConnectionManager {
 
 	private static ServerInfo connectionInfo = null;
+
+	private static final List<IConnectionListener> listeners = new LinkedList<>();
+
+	public static void subscribe(IConnectionListener listener) {
+		listeners.add(listener);
+	}
+
+	public static void unsubscribe(IConnectionListener listener) {
+		listeners.remove(listener);
+	}
+
+	private static void notifyConnectionLost() {
+
+		for (IConnectionListener listener : listeners) {
+			listener.connectionLost();
+		}
+	}
+
+	private static void notifyConnectionEstablished() {
+
+		for (IConnectionListener listener : listeners) {
+			listener.connectionEstablished(connectionInfo);
+		}
+	}
 
 	/**
 	 * @return - true if there is connection info available and false otherwise
@@ -24,6 +49,8 @@ public class ConnectionManager {
 	 */
 	public static synchronized void setConnection(ServerInfo connection) {
 		connectionInfo = connection;
+
+		notifyConnectionEstablished();
 	}
 
 	/**
@@ -31,6 +58,8 @@ public class ConnectionManager {
 	 */
 	public static synchronized void clearConnection() {
 		connectionInfo = null;
+
+		notifyConnectionLost();
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.remoty.services.detection;
 
+import com.remoty.common.IDetectionListener;
 import com.remoty.gui.MainActivity;
 import com.remoty.services.threading.TaskScheduler;
 

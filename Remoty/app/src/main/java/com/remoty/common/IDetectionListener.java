@@ -1,6 +1,4 @@
-package com.remoty.services.detection;
-
-import com.remoty.common.datatypes.ServerInfo;
+package com.remoty.common;
 
 import java.util.List;
 
