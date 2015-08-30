@@ -50,7 +50,12 @@ public class ConnectionManager {
 	public static synchronized void setConnection(ServerInfo connection) {
 		connectionInfo = connection;
 
-		notifyConnectionEstablished();
+		if (connection == null) {
+			notifyConnectionLost();
+		}
+		else {
+			notifyConnectionEstablished();
+		}
 	}
 
 	/**

@@ -113,6 +113,10 @@ public class MainActivity extends DebugActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+
+		// Clearing connection so that it is not kept in memory as a static object until the OS
+		// decides to stop the process and clear the RAM
+		ConnectionManager.clearConnection();
 	}
 
 	@Override
