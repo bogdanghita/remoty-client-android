@@ -27,10 +27,16 @@ public class DetectionResponseService {
 		acceptTimeoutExceeded = false;
 
 		try {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Initializing the ServerSocket...");
+
 			acceptSocket = new ServerSocket(MainActivity.LOCAL_DETECTION_RESPONSE_PORT);
 			acceptSocket.setSoTimeout(MainActivity.DETECTION_RESPONSE_TIMEOUT);
+
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Initialized the ServerSocket.");
 		}
 		catch (IOException e) {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to initialize the ServerSocket!");
+
 			e.printStackTrace();
 
 			acceptSocket = null;
@@ -46,9 +52,15 @@ public class DetectionResponseService {
 	public void close() {
 
 		try {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Closing the ServerSocket...");
+
 			acceptSocket.close();
+
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Closed the ServerSocket.");
 		}
 		catch (IOException e) {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to close the ServerSocket!");
+
 			e.printStackTrace();
 
 			// Nothing to be done here...
@@ -60,7 +72,7 @@ public class DetectionResponseService {
 
 	public List<TcpSocket> receiveDetectionResponse() {
 
-		Log.d("SECOND_STEP", "Done looping over all network interfaces. Waiting for replies...");
+		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Done looping over all network interfaces. Waiting for replies...");
 
 		ArrayList<TcpSocket> socketList = new ArrayList<>();
 
@@ -80,14 +92,22 @@ public class DetectionResponseService {
 					server.setTimeout(MainActivity.PING_RESPONSE_TIMEOUT);
 				}
 				catch (SocketException e) {
+					Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to set a timeout to the ServerSocket.");
+
 					e.printStackTrace();
 
 					// TODO: Make this prettier.
 					// Closing socket
 					try {
+						Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Closing the ServerSocket...");
+
 						server.close();
+
+						Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Closed the ServerSocket.");
 					}
 					catch (IOException e1) {
+						Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to close the ServerSocket after a failed timeout set!");
+
 						e1.printStackTrace();
 
 						// Nothing to be done here...
@@ -102,7 +122,7 @@ public class DetectionResponseService {
 			}
 		}
 
-		Log.d("SECOND_STEP", "Stopped waiting for replies. Returning servers list.");
+		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Stopped waiting for replies. Returning servers list.");
 
 		return socketList;
 	}
@@ -110,10 +130,18 @@ public class DetectionResponseService {
 	private TcpSocket accept(ServerSocket serverSocket) {
 
 		Socket socket;
+		// Accept a new client. If there are no more pending connections, this ServerSocket.Accept()
+		// will timeout thus finishing the "accepting" cycle.
 		try {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Accepting new client...");
+
 			socket = serverSocket.accept();
+
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Accepted new client.");
 		}
 		catch (IOException e) {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to accept new client. Stopped accepting new clients.");
+
 			e.printStackTrace();
 
 			acceptTimeoutExceeded = true;
@@ -121,15 +149,20 @@ public class DetectionResponseService {
 		}
 
 		TcpSocket tcpSocket;
+		// Create a TcpSocket for the new client. This will be given as the return value.
 		try {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Creating TcpSocket for new client...");
+
 			tcpSocket = new TcpSocket(socket);
 			tcpSocket.setKeepAlive(true);
 			tcpSocket.setTcpNoDelay(true);
+
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Created TcpSocket for new client.");
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to create a new TcpSocket.");
 
-			// TODO: put log message here
+			e.printStackTrace();
 
 			try {
 				socket.close();

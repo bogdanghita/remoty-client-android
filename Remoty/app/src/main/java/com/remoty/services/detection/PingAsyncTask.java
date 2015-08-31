@@ -30,33 +30,43 @@ public class PingAsyncTask extends AsyncTask<Void, Void, ServerInfo> {
 	@Override
 	protected ServerInfo doInBackground(Void... params) {
 
-		Log.d(MainActivity.TAG_SERVICES, "Sending ping to " + server.getInetAddress());
-
 		try {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Sending ping to " + server.getInetAddress());
+
 			Message.AbstractMessage pingMessage = new Message.AbstractMessage();
 			server.sendObject(pingMessage);
+
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Sent ping to " + server.getInetAddress());
 		}
 		catch (IOException e) {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Failed to send ping to " + server.getInetAddress() + " Server will be deleted.");
+
 			return null;
 		}
 
-		Log.d(MainActivity.TAG_SERVICES, "Waiting to receive ping response from " + server.getInetAddress().getHostAddress());
-
 		Message.HostInfoMessage pingResponseMessage;
 		try {
+
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Waiting to receive ping response from " + server.getInetAddress().getHostAddress());
+
 			pingResponseMessage = server.receiveObject(Message.HostInfoMessage.class);
+
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Ping response received successfully from " + server.getInetAddress().getHostAddress());
 		}
 		catch (IOException e) {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Failed to receive ping response from " + server.getInetAddress().getHostAddress() + " Server will be deleted.");
+
 			e.printStackTrace();
 			return null;
 		}
 		catch (ClassNotFoundException e) {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Receiced INVALID ping response from " + server.getInetAddress().getHostAddress() + " Server will be deleted.");
+
 			e.printStackTrace();
 			return null;
 		}
 
-		Log.d(MainActivity.TAG_SERVICES, "Ping response received successfully from " + server.getInetAddress().getHostAddress());
-
+		// Building ServerInfo using the ping response.
 		String ip = server.getInetAddress().getHostAddress();
 		int tcpPort = pingResponseMessage.port;
 		String hostName = pingResponseMessage.hostname;

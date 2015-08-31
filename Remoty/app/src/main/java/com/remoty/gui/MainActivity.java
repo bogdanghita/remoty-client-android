@@ -27,6 +27,7 @@ public class MainActivity extends DebugActivity {
 
 	public final static int MSG_SCHEDULE = 1000;
 
+	// Logging tags
 	public static final String TAG_SERVICES = "SERVICES";
 
 	public final static String LIFECYCLE = "LIFECYCLE";
@@ -34,6 +35,12 @@ public class MainActivity extends DebugActivity {
 	public static final String DETECTION = "DETECTION";
 
 	public static final String BROADCAST = "BROADCAST";
+
+	public static final String RESPONSE = "RESPONSE";
+
+	public static final String PING_SERVICE = "PING_SERVICE";
+
+	public static final String PING_TASK = "PING_TASK";
 
 	// TODO: Don't forget about the join that blocks the UI when detection closes (see if it is still doing it and make a decision)
 
