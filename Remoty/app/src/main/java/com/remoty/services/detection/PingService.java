@@ -106,7 +106,7 @@ public class PingService {
 			}
 
 			// If this is a new server (it should be as the servers do not respond to broadcast messages
-			// from already discovered clients) adding it to the list.
+			// from already discovered clients) add it to the list.
 			if (!serverInfoMap.containsKey(serverInfo.ip)) {
 
 				// Adding server to the list
@@ -126,6 +126,8 @@ public class PingService {
 	 */
 	private void handleNoResponse(PingAsyncTask ping) {
 
+		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Receiving ping response from " + ping.getSocket().getInetAddress().getHostAddress());
+
 		TcpSocket socket = ping.getSocket();
 		String serverIp = socket.getInetAddress().getHostAddress();
 
@@ -134,15 +136,24 @@ public class PingService {
 		serverInfoMap.remove(serverIp);
 
 		//  Notifying the ConnectionManager if this server was the current selected one
-		if (ConnectionManager.hasConnection() && ConnectionManager.getConnection().ip.equals(serverIp)) {
+		if (ConnectionManager.hasConnection() && ConnectionManager.getConnection().ip.equals(serverIp)) {;
+
 			ConnectionManager.clearConnection();
+
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Removed the currently selected server. It did not respond to ping.");
 		}
 
 		// Closing socket
 		try {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Closing the server that did not respond to ping...");
+
 			socket.close();
+
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Closed the server that did not respond to ping.");
 		}
 		catch (IOException e) {
+			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Failed to close the server that did not respond to ping!");
+
 			e.printStackTrace();
 
 			// Nothing to be done here...
