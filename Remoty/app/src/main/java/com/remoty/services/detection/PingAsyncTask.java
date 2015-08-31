@@ -30,6 +30,7 @@ public class PingAsyncTask extends AsyncTask<Void, Void, ServerInfo> {
 	@Override
 	protected ServerInfo doInBackground(Void... params) {
 
+		// Send ping.
 		try {
 			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Sending ping to " + server.getInetAddress());
 
@@ -45,6 +46,7 @@ public class PingAsyncTask extends AsyncTask<Void, Void, ServerInfo> {
 		}
 
 		Message.HostInfoMessage pingResponseMessage;
+		// Receive ping response.
 		try {
 
 			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Waiting to receive ping response from " + server.getInetAddress().getHostAddress());

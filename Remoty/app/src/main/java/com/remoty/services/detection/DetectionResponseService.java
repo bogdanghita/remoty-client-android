@@ -26,6 +26,7 @@ public class DetectionResponseService {
 
 		acceptTimeoutExceeded = false;
 
+		// Start the ServerSocket. Remote servers will connect to this Android device via this ServerSocket.
 		try {
 			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Initializing the ServerSocket...");
 
@@ -51,6 +52,7 @@ public class DetectionResponseService {
 	// TODO: if this is called multiple times or before init() it is not good. Handle this inside or put a NOTE
 	public void close() {
 
+		// Close the ServerSocket.
 		try {
 			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.RESPONSE, "Closing the ServerSocket...");
 
