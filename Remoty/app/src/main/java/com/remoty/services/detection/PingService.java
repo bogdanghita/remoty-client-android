@@ -54,6 +54,7 @@ public class PingService {
 	}
 
 	private void sendPingMessages() {
+		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Setting up all the pingers.");
 
 		for (TcpSocket socket : sockets) {
 
@@ -62,9 +63,12 @@ public class PingService {
 
 			pingTaskList.add(ping);
 		}
+
+		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "All the pingers have started.");
 	}
 
 	private List<ServerInfo> receivePingResponses() {
+		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Start receiving ping responses.");
 
 		boolean listChangedFlag = false;
 
@@ -74,9 +78,15 @@ public class PingService {
 
 			// Retrieving the result of the ping
 			try {
+				Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Receiving ping response from " + ping.getSocket().getInetAddress().getHostAddress());
+
 				serverInfo = ping.get(MainActivity.ASYNC_TASK_GET_TIMEOUT, TimeUnit.MILLISECONDS);
+
+				Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Received ping response from " + ping.getSocket().getInetAddress().getHostAddress());
 			}
 			catch (InterruptedException | ExecutionException | TimeoutException e) {
+				Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Failed to receive ping response from " + ping.getSocket().getInetAddress().getHostAddress());
+
 				e.printStackTrace();
 
 				// Marking this connection as lost if a timeout or other exception occurs
@@ -85,7 +95,7 @@ public class PingService {
 
 			// Checking if there is a response
 			// NOTE: PingAsyncTask will return null if there is a receive problem.
-			if(serverInfo == null) {
+			if (serverInfo == null) {
 
 				// Removing server and notifying the ConnectionManager if necessary
 				handleNoResponse(ping);
@@ -124,7 +134,7 @@ public class PingService {
 		serverInfoMap.remove(serverIp);
 
 		//  Notifying the ConnectionManager if this server was the current selected one
-		if(ConnectionManager.hasConnection() && ConnectionManager.getConnection().ip.equals(serverIp)) {
+		if (ConnectionManager.hasConnection() && ConnectionManager.getConnection().ip.equals(serverIp)) {
 			ConnectionManager.clearConnection();
 		}
 
