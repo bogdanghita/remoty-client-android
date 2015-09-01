@@ -6,18 +6,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.remoty.R;
 import com.remoty.common.ConnectionManager;
+import com.remoty.common.ISendErrorListener;
 import com.remoty.common.ServerInfo;
 import com.remoty.services.threading.TaskScheduler;
 
 
-public class MainActivity extends DebugActivity {
+public class MainActivity extends DebugActivity implements ISendErrorListener {
 
 	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
 	public final static int DETECTION_RESPONSE_TIMEOUT = 500;
 	public final static int PING_RESPONSE_TIMEOUT = 500;
+	public final static int INIT_REMOTE_CONTROL_TIMEOUT = 2000;
+
+	// TODO: rename and see if it is relevant since at this moment only send operations are performed
+	public final static int ACCELEROMETER_TIMEOUT = 50;
 
 	public final static long DETECTION_INTERVAL = 2000;
 	public final static long ACCELEROMETER_INTERVAL = 20;
@@ -176,6 +182,16 @@ public class MainActivity extends DebugActivity {
 
 	public void buttonDrive(View view) {
 
+		if(!ConnectionManager.hasConnection()) {
+
+//			Toast.makeText(this, "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
+
+			// TODO: Review this from the point of view of UX
+			openConnectPage();
+
+			return;
+		}
+
 		DriveFragment driveFragment = new DriveFragment();
 
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -233,6 +249,15 @@ public class MainActivity extends DebugActivity {
 
 		transaction.commit();
 	}
+
+	@Override
+	public void notifySendError() {
+
+
+	}
+
+
+
 
 
 	// TEST METHODS

@@ -1,6 +1,7 @@
 package com.remoty.common;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.remoty.gui.MainActivity;
 import com.remoty.services.networking.TcpSocket;

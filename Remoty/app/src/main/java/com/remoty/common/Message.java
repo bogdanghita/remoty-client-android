@@ -32,7 +32,7 @@ public class Message {
 		public float x, y, z;
 	}
 
-	public static class SimulationInfoMessage extends AbstractMessage {
+	public static class RemoteControlPortsMessage extends AbstractMessage {
 
 		public int userId;
 

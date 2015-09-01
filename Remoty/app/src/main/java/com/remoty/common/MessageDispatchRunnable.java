@@ -1,5 +1,7 @@
 package com.remoty.common;
 
+import com.remoty.gui.MainActivity;
+
 /**
  * Created by Bogdan on 8/30/2015.
  */
@@ -23,10 +25,7 @@ public class MessageDispatchRunnable implements Runnable {
 		this.ip = ip;
 		this.port= port;
 
-		// TODO: think about this timeout and then move it from here
-		int MESSAGE_DISPATCH_TIMEOUT = 100;
-
-		messageDispatcher = new MessageDispatchService(MESSAGE_DISPATCH_TIMEOUT);
+		messageDispatcher = new MessageDispatchService(MainActivity.ACCELEROMETER_TIMEOUT);
 
 		message = new Message.AbstractMessage();
 	}

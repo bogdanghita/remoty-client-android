@@ -8,11 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.remoty.R;
 import com.remoty.common.AccelerometerService;
 import com.remoty.common.ConnectionManager;
+import com.remoty.common.IConnectionListener;
 import com.remoty.common.Message;
+import com.remoty.common.RemoteControlService;
 import com.remoty.common.ServerInfo;
 import com.remoty.services.networking.TcpSocket;
 
@@ -22,9 +25,10 @@ import java.net.Socket;
 /**
  * Created by Bogdan on 8/17/2015.
  */
-public class DriveFragment extends LiveDataTransferFragment {
+public class DriveFragment extends LiveDataTransferFragment implements IConnectionListener {
 
 	AccelerometerService accService;
+	RemoteControlService remoteControlService;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class DriveFragment extends LiveDataTransferFragment {
 		Sensor mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
 		accService = new AccelerometerService(mSensorManager, mAccelerometerSensor);
+		remoteControlService = new RemoteControlService();
 	}
 
 	@Override
@@ -55,39 +60,35 @@ public class DriveFragment extends LiveDataTransferFragment {
 		super.onStart();
 
 		// NOTE: onResume() is always called immediately after onStart()
-
-		// TODO: This case should be treated with very much attention because it is important
-		// Checking if there is a connection
-		if(!ConnectionManager.hasConnection()) {
-
-			Log.d(MainActivity.TAG_SERVICES, "Not connected.");
-
-			// TODO: Do something here...
-			// TODO: It is important the acc service not to be started
-
-			return;
-		}
-
-		// Retrieving info about accelerometer simulation port
-		String ip = ConnectionManager.getConnection().ip;
-
-		setAccelerometerPort();
-
-		if(port == -1) {
-			return;
-		}
-
-		// Initializing simulation
-		accService.init(ip, port);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		if(accService.isReady()) {
-			accService.start();
+		ConnectionManager.subscribe(this);
+
+		// This fragment is only launched if there is a connection selected. If it is recreated and
+		// launched from a previous state then the selected connection will also be persisted
+		ServerInfo server = ConnectionManager.getConnection();
+		Message.RemoteControlPortsMessage ports = remoteControlService.getRemoteControlPorts(server);
+
+		if(ports == null) {
+
+			// TODO: Do something ...
+			// TODO: Open connect page
+
+			Toast.makeText(getActivity(), "Unable to get RC port. Should open ConnectPage.", Toast.LENGTH_LONG).show();
+
+			return;
 		}
+
+		// All good. Starting remote control.
+
+		// Initializing accelerometer simulation
+		accService.init(server.ip, ports.accelerometerPort);
+
+		accService.start();
 	}
 
 	@Override
@@ -97,6 +98,8 @@ public class DriveFragment extends LiveDataTransferFragment {
 		if(accService.isRunning()) {
 			accService.stop();
 		}
+
+		ConnectionManager.unsubscribe(this);
 	}
 
 	@Override
@@ -109,48 +112,19 @@ public class DriveFragment extends LiveDataTransferFragment {
 		accService.clear();
 	}
 
-	private int port;
+	@Override
+	public void connectionLost() {
 
-	private void setAccelerometerPort() {
-
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-
-				ServerInfo info = ConnectionManager.getConnection();
-
-				try {
-					// TODO: put a timeout for connection
-					Socket socket = new Socket(info.ip, info.port);
-					TcpSocket tcpSocket = new TcpSocket(socket);
-
-					Message.SimulationInfoMessage message;
-					message = tcpSocket.receiveObject(Message.SimulationInfoMessage.class);
-
-					tcpSocket.close();
-
-					port = message.accelerometerPort;
-				}
-				catch (IOException | ClassNotFoundException e) {
-					e.printStackTrace();
-
-					Log.d(MainActivity.TAG_SERVICES, "Unable to get acc port.");
-
-					// TODO: do something here
-
-					port = -1;
-				}
-			}
-		});
-
-		t.start();
-
-		try {
-			t.join();
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
+		if(accService.isRunning()) {
+			accService.stop();
 		}
 	}
 
+	@Override
+	public void connectionEstablished(ServerInfo server) {
+
+		if(accService.isReady()) {
+			accService.start();
+		}
+	}
 }
