@@ -1,11 +1,23 @@
 package com.remoty.gui;
 
-import android.app.FragmentTransaction;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.support.design.widget.TabLayout;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.remoty.R;
 import com.remoty.common.ConnectionManager;
@@ -13,10 +25,20 @@ import com.remoty.common.ServerInfo;
 import com.remoty.services.TaskScheduler;
 
 
-public class MainActivity extends DebugActivity {
+public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks {
 
     public static final String TAG_SERVICES = "SERVICES";
 
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private String[] mDrawerListItems;
+
+    private ViewPager viewPager;
+    private FragmentTabListener mAdapter;
+    private ActionBar actionBar;
+    // Tab titles
+    private String[] tabs = { "Drive", "Connect", "Score" };
     // TODO: think if we want the action bar in all fragments
     // TODO: also do some research on the action bar and AppCompatActivity
 
@@ -30,16 +52,81 @@ public class MainActivity extends DebugActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.fragment_container);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        // Checking if activity was restored from a previous state
-        if (savedInstanceState == null) {
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Drive"));
+        tabLayout.addTab(tabLayout.newTab().setText("Connect"));
+        tabLayout.addTab(tabLayout.newTab().setText("Score"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-            // Adding main fragment
-            MainFragment mainFragment = new MainFragment();
-            getFragmentManager().beginTransaction().add(R.id.activity_main, mainFragment).addToBackStack(null).commit();
-        }
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new FragmentTabListener
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+/*
+         mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        // mTitle = getTitle();
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.navigation_drawer));
+*/
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        mDrawerList = (ListView) findViewById(R.id.list);
+        mDrawerListItems = getResources().getStringArray(R.array.drawer_list);
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, mDrawerListItems));
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, "You selected an item", Toast.LENGTH_SHORT).show();
+                mDrawerLayout.closeDrawer(mDrawerList);
+            }
+        });
+
+        mDrawerToggle = new ActionBarDrawerToggle(this,
+                mDrawerLayout,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close){
+            public void onDrawerClosed(View v){
+                super.onDrawerClosed(v);
+                invalidateOptionsMenu();
+                syncState();
+            }
+            public void onDrawerOpened(View v){
+                super.onDrawerOpened(v);
+                invalidateOptionsMenu();
+                syncState();
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        mDrawerToggle.syncState();
         // TEST
 
 //        testTaskScheduler();
@@ -116,6 +203,15 @@ public class MainActivity extends DebugActivity {
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.home:
+            {
+                if(mDrawerLayout.isDrawerOpen(mDrawerList)){
+                    mDrawerLayout.closeDrawer(mDrawerList);
+                } else {
+                    mDrawerLayout.openDrawer(mDrawerList);
+                }
+                return true;
+            }
             case R.id.action_love:
                 break;
             case R.id.action_share:
@@ -141,47 +237,22 @@ public class MainActivity extends DebugActivity {
             getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
-        }
+     }
     }
 
-    public void buttonDrive(View view) {
-
-        DriveFragment driveFragment = new DriveFragment();
-
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.activity_main, driveFragment);
-
-        transaction.addToBackStack(null);
-
-        transaction.commit();
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState){
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
     }
 
-    public void buttonScore(View view) {
-
-        ScoreFragment scoreFragment = new ScoreFragment();
-
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.activity_main, scoreFragment);
-
-        transaction.addToBackStack(null);
-
-        transaction.commit();
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    public void buttonConnect(View view) {
 
-        ConnectFragment connectFragment = new ConnectFragment();
-
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.activity_main, connectFragment);
-
-        transaction.addToBackStack(null);
-
-        transaction.commit();
-    }
 
     public void buttonSubscribe(View view) {
 
@@ -235,6 +306,12 @@ public class MainActivity extends DebugActivity {
 
         timer.stop();
     }
+
+    @Override
+    public void onNavigationDrawerItemSelected(int poson){
+
+    }
+
 
     // END TEST METHODS
 }
