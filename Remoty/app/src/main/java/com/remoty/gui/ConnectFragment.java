@@ -1,6 +1,7 @@
 package com.remoty.gui;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by Bogdan on 8/17/2015.
  */
-public class ConnectFragment extends DebugFragment implements IDetectionListener {
+public class ConnectFragment extends Fragment implements IDetectionListener {
 
     /*
     There will be two types of messages:
