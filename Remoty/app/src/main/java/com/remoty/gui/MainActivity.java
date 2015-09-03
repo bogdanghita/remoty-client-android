@@ -16,6 +16,7 @@ import android.view.View;
 import android.support.design.widget.TabLayout;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,13 +31,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static final String TAG_SERVICES = "SERVICES";
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    private LinearLayout mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private String[] mDrawerListItems;
 
-    private ViewPager viewPager;
-    private FragmentTabListener mAdapter;
-    private ActionBar actionBar;
     // Tab titles
     private String[] tabs = { "Drive", "Connect", "Score" };
     // TODO: think if we want the action bar in all fragments
@@ -94,28 +92,30 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 (DrawerLayout) findViewById(R.id.navigation_drawer));
 */
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        mDrawerList = (ListView) findViewById(R.id.list);
-        mDrawerListItems = getResources().getStringArray(R.array.drawer_list);
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, mDrawerListItems));
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, "You selected an item", Toast.LENGTH_SHORT).show();
-                mDrawerLayout.closeDrawer(mDrawerList);
-            }
-        });
+        mDrawerList = (LinearLayout) findViewById(R.id.list);
+//        mDrawerListItems = getResources().getStringArray(R.array.drawer_list);
+//        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+//                android.R.layout.simple_list_item_1, mDrawerListItems));
+//        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Toast.makeText(MainActivity.this, "You selected an item", Toast.LENGTH_SHORT).show();
+//                mDrawerLayout.closeDrawer(mDrawerList);
+//            }
+//        });
 
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout,
                 toolbar,
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close){
+            @Override
             public void onDrawerClosed(View v){
                 super.onDrawerClosed(v);
                 invalidateOptionsMenu();
                 syncState();
             }
+            @Override
             public void onDrawerOpened(View v){
                 super.onDrawerOpened(v);
                 invalidateOptionsMenu();
