@@ -39,10 +39,53 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:id="@+id/list"
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:background="#ffff2a23"/>
+        android:background="#FFFFFF">
+
+        <LinearLayout
+            android:id="@+id/user_profile"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="#ffffa17a"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Connection state: NONE"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/available_connections"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Your available connections:"/>
+
+            <LinearLayout
+                android:id="@+id/connections"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_manual_connection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="buttonManualConnection"
+                android:text="Manual connection"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>
