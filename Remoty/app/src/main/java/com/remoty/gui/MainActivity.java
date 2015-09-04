@@ -1,11 +1,11 @@
 package com.remoty.gui;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -14,29 +14,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.TabLayout;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.remoty.R;
 import com.remoty.common.ConnectionManager;
 import com.remoty.common.ServerInfo;
+import com.remoty.services.IDetectionListener;
 import com.remoty.services.TaskScheduler;
 
+import java.util.LinkedList;
+import java.util.List;
 
-public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks {
+
+public class MainActivity extends ActionBarActivity implements IDetectionListener {
 
     public static final String TAG_SERVICES = "SERVICES";
 
     private DrawerLayout mDrawerLayout;
-    private LinearLayout mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-    private String[] mDrawerListItems;
+    public static LinearLayout container;
 
-    // Tab titles
-    private String[] tabs = { "Drive", "Connect", "Score" };
+    public static MainActivity Instance;
+
+    private List<ServerInfo> dummyServers;
+
     // TODO: think if we want the action bar in all fragments
     // TODO: also do some research on the action bar and AppCompatActivity
 
@@ -50,16 +52,22 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // set current instance
+        Instance = this;
+
         setContentView(R.layout.activity_main);
+
+        // set ActionBar and FragmentTabs in Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Drive"));
-        tabLayout.addTab(tabLayout.newTab().setText("Connect"));
-        tabLayout.addTab(tabLayout.newTab().setText("Score"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Configurations"));
+        tabLayout.addTab(tabLayout.newTab().setText("Market"));
+        tabLayout.addTab(tabLayout.newTab().setText("Social"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+        // setting Tab logic and fragment container
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new FragmentTabListener
                 (getSupportFragmentManager(), tabLayout.getTabCount());
@@ -81,28 +89,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
             }
         });
-/*
-         mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        // mTitle = getTitle();
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.navigation_drawer));
-*/
+        final LinearLayout container = (LinearLayout) findViewById(R.id.connections);
+
+        // Setting up Navigation Drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        mDrawerList = (LinearLayout) findViewById(R.id.list);
-//        mDrawerListItems = getResources().getStringArray(R.array.drawer_list);
-//        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-//                android.R.layout.simple_list_item_1, mDrawerListItems));
-//        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(MainActivity.this, "You selected an item", Toast.LENGTH_SHORT).show();
-//                mDrawerLayout.closeDrawer(mDrawerList);
-//            }
-//        });
 
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout,
@@ -118,6 +109,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             @Override
             public void onDrawerOpened(View v){
                 super.onDrawerOpened(v);
+
+                MainActivity.Instance.update(dummyServers);
+
                 invalidateOptionsMenu();
                 syncState();
             }
@@ -205,12 +199,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         switch (id) {
             case R.id.home:
             {
-                if(mDrawerLayout.isDrawerOpen(mDrawerList)){
-                    mDrawerLayout.closeDrawer(mDrawerList);
+                if(mDrawerLayout.isDrawerOpen(container)){
+                    mDrawerLayout.closeDrawer(container);
                 } else {
-                    mDrawerLayout.openDrawer(mDrawerList);
+                    mDrawerLayout.openDrawer(container);
                 }
-                return true;
+                break;
             }
             case R.id.action_love:
                 break;
@@ -228,17 +222,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         return true;
     }
 
-    @Override
-    public void onBackPressed() {
-
-        /* Forcing back stack pop (it seems that the back stack is not popped automatically, although
-        it should be). TODO: check how this behaves on multiple devices */
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-     }
-    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState){
@@ -250,6 +233,30 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void update(final List<ServerInfo> servers) {
+
+        // This is called from another thread so we need to ensure it is executed on the UI thread
+        MainActivity.Instance.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                serversTest();
+
+                container = (LinearLayout) findViewById(R.id.connections);
+
+                container.removeAllViews();
+
+                for (ServerInfo server : dummyServers) {
+
+                    Button button = createServerButton(server.name, server.ip, server.port);
+
+                    container.addView(button);
+                }
+            }
+        });
     }
 
 
@@ -307,11 +314,31 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         timer.stop();
     }
 
-    @Override
-    public void onNavigationDrawerItemSelected(int poson){
+    private Button createServerButton(String hostname, String ip, int port) {
 
+        Button button = new Button(this.getApplicationContext());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        button.setLayoutParams(params);
+
+        button.setBackgroundColor(Color.TRANSPARENT);
+        button.setTextColor(Color.DKGRAY);
+
+        String text = hostname + " - " + ip + ":" + port;
+
+        button.setText(text);
+
+        return button;
     }
 
+    private void serversTest() {
+
+        dummyServers = new LinkedList<>();
+        dummyServers.add(new ServerInfo("192.168.1.11", 8, "Server1"));
+        dummyServers.add(new ServerInfo("192.168.1.73", 11, "Server2"));
+
+    }
 
     // END TEST METHODS
 }
