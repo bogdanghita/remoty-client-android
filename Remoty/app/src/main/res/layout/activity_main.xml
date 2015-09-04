@@ -1,7 +1,6 @@
 <android.support.v4.widget.DrawerLayout
-    android:id="@+id/drawer"
+    android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -31,18 +30,19 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
+    <!-- TODO: Think if it is ok to have a fixed size for the sidebar given in dp -->
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:background="#FFFFFF">
+        android:background="#FFFFFF"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/user_profile"
@@ -58,7 +58,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/container"
+            android:id="@+id/connect_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -70,7 +70,7 @@
                 android:text="Your available connections:"/>
 
             <LinearLayout
-                android:id="@+id/connections"
+                android:id="@+id/connections_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">

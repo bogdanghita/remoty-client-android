@@ -10,15 +10,9 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_love"
+        android:id="@+id/action_help"
         android:orderInCategory="10"
-        android:title="Love"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/action_share"
-        android:orderInCategory="11"
-        android:title="Share"
+        android:title="Help"
         app:showAsAction="always"/>
 
 </menu>
