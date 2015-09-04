@@ -16,13 +16,13 @@ public class FragmentTabListener extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                DriveFragment tab1 = new DriveFragment();
+                MyConfigurations tab1 = new MyConfigurations();
                 return tab1;
             case 1:
-                ConnectFragment tab2 = new ConnectFragment();
+                MarketFragment tab2 = new MarketFragment();
                 return tab2;
             case 2:
-                ScoreFragment tab3 = new ScoreFragment();
+                SocialFragment tab3 = new SocialFragment();
                 return tab3;
             default:
                 return null;
