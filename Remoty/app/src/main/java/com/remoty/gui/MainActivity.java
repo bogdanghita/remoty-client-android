@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 
 	public static final String TAG_SERVICES = "SERVICES";
 
-	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	public static LinearLayout container;
 
@@ -47,66 +46,11 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 
 		setContentView(R.layout.activity_main);
 
-		// set ActionBar and FragmentTabs in Toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
+		configureToolbar(toolbar);
 
-		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-		tabLayout.addTab(tabLayout.newTab().setText("My Configurations"));
-		tabLayout.addTab(tabLayout.newTab().setText("Market"));
-		tabLayout.addTab(tabLayout.newTab().setText("Social"));
-		tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-		// setting Tab logic and fragment container
-		final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-		final PagerAdapter adapter = new FragmentTabListener(getSupportFragmentManager(), tabLayout.getTabCount());
-		viewPager.setAdapter(adapter);
-		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-			@Override
-			public void onTabSelected(TabLayout.Tab tab) {
-				viewPager.setCurrentItem(tab.getPosition());
-			}
-
-			@Override
-			public void onTabUnselected(TabLayout.Tab tab) {
-
-			}
-
-			@Override
-			public void onTabReselected(TabLayout.Tab tab) {
-
-			}
-		});
-
-		// Setting up Navigation Drawer
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-
-			@Override
-			public void onDrawerClosed(View v) {
-				super.onDrawerClosed(v);
-				invalidateOptionsMenu();
-				syncState();
-			}
-
-			@Override
-			public void onDrawerOpened(View v) {
-				super.onDrawerOpened(v);
-
-				// This is just for testing
-//				MainActivity.Instance.update(generateTestList());
-
-				invalidateOptionsMenu();
-				syncState();
-			}
-		};
-
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		mDrawerToggle.syncState();
+		DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		configureNavigationDrawer(drawerLayout, toolbar);
 	}
 
 	@Override
@@ -177,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
+		DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
 		switch (id) {
 			case R.id.home: {
 				if (mDrawerLayout.isDrawerOpen(container)) {
@@ -204,35 +150,80 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
+
 		mDrawerToggle.syncState();
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
+
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	@Override
-	public void update(final List<ServerInfo> servers) {
+	private void configureToolbar(Toolbar toolbar) {
 
-		// This is called from another thread so we need to ensure it is executed on the UI thread
-		MainActivity.Instance.runOnUiThread(new Runnable() {
+		// Setting up ActionBar and FragmentTabs in Toolbar
+		setSupportActionBar(toolbar);
+
+		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+		tabLayout.addTab(tabLayout.newTab().setText("My Configurations"));
+		tabLayout.addTab(tabLayout.newTab().setText("Market"));
+		tabLayout.addTab(tabLayout.newTab().setText("Social"));
+		tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+		// Setting Tab logic and fragment container
+		final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+		final PagerAdapter adapter = new FragmentTabListener(getSupportFragmentManager(), tabLayout.getTabCount());
+		viewPager.setAdapter(adapter);
+		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 			@Override
-			public void run() {
+			public void onTabSelected(TabLayout.Tab tab) {
+				viewPager.setCurrentItem(tab.getPosition());
+			}
 
-				container = (LinearLayout) findViewById(R.id.connections_layout);
+			@Override
+			public void onTabUnselected(TabLayout.Tab tab) {
 
-				container.removeAllViews();
+			}
 
-				for (ServerInfo server : servers) {
+			@Override
+			public void onTabReselected(TabLayout.Tab tab) {
 
-					Button button = createServerButton(server.name, server.ip, server.port);
-
-					container.addView(button);
-				}
 			}
 		});
+	}
+
+	private void configureNavigationDrawer(DrawerLayout mDrawerLayout, Toolbar toolbar) {
+
+		// Setting up Navigation Drawer
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+			@Override
+			public void onDrawerClosed(View v) {
+				super.onDrawerClosed(v);
+
+				invalidateOptionsMenu();
+				syncState();
+			}
+
+			@Override
+			public void onDrawerOpened(View v) {
+				super.onDrawerOpened(v);
+
+				// This is just for testing
+//				MainActivity.Instance.update(generateTestList());
+
+				invalidateOptionsMenu();
+				syncState();
+			}
+		};
+
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		mDrawerToggle.syncState();
 	}
 
 	public void buttonHelp(View view) {
@@ -262,6 +253,32 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 
 		return button;
 	}
+
+	@Override
+	public void update(final List<ServerInfo> servers) {
+
+		// This is called from another thread so we need to ensure it is executed on the UI thread
+		MainActivity.Instance.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+
+				container = (LinearLayout) findViewById(R.id.connections_layout);
+
+				container.removeAllViews();
+
+				for (ServerInfo server : servers) {
+
+					Button button = createServerButton(server.name, server.ip, server.port);
+
+					container.addView(button);
+				}
+			}
+		});
+	}
+
+
+
+// =================================================================================================
 
 	// TEST METHODS
 

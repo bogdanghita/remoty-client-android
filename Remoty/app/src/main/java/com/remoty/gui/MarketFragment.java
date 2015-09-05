@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 /**
  * Created by alina on 9/4/2015.
  */
-public class MarketFragment extends Fragment {
+public class MarketFragment extends DebugFragment {
 
 
 }
