@@ -2,7 +2,6 @@ package com.remoty.services.detection;
 
 import android.util.Log;
 
-import com.remoty.abc.StateManager;
 import com.remoty.common.ServerInfo;
 import com.remoty.services.networking.TcpSocket;
 import com.remoty.gui.MainActivity;

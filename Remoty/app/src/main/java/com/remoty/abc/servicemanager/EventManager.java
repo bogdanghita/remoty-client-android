@@ -1,4 +1,4 @@
-package com.remoty.abc;
+package com.remoty.abc.servicemanager;
 
 import com.google.common.collect.HashMultimap;
 import com.remoty.abc.events.ConnectionCheckListener;

@@ -1,4 +1,4 @@
-package com.remoty.abc;
+package com.remoty.abc.servicemanager;
 
 import com.remoty.common.ServerInfo;
 
@@ -10,12 +10,12 @@ import java.util.List;
  */
 public class StateManager {
 
-	private static ServerInfo connectionInfo = null;
+	private ServerInfo connectionInfo = null;
 
 	/**
 	 * @return - true if there is connection info available and false otherwise
 	 */
-	public static synchronized boolean hasConnection() {
+	public synchronized boolean hasConnection() {
 		return connectionInfo != null;
 	}
 
@@ -25,7 +25,7 @@ public class StateManager {
 	 *
 	 * @param connection - info about the server.
 	 */
-	public static synchronized void setConnection(ServerInfo connection) {
+	public synchronized void setConnection(ServerInfo connection) {
 		connectionInfo = connection;
 
 //		if (connection == null) {
@@ -39,7 +39,7 @@ public class StateManager {
 	/**
 	 * Has the same effect as calling setConnection(null).
 	 */
-	public static synchronized void clearConnection() {
+	public synchronized void clearConnection() {
 		connectionInfo = null;
 
 //		notifyConnectionLost();
@@ -48,7 +48,7 @@ public class StateManager {
 	/**
 	 * @return - the connection info or null if there is no connection.
 	 */
-	public static synchronized ServerInfo getConnection() {
+	public synchronized ServerInfo getConnection() {
 		return connectionInfo;
 	}
 }

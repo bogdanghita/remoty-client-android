@@ -1,7 +1,7 @@
 package com.remoty.abc.events;
 
 
-import com.remoty.abc.EventManager;
+import com.remoty.abc.servicemanager.EventManager;
 
 /**
  * Created by Bogdan on 9/5/2015.

@@ -20,9 +20,9 @@ import android.widget.Toast;
 
 import com.remoty.R;
 import com.remoty.abc.events.ConnectionCheckListener;
-import com.remoty.abc.ConnectionCheckService;
-import com.remoty.abc.ServiceManager;
-import com.remoty.abc.StateManager;
+import com.remoty.abc.servicemanager.ConnectionCheckService;
+import com.remoty.abc.servicemanager.ServiceManager;
+import com.remoty.abc.servicemanager.StateManager;
 import com.remoty.abc.events.DetectionListener;
 import com.remoty.common.ServerInfo;
 import com.remoty.services.detection.DetectionService;
@@ -77,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
 	// TODO: Talk with Alina about this.
 	public static MainActivity Instance;
 
-	public ServiceManager serviceManager;
+	private ServiceManager serviceManager;
+	private StateManager stateManager;
 	private DetectionService serverDetection;
 	private ConnectionCheckService connectionCheck;
 
@@ -88,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
 		// set current instance
 		Instance = this;
 
-		serviceManager = new ServiceManager();
+		serviceManager = ServiceManager.getInstance();
+		stateManager = serviceManager.getStateManager();
 		serverDetection = serviceManager.getActionManager().getServerDetectionService();
 		connectionCheck = serviceManager.getActionManager().getConnectionCheckService();
 
@@ -109,16 +111,16 @@ public class MainActivity extends AppCompatActivity {
 		// Restoring the connection info from the saved instance. If there was no connection then
 		// the it is set to null (returned by retrieveFromBundle())
 		ServerInfo connectionInfo = ServerInfo.retrieveFromBundle(savedInstanceState);
-		StateManager.setConnection(connectionInfo);
+		stateManager.setConnection(connectionInfo);
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 
 		// Saving the connection info to the bundle
-		if (StateManager.hasConnection()) {
+		if (stateManager.hasConnection()) {
 
-			ServerInfo connectionInfo = StateManager.getConnection();
+			ServerInfo connectionInfo = stateManager.getConnection();
 			ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
 		}
 
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 		updateConnectionStatus();
 
 		// Starting connection check if necessary
-		if (StateManager.hasConnection()) {
+		if (stateManager.hasConnection()) {
 			startConnectionCheck();
 		}
 
@@ -154,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
 		super.onPause();
 
 		// Stopping connection check if necessary
-		if (StateManager.hasConnection()) {
+		if (stateManager.hasConnection()) {
 			stopConnectionCheck();
 		}
 
@@ -174,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
 		// Clearing connection so that it is not kept in memory as a static object until the OS
 		// decides to stop the process and clear the RAM
-		StateManager.clearConnection();
+		stateManager.clearConnection();
 	}
 
 	@Override
@@ -386,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
 	private void serverSelected(ServerInfo server) {
 
 		// Notifying the StateManager
-		StateManager.setConnection(server);
+		stateManager.setConnection(server);
 
 		updateConnectionStatus();
 	}
@@ -394,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
 	// TODO: call this method when the user chooses to disconnect from the current server
 	private void serverDeselected(ServerInfo server) {
 
-		StateManager.clearConnection();
+		stateManager.clearConnection();
 
 		updateConnectionStatus();
 	}
@@ -413,9 +415,9 @@ public class MainActivity extends AppCompatActivity {
 
 		String text = "Selection: ";
 
-		if (StateManager.hasConnection()) {
+		if (stateManager.hasConnection()) {
 
-			ServerInfo info = StateManager.getConnection();
+			ServerInfo info = stateManager.getConnection();
 
 			text += info.name;
 		}
