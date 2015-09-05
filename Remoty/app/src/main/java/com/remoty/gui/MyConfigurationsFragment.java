@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.remoty.R;
 import com.remoty.common.Configuration;
+import com.remoty.common.ConnectionManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -86,6 +88,16 @@ public class MyConfigurationsFragment extends DebugFragment {
 	}
 
 	private void switchToFragment(Fragment fragment) {
+
+		if(!ConnectionManager.hasConnection()) {
+
+			Toast.makeText(getActivity(), "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
+
+			// TODO: Review this from the point of view of UX
+//			openConnectPage();
+
+			return;
+		}
 
 		// TODO: Open the new fragment.
 		// NOTE: A configuration page is going to be launched so the screen should not contain the action bar and the tabs

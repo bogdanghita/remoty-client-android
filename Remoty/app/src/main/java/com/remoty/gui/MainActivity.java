@@ -1,5 +1,6 @@
 package com.remoty.gui;
 
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import com.remoty.R;
 import com.remoty.common.ConnectionManager;
 import com.remoty.common.IDetectionListener;
+import com.remoty.common.ISendErrorListener;
 import com.remoty.common.ServerInfo;
 import com.remoty.services.threading.TaskScheduler;
 
@@ -26,9 +28,38 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements IDetectionListener {
+public class MainActivity extends AppCompatActivity implements IDetectionListener, ISendErrorListener {
 
+	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
+	public final static int DETECTION_RESPONSE_TIMEOUT = 500;
+	public final static int PING_RESPONSE_TIMEOUT = 500;
+	public final static int INIT_REMOTE_CONTROL_TIMEOUT = 2000;
+
+	// TODO: rename and see if it is relevant since at this moment only send operations are performed
+	public final static int ACCELEROMETER_TIMEOUT = 50;
+
+	public final static long DETECTION_INTERVAL = 2000;
+	public final static long ACCELEROMETER_INTERVAL = 20;
+
+	public final static int LOCAL_DETECTION_RESPONSE_PORT = 10000;
+	public final static int REMOTE_DETECTION_PORT = 9001;
+
+	public final static int MSG_SCHEDULE = 1000;
+
+	// Logging tags
 	public static final String TAG_SERVICES = "SERVICES";
+
+	public final static String LIFECYCLE = "LIFECYCLE";
+
+	public static final String DETECTION = "DETECTION";
+
+	public static final String BROADCAST = "BROADCAST";
+
+	public static final String RESPONSE = "RESPONSE";
+
+	public static final String PING_SERVICE = "PING_SERVICE";
+
+	public static final String PING_TASK = "PING_TASK";
 
 	private ActionBarDrawerToggle mDrawerToggle;
 	public static LinearLayout container;
@@ -36,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 	public static MainActivity Instance;
 
 	// TODO: get more details on the thing with "in some cases the fragment is called with the empty constructor"
+
+	// TODO: Don't forget about the join that blocks the UI when detection closes (see if it is still doing it and make a decision)
+
+	// TODO: Implement logic for opening the connect page when connection is lost (see openConnectPage())
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +93,8 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 		// Always call the superclass so it can restore the view hierarchy
 		super.onRestoreInstanceState(savedInstanceState);
 
-		// TODO: handle the situation when there is no connection info.
-
-		// Restoring the connection info from the saved instance
+		// Restoring the connection info from the saved instance. If there was no connection then
+		// the it is set to null (returned by retrieveFromBundle())
 		ServerInfo connectionInfo = ServerInfo.retrieveFromBundle(savedInstanceState);
 		ConnectionManager.setConnection(connectionInfo);
 	}
@@ -68,11 +102,12 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 
-		// TODO: handle the situation when there is no connection info.
-
 		// Saving the connection info to the bundle
-		ServerInfo connectionInfo = ConnectionManager.getConnection();
-		ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
+		if (ConnectionManager.hasConnection()) {
+
+			ServerInfo connectionInfo = ConnectionManager.getConnection();
+			ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
+		}
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
@@ -105,6 +140,10 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+
+		// Clearing connection so that it is not kept in memory as a static object until the OS
+		// decides to stop the process and clear the RAM
+		ConnectionManager.clearConnection();
 	}
 
 	@Override
@@ -226,6 +265,19 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 		mDrawerToggle.syncState();
 	}
 
+	/**
+	 * TODO: Review this.
+	 * NOTE: Maybe sometimes we will not want to disconnect from the server but just warn the user that
+	 * something is not ok with the connection
+	 * TODO: Open connect page when the connection is lost
+	 * TODO: Subscribe MainActivity to the ConnectionManager and do the job there
+	 * Opens the connect page. It is called either when the user navigates to it or when the connection is lost.
+	 * For future uses: adapt the content of this method to the component type of the connect page.
+	 */
+	private void openConnectPage() {
+
+	}
+
 	public void buttonHelp(View view) {
 
 	}
@@ -276,7 +328,11 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 		});
 	}
 
+	@Override
+	public void notifySendError() {
 
+
+	}
 
 // =================================================================================================
 
