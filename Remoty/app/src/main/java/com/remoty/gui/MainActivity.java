@@ -1,6 +1,5 @@
 package com.remoty.gui;
 
-import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -16,19 +15,30 @@ import android.view.View;
 import android.support.design.widget.TabLayout;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.remoty.R;
-import com.remoty.common.ConnectionManager;
-import com.remoty.common.IDetectionListener;
-import com.remoty.common.ISendErrorListener;
+import com.remoty.abc.events.ConnectionCheckListener;
+import com.remoty.abc.ConnectionCheckService;
+import com.remoty.abc.ServiceManager;
+import com.remoty.abc.StateManager;
+import com.remoty.abc.events.DetectionListener;
 import com.remoty.common.ServerInfo;
+import com.remoty.services.detection.DetectionService;
 import com.remoty.services.threading.TaskScheduler;
 
 import java.util.LinkedList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements IDetectionListener, ISendErrorListener {
+// TODO: get more details on the thing with "in some cases the fragment is called with the empty constructor"
+
+// TODO: Don't forget about the join that blocks the UI when detection closes (see if it is still doing it and make a decision)
+
+// TODO: Implement logic for opening the connect page when connection is lost (see openConnectPage())
+
+public class MainActivity extends AppCompatActivity {
 
 	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
 	public final static int DETECTION_RESPONSE_TIMEOUT = 500;
@@ -62,15 +72,14 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 	public static final String PING_TASK = "PING_TASK";
 
 	private ActionBarDrawerToggle mDrawerToggle;
-	public static LinearLayout container;
+	private LinearLayout container;
 
+	// TODO: Talk with Alina about this.
 	public static MainActivity Instance;
 
-	// TODO: get more details on the thing with "in some cases the fragment is called with the empty constructor"
-
-	// TODO: Don't forget about the join that blocks the UI when detection closes (see if it is still doing it and make a decision)
-
-	// TODO: Implement logic for opening the connect page when connection is lost (see openConnectPage())
+	public ServiceManager serviceManager;
+	private DetectionService serverDetection;
+	private ConnectionCheckService connectionCheck;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +87,10 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 
 		// set current instance
 		Instance = this;
+
+		serviceManager = new ServiceManager();
+		serverDetection = serviceManager.getActionManager().getServerDetectionService();
+		connectionCheck = serviceManager.getActionManager().getConnectionCheckService();
 
 		setContentView(R.layout.activity_main);
 
@@ -96,16 +109,16 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 		// Restoring the connection info from the saved instance. If there was no connection then
 		// the it is set to null (returned by retrieveFromBundle())
 		ServerInfo connectionInfo = ServerInfo.retrieveFromBundle(savedInstanceState);
-		ConnectionManager.setConnection(connectionInfo);
+		StateManager.setConnection(connectionInfo);
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 
 		// Saving the connection info to the bundle
-		if (ConnectionManager.hasConnection()) {
+		if (StateManager.hasConnection()) {
 
-			ServerInfo connectionInfo = ConnectionManager.getConnection();
+			ServerInfo connectionInfo = StateManager.getConnection();
 			ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
 		}
 
@@ -117,18 +130,36 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 	public void onStart() {
 		super.onStart();
 
+		// Start detection
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
+		// Updating connection status
+		updateConnectionStatus();
+
+		// Starting connection check if necessary
+		if (StateManager.hasConnection()) {
+			startConnectionCheck();
+		}
+
+		// Starting server detection
+		startServerDetection();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 
+		// Stopping connection check if necessary
+		if (StateManager.hasConnection()) {
+			stopConnectionCheck();
+		}
+
+		// Stopping server detection
+		stopServerDetection();
 	}
 
 	@Override
@@ -143,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 
 		// Clearing connection so that it is not kept in memory as a static object until the OS
 		// decides to stop the process and clear the RAM
-		ConnectionManager.clearConnection();
+		StateManager.clearConnection();
 	}
 
 	@Override
@@ -240,19 +271,19 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
 
 			@Override
-			public void onDrawerClosed(View v) {
-				super.onDrawerClosed(v);
+			public void onDrawerOpened(View v) {
+				super.onDrawerOpened(v);
+
+				// This is just for testing
+//				MainActivity.Instance.update(generateTestList());
 
 				invalidateOptionsMenu();
 				syncState();
 			}
 
 			@Override
-			public void onDrawerOpened(View v) {
-				super.onDrawerOpened(v);
-
-				// This is just for testing
-//				MainActivity.Instance.update(generateTestList());
+			public void onDrawerClosed(View v) {
+				super.onDrawerClosed(v);
 
 				invalidateOptionsMenu();
 				syncState();
@@ -265,12 +296,17 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 		mDrawerToggle.syncState();
 	}
 
+	public ServiceManager getServiceManager() {
+
+		return serviceManager;
+	}
+
 	/**
 	 * TODO: Review this.
 	 * NOTE: Maybe sometimes we will not want to disconnect from the server but just warn the user that
 	 * something is not ok with the connection
 	 * TODO: Open connect page when the connection is lost
-	 * TODO: Subscribe MainActivity to the ConnectionManager and do the job there
+	 * TODO: Subscribe MainActivity to the StateManager and do the job there
 	 * Opens the connect page. It is called either when the user navigates to it or when the connection is lost.
 	 * For future uses: adapt the content of this method to the component type of the connect page.
 	 */
@@ -286,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 
 	}
 
-	private Button createServerButton(String hostname, String ip, int port) {
+	private Button createServerButton(final String hostname, final String ip, final int port) {
 
 		Button button = new Button(this.getApplicationContext());
 
@@ -303,36 +339,158 @@ public class MainActivity extends AppCompatActivity implements IDetectionListene
 
 		button.setText(text);
 
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				Toast.makeText(getApplicationContext(), "Server selected", Toast.LENGTH_LONG).show();
+
+				serverSelected(new ServerInfo(ip, port, hostname));
+			}
+		});
+
 		return button;
 	}
 
-	@Override
-	public void update(final List<ServerInfo> servers) {
+	private void startServerDetection() {
 
-		// This is called from another thread so we need to ensure it is executed on the UI thread
-		MainActivity.Instance.runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
+		serviceManager.getEventManager().subscribe(detectionListener);
 
-				container = (LinearLayout) findViewById(R.id.connections_layout);
+		serverDetection.init();
+		serverDetection.start();
+	}
 
-				container.removeAllViews();
+	private void stopServerDetection() {
 
-				for (ServerInfo server : servers) {
+		serverDetection.stop();
+		serverDetection.clear();
 
-					Button button = createServerButton(server.name, server.ip, server.port);
+		serviceManager.getEventManager().unsubscribe(detectionListener);
+	}
 
-					container.addView(button);
+	private void startConnectionCheck() {
+
+		serviceManager.getEventManager().subscribe(connectionCheckListener);
+
+		connectionCheck.start();
+	}
+
+	private void stopConnectionCheck() {
+
+		connectionCheck.stop();
+
+		serviceManager.getEventManager().unsubscribe(connectionCheckListener);
+	}
+
+	// This is called when a server is chosen as the current connection
+	private void serverSelected(ServerInfo server) {
+
+		// Notifying the StateManager
+		StateManager.setConnection(server);
+
+		updateConnectionStatus();
+	}
+
+	// TODO: call this method when the user chooses to disconnect from the current server
+	private void serverDeselected(ServerInfo server) {
+
+		StateManager.clearConnection();
+
+		updateConnectionStatus();
+	}
+
+	/**
+	 * TODO: Be sure that this works when the side bar is closed
+	 * <p/>
+	 * NOTE: This method is just for now. Connection status update will be defined when the GUI behavior is ready.
+	 * <p/>
+	 * Retrieves the current connection status from the StateManager and updates the GUI components accordingly.
+	 * For future uses: adapt the content of this method to the GUI type.
+	 */
+	private void updateConnectionStatus() {
+
+		TextView currentConnectionTextView = (TextView) findViewById(R.id.current_selection_text_view);
+
+		String text = "Selection: ";
+
+		if (StateManager.hasConnection()) {
+
+			ServerInfo info = StateManager.getConnection();
+
+			text += info.name;
+		}
+		else {
+			text += "NONE";
+		}
+
+		currentConnectionTextView.setText(text);
+
+		// TODO: also update the status icon
+	}
+
+// =================================================================================================
+//	LISTENERS
+
+	ConnectionCheckListener connectionCheckListener = new ConnectionCheckListener() {
+
+		@Override
+		public void connectionEstablished() {
+
+			// This may be called from another thread so we need to ensure it is executed on the UI thread
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+
+					// TODO: update connection status
+					// - update Icon
+					// - update state of the connect area in the side menu
+
+					Toast.makeText(getApplicationContext(), "Connection established", Toast.LENGTH_LONG).show();
 				}
-			}
-		});
-	}
+			});
+		}
 
-	@Override
-	public void notifySendError() {
+		@Override
+		public void connectionLost() {
 
+			// This may be called from another thread so we need to ensure it is executed on the UI thread
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
 
-	}
+					// TODO: update connection status
+					// - update Icon
+					// - update state of the connect area in the side menu
+
+					Toast.makeText(getApplicationContext(), "Connection lost", Toast.LENGTH_LONG).show();
+				}
+			});
+		}
+	};
+
+	DetectionListener detectionListener = new DetectionListener() {
+		@Override
+		public void update(final List<ServerInfo> servers) {
+
+			// This is called from another thread so we need to ensure it is executed on the UI thread
+			MainActivity.Instance.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+
+					container = (LinearLayout) findViewById(R.id.connections_layout);
+
+					container.removeAllViews();
+
+					for (ServerInfo server : servers) {
+
+						Button button = createServerButton(server.name, server.ip, server.port);
+
+						container.addView(button);
+					}
+				}
+			});
+		}
+	};
 
 // =================================================================================================
 

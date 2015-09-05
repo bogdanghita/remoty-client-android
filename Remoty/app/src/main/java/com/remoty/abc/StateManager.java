@@ -1,4 +1,6 @@
-package com.remoty.common;
+package com.remoty.abc;
+
+import com.remoty.common.ServerInfo;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,33 +8,9 @@ import java.util.List;
 /**
  * Created by Bogdan on 8/23/2015.
  */
-public class ConnectionManager {
+public class StateManager {
 
 	private static ServerInfo connectionInfo = null;
-
-	private static final List<IConnectionListener> listeners = new LinkedList<>();
-
-	public static void subscribe(IConnectionListener listener) {
-		listeners.add(listener);
-	}
-
-	public static void unsubscribe(IConnectionListener listener) {
-		listeners.remove(listener);
-	}
-
-	private static void notifyConnectionLost() {
-
-		for (IConnectionListener listener : listeners) {
-			listener.connectionLost();
-		}
-	}
-
-	private static void notifyConnectionEstablished() {
-
-		for (IConnectionListener listener : listeners) {
-			listener.connectionEstablished(connectionInfo);
-		}
-	}
 
 	/**
 	 * @return - true if there is connection info available and false otherwise
@@ -50,12 +28,12 @@ public class ConnectionManager {
 	public static synchronized void setConnection(ServerInfo connection) {
 		connectionInfo = connection;
 
-		if (connection == null) {
-			notifyConnectionLost();
-		}
-		else {
-			notifyConnectionEstablished();
-		}
+//		if (connection == null) {
+//			notifyConnectionLost();
+//		}
+//		else {
+//			notifyConnectionEstablished();
+//		}
 	}
 
 	/**
@@ -64,7 +42,7 @@ public class ConnectionManager {
 	public static synchronized void clearConnection() {
 		connectionInfo = null;
 
-		notifyConnectionLost();
+//		notifyConnectionLost();
 	}
 
 	/**

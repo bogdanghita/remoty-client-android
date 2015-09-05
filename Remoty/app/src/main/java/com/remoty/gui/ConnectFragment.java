@@ -1,7 +1,6 @@
 package com.remoty.gui;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,19 +9,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.remoty.R;
-import com.remoty.common.ConnectionManager;
-import com.remoty.common.IConnectionListener;
+import com.remoty.abc.StateManager;
 import com.remoty.common.ViewFactory;
 import com.remoty.common.ServerInfo;
-import com.remoty.common.IDetectionListener;
-import com.remoty.services.detection.ServerDetection;
+import com.remoty.services.detection.DetectionService;
 
-import java.util.List;
 
 /**
  * Created by Bogdan on 8/17/2015.
  */
-public class ConnectFragment extends DebugFragment implements IDetectionListener, View.OnClickListener, IConnectionListener {
+public class ConnectFragment extends DebugFragment implements /*DetectionListener,*/ View.OnClickListener {
 
 	/* There are two possible ways of handling connection lost events:
 	* 1. (current one) The fragment that is currently active is responsible to report if the
@@ -57,7 +53,7 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
      - for every client there will be a different set of sockets (as the connection in TCP is 1 to 1)
      */
 
-	ServerDetection serverDetection;
+	DetectionService serverDetection;
 
 	LinearLayout serversLayout;
 	TextView currentConnectionTextView;
@@ -86,7 +82,7 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 		super.onCreate(savedInstanceState);
 
 		// TODO: Make a factory for all services like this one
-		serverDetection = new ServerDetection();
+//		serverDetection = new DetectionService();
 	}
 
 	@Override
@@ -108,8 +104,8 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 		updateConnectionStatus();
 
 		// Subscribing to events
-		ConnectionManager.subscribe(this);
-		serverDetection.subscribe(this);
+//		StateManager.subscribe(this);
+//		serverDetection.subscribe(this);
 
 		// Start sending detection and state check messages
 		serverDetection.start();
@@ -123,8 +119,8 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 		serverDetection.stop();
 
 		// Unsubscribing from events
-		ConnectionManager.unsubscribe(this);
-		serverDetection.unsubscribe(this);
+//		StateManager.unsubscribe(this);
+//		serverDetection.unsubscribe(this);
 	}
 
 	@Override
@@ -137,51 +133,51 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 		serverDetection.clear();
 	}
 
-	@Override
-	public void connectionLost() {
+//	@Override
+//	public void connectionLost() {
+//
+//		// This may be called from another thread so we need to ensure it is executed on the UI thread
+//		getActivity().runOnUiThread(new Runnable() {
+//			@Override
+//			public void run() {
+//
+//				currentConnectionTextView.setText("Selection: NONE");
+//			}
+//		});
+//	}
+//
+//	@Override
+//	public void connectionEstablished(ServerInfo server) {
+//
+//		// This may be called from another thread so we need to ensure it is executed on the UI thread
+//		getActivity().runOnUiThread(new Runnable() {
+//			@Override
+//			public void run() {
+//
+//				updateConnectionStatus();
+//			}
+//		});
+//	}
 
-		// This may be called from another thread so we need to ensure it is executed on the UI thread
-		getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-
-				currentConnectionTextView.setText("Selection: NONE");
-			}
-		});
-	}
-
-	@Override
-	public void connectionEstablished(ServerInfo server) {
-
-		// This may be called from another thread so we need to ensure it is executed on the UI thread
-		getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-
-				updateConnectionStatus();
-			}
-		});
-	}
-
-	@Override
-	public void update(final List<ServerInfo> servers) {
-
-		// This may be called from another thread so we need to ensure it is executed on the UI thread
-		getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-
-				serversLayout.removeAllViews();
-
-				for (ServerInfo server : servers) {
-
-					Button button = createServerButton(server);
-
-					serversLayout.addView(button);
-				}
-			}
-		});
-	}
+//	@Override
+//	public void update(final List<ServerInfo> servers) {
+//
+//		// This may be called from another thread so we need to ensure it is executed on the UI thread
+//		getActivity().runOnUiThread(new Runnable() {
+//			@Override
+//			public void run() {
+//
+//				serversLayout.removeAllViews();
+//
+//				for (ServerInfo server : servers) {
+//
+//					Button button = createServerButton(server);
+//
+//					serversLayout.addView(button);
+//				}
+//			}
+//		});
+//	}
 
 	private Button createServerButton(final ServerInfo server) {
 
@@ -204,8 +200,8 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 
 	private void serverSelected(ServerInfo server) {
 
-		// Notifying the ConnectionManager
-		ConnectionManager.setConnection(server);
+		// Notifying the StateManager
+		StateManager.setConnection(server);
 
 		// There is no need to update the UI here since this class implements IConnectionListener
 		// and will handle the event in connectionEstablished() when it will be notified
@@ -214,16 +210,16 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 	}
 
 	/**
-	 * Retrieves the current connection status from the ConnectionManager and updates the GUI components accordingly.
+	 * Retrieves the current connection status from the StateManager and updates the GUI components accordingly.
 	 * For future uses: adapt the content of this method to the GUI type.
 	 */
 	private void updateConnectionStatus() {
 
 		String text = "Selection: ";
 
-		if (ConnectionManager.hasConnection()) {
+		if (StateManager.hasConnection()) {
 
-			ServerInfo info = ConnectionManager.getConnection();
+			ServerInfo info = StateManager.getConnection();
 
 			text += info.name;
 		}
@@ -272,7 +268,7 @@ public class ConnectFragment extends DebugFragment implements IDetectionListener
 	 */
 	public void buttonDisconnect(View view) {
 
-		ConnectionManager.clearConnection();
+		StateManager.clearConnection();
 
 		// There is no need to do anything else here since this class implements IConnectionListener
 		// and will handle the event in connectionLost() when it will be notified

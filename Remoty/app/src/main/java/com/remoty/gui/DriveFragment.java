@@ -4,7 +4,6 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +11,15 @@ import android.widget.Toast;
 
 import com.remoty.R;
 import com.remoty.common.AccelerometerService;
-import com.remoty.common.ConnectionManager;
-import com.remoty.common.IConnectionListener;
+import com.remoty.abc.StateManager;
 import com.remoty.common.Message;
 import com.remoty.common.RemoteControlService;
 import com.remoty.common.ServerInfo;
-import com.remoty.services.networking.TcpSocket;
-
-import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Created by Bogdan on 8/17/2015.
  */
-public class DriveFragment extends LiveDataTransferFragment implements IConnectionListener {
+public class DriveFragment extends LiveDataTransferFragment {
 
 	AccelerometerService accService;
 	RemoteControlService remoteControlService;
@@ -66,11 +60,11 @@ public class DriveFragment extends LiveDataTransferFragment implements IConnecti
 	public void onResume() {
 		super.onResume();
 
-		ConnectionManager.subscribe(this);
+//		StateManager.subscribe(this);
 
 		// This fragment is only launched if there is a connection selected. If it is recreated and
 		// launched from a previous state then the selected connection will also be persisted
-		ServerInfo server = ConnectionManager.getConnection();
+		ServerInfo server = StateManager.getConnection();
 		Message.RemoteControlPortsMessage ports = remoteControlService.getRemoteControlPorts(server);
 
 		if(ports == null) {
@@ -99,7 +93,7 @@ public class DriveFragment extends LiveDataTransferFragment implements IConnecti
 			accService.stop();
 		}
 
-		ConnectionManager.unsubscribe(this);
+//		StateManager.unsubscribe(this);
 	}
 
 	@Override
@@ -112,19 +106,19 @@ public class DriveFragment extends LiveDataTransferFragment implements IConnecti
 		accService.clear();
 	}
 
-	@Override
-	public void connectionLost() {
-
-		if(accService.isRunning()) {
-			accService.stop();
-		}
-	}
-
-	@Override
-	public void connectionEstablished(ServerInfo server) {
-
-		if(accService.isReady()) {
-			accService.start();
-		}
-	}
+//	@Override
+//	public void connectionLost() {
+//
+//		if(accService.isRunning()) {
+//			accService.stop();
+//		}
+//	}
+//
+//	@Override
+//	public void connectionEstablished(ServerInfo server) {
+//
+//		if(accService.isReady()) {
+//			accService.start();
+//		}
+//	}
 }

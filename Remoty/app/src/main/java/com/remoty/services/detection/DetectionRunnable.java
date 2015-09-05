@@ -2,7 +2,8 @@ package com.remoty.services.detection;
 
 import android.util.Log;
 
-import com.remoty.common.IDetectionListener;
+import com.remoty.abc.events.DetectionEvent;
+import com.remoty.abc.EventManager;
 import com.remoty.common.ServerInfo;
 import com.remoty.gui.MainActivity;
 import com.remoty.services.networking.TcpSocket;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public class DetectionRunnable implements Runnable {
 
-	private List<IDetectionListener> listeners;
+	private EventManager eventManager;
 
 	List<TcpSocket> pingSockets;
 
@@ -24,9 +25,9 @@ public class DetectionRunnable implements Runnable {
 	DetectionResponseService responseService;
 	PingService pingService;
 
-	public DetectionRunnable(List<IDetectionListener> listeners) {
+	public DetectionRunnable(EventManager eventManager) {
 
-		this.listeners = listeners;
+		this.eventManager = eventManager;
 
 		pingSockets = new ArrayList<>();
 
@@ -56,7 +57,10 @@ public class DetectionRunnable implements Runnable {
 
 		// Notify all listeners if the list was updated
 		if (results != null) {
-			notifyListeners(results);
+
+			// TODO: Trigger event...
+
+			triggerEvent(results);
 		}
 
 		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION, "Detection cycle finished.");
@@ -89,10 +93,8 @@ public class DetectionRunnable implements Runnable {
 	 *
 	 * @param servers - the list containing info about the active servers.
 	 */
-	private void notifyListeners(List<ServerInfo> servers) {
+	private void triggerEvent(List<ServerInfo> servers) {
 
-		for (IDetectionListener listener : listeners) {
-			listener.update(servers);
-		}
+		eventManager.triggerEvent(new DetectionEvent(servers));
 	}
 }

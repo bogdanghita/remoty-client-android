@@ -52,9 +52,11 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/current_selection_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Connection state: NONE"/>
+                android:text="Selection: NONE"/>
+
         </LinearLayout>
 
         <LinearLayout
