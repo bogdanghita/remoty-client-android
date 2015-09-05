@@ -21,11 +21,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-
         </LinearLayout>
 
         <TextView
+            android:id="@+id/current_selection_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Selection: NONE"/>
@@ -41,10 +40,17 @@
 
         <Button
             android:id="@+id/button_manual_connection"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:onClick="buttonManualConnection"
+            android:layout_weight="50"
             android:text="Manual connection"/>
+
+        <Button
+            android:id="@+id/button_disconnect"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:text="Disconnect"/>
 
     </LinearLayout>
 
