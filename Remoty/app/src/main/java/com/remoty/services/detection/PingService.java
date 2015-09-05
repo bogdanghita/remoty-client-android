@@ -136,9 +136,9 @@ public class PingService {
 
 		// TODO: move this from here
 //		//  Notifying the StateManager if this server was the current selected one
-//		if (StateManager.hasConnection() && StateManager.getConnection().ip.equals(serverIp)) {;
+//		if (StateManager.hasSelection() && StateManager.getSelection().ip.equals(serverIp)) {;
 //
-//			StateManager.clearConnection();
+//			StateManager.clearSelection();
 //
 //			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Removed the currently selected server. It did not respond to ping.");
 //		}

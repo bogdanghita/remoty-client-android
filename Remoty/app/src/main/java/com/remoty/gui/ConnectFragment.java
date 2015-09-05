@@ -179,29 +179,29 @@ public class ConnectFragment extends DebugFragment implements /*DetectionListene
 //		});
 //	}
 
-	private Button createServerButton(final ServerInfo server) {
-
-		Button button = ViewFactory.getButton(ViewFactory.ButtonType.BUTTON_SERVER_INFO, getActivity());
-
-		String text = server.name + " - " + server.ip + ":" + server.port;
-
-		button.setText(text);
-
-		button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				serverSelected(server);
-			}
-		});
-
-		return button;
-	}
+//	private Button createServerButton(final ServerInfo server) {
+//
+//		Button button = ViewFactory.getButton(ViewFactory.ButtonType.BUTTON_SERVER_INFO, getActivity());
+//
+//		String text = server.name + " - " + server.ip + ":" + server.port;
+//
+//		button.setText(text);
+//
+//		button.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//
+//				serverSelected(server);
+//			}
+//		});
+//
+//		return button;
+//	}
 
 	private void serverSelected(ServerInfo server) {
 
 		// Notifying the StateManager
-//		StateManager.setConnection(server);
+//		StateManager.setSelection(server);
 
 		// There is no need to update the UI here since this class implements IConnectionListener
 		// and will handle the event in connectionEstablished() when it will be notified
@@ -217,9 +217,9 @@ public class ConnectFragment extends DebugFragment implements /*DetectionListene
 
 		String text = "Selection: ";
 
-//		if (StateManager.hasConnection()) {
+//		if (StateManager.hasSelection()) {
 //
-//			ServerInfo info = StateManager.getConnection();
+//			ServerInfo info = StateManager.getSelection();
 //
 //			text += info.name;
 //		}
@@ -268,7 +268,7 @@ public class ConnectFragment extends DebugFragment implements /*DetectionListene
 	 */
 	public void buttonDisconnect(View view) {
 
-//		StateManager.clearConnection();
+//		StateManager.clearSelection();
 
 		// There is no need to do anything else here since this class implements IConnectionListener
 		// and will handle the event in connectionLost() when it will be notified
