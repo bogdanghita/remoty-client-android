@@ -9,53 +9,66 @@ import android.util.Log;
  */
 public class DebugActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        Log.d(DebugFragment.LIFECYCLE, this.getClass().getName() + " - " + "onCreate");
-    }
+		Log.d(MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onCreate");
+	}
 
-    @Override
-    public void onStart() {
-        super.onStart();
+	@Override
+	public void onStart() {
+		super.onStart();
 
-        Log.d(DebugFragment.LIFECYCLE, this.getClass().getName() + " - " + "onStart");
-    }
+		Log.d(MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onStart");
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
+	@Override
+	public void onResume() {
+		super.onResume();
 
-        Log.d(DebugFragment.LIFECYCLE, this.getClass().getName() + " - " + "onResume");
-    }
+		Log.d(MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onResume");
+	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
+	@Override
+	public void onPause() {
+		super.onPause();
 
-        Log.d(DebugFragment.LIFECYCLE, this.getClass().getName() + " - " + "onPause");
-    }
+		Log.d(MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onPause");
+	}
 
-    @Override
-    public void onStop() {
-        super.onStop();
+	@Override
+	public void onStop() {
+		super.onStop();
 
-        Log.d(DebugFragment.LIFECYCLE, this.getClass().getName() + " - " + "onStop");
-    }
+		Log.d(MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onStop");
+	}
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 
-        Log.d(DebugFragment.LIFECYCLE, this.getClass().getName() + " - " + "onDestroy");
-    }
+		Log.d(MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onDestroy");
+	}
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
 
-        Log.d(DebugFragment.LIFECYCLE, this.getClass().getName() + " - " + "onBackPressed");
-    }
+		Log.d(MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onBackPressed");
+	}
 
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+
+		Log.d(MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onRestoreInstanceState");
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+
+		Log.d(MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onSaveInstanceState");
+	}
 }

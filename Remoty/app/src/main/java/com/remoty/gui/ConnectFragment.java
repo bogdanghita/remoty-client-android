@@ -7,24 +7,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.remoty.R;
 import com.remoty.common.ConnectionManager;
+import com.remoty.common.IConnectionListener;
+import com.remoty.common.ViewFactory;
 import com.remoty.common.ServerInfo;
-import com.remoty.services.IDetectionListener;
-import com.remoty.services.ServerDetection;
+import com.remoty.common.IDetectionListener;
+import com.remoty.services.detection.ServerDetection;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by Bogdan on 8/17/2015.
  */
-public class ConnectFragment extends Fragment implements IDetectionListener {
+public class ConnectFragment extends DebugFragment implements IDetectionListener, View.OnClickListener, IConnectionListener {
+
+	/* There are two possible ways of handling connection lost events:
+	* 1. (current one) The fragment that is currently active is responsible to report if the
+	* connection is lost or something is working bad on the network
+	* 2. Have a separate thread that periodically checks if the connection to the selected server
+	* is active and good
+	*/
 
     /*
-    There will be two types of messages:
-    1. UDP broadcast messages; the response of the server should be a TCP connect
+	There will be two types of messages:
+    1. UDP sendDetectionMessage messages; the response of the server should be a TCP connect
     2. TCP state check for servers already discovered (using the connection created on the response)
         - response should be the data for future communication (the port it listens for data transfer
      start notifications - same for all clients)
@@ -40,7 +49,7 @@ public class ConnectFragment extends Fragment implements IDetectionListener {
      */
 
     /*
-    TODO: see what's with this comment
+	TODO: see what's with this comment
         3. receive form server the data that will be used further
      - when such a notification is received, the server creates sockets for data transfer messages
      and sends the info about them back to the client (this will happen when the client wants to start
@@ -48,123 +57,224 @@ public class ConnectFragment extends Fragment implements IDetectionListener {
      - for every client there will be a different set of sockets (as the connection in TCP is 1 to 1)
      */
 
-    ServerDetection serverDetection;
+	ServerDetection serverDetection;
 
-    LinearLayout serversLayout;
+	LinearLayout serversLayout;
+	TextView currentConnectionTextView;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        setHasOptionsMenu(true);
+		setHasOptionsMenu(true);
 
-        View parentView = inflater.inflate(R.layout.fragment_connect, container, false);
+		View parentView = inflater.inflate(R.layout.fragment_connect, container, false);
 
-        serversLayout = (LinearLayout) parentView.findViewById(R.id.servers_layout);
+		// TODO: think if this should be moved to another place or wrapped inside a method
+		serversLayout = (LinearLayout) parentView.findViewById(R.id.servers_layout);
+		currentConnectionTextView = (TextView) parentView.findViewById(R.id.current_selection_text_view);
 
-        return parentView;
-    }
+		// TODO: think if this should be moved to another place or wrapped inside a method
+		// Subscribe class as OnClickListener for the buttons in its layout
+		parentView.findViewById(R.id.button_manual_connection).setOnClickListener(this);
+		parentView.findViewById(R.id.button_disconnect).setOnClickListener(this);
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+		return parentView;
+	}
 
-        // TODO: Make a factory for all services like this one
-        serverDetection = new ServerDetection();
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-    @Override
-    public void onStart() {
-        super.onStart();
+		// TODO: Make a factory for all services like this one
+		serverDetection = new ServerDetection();
+	}
 
-        // NOTE: onResume() is always called immediately after onStart()
+	@Override
+	public void onStart() {
+		super.onStart();
 
-        serverDetection.subscribe(this);
-        serverDetection.init();
-    }
+		// NOTE: onResume() is always called immediately after onStart()
 
-    @Override
-    public void onResume() {
-        super.onResume();
+		serverDetection.init();
+	}
 
-        // Start sending detection and state check messages
-        serverDetection.start();
+	@Override
+	public void onResume() {
+		super.onResume();
 
-//        buttonTest();
-    }
+		// Updating connection status
+		// NOTE: This is needed here because when the connection is set by MainActivity in
+		// onSaveInstanceState() this fragment is not subscribed yet and will not be notified
+		updateConnectionStatus();
 
-    @Override
-    public void onPause() {
-        super.onPause();
+		// Subscribing to events
+		ConnectionManager.subscribe(this);
+		serverDetection.subscribe(this);
 
-        // Stop sending detection and state check messages
-        serverDetection.stop();
-        serverDetection.unsubscribe(this);
-    }
+		// Start sending detection and state check messages
+		serverDetection.start();
+	}
 
-    @Override
-    public void onStop() {
-        super.onStop();
+	@Override
+	public void onPause() {
+		super.onPause();
 
-        // NOTE: activity might be destroyed (and might also be recreated -> savedInstanceState) after this,
-        // or it might be restarted (onRestart -> on Start)
+		// Stop sending detection and state check messages
+		serverDetection.stop();
 
-        serverDetection.clear();
-    }
+		// Unsubscribing from events
+		ConnectionManager.unsubscribe(this);
+		serverDetection.unsubscribe(this);
+	}
 
-    @Override
-    public void update(final List<ServerInfo> servers) {
+	@Override
+	public void onStop() {
+		super.onStop();
 
-        // This is called from another thread so we need to ensure it is executed on the UI thread
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+		// NOTE: activity might be destroyed (and might also be recreated -> savedInstanceState) after this,
+		// or it might be restarted (onRestart -> on Start)
 
-                serversLayout.removeAllViews();
+		serverDetection.clear();
+	}
 
-                for (ServerInfo server : servers) {
+	@Override
+	public void connectionLost() {
 
-                    Button button = createServerButton(server.name, server.ip, server.port);
+		// This may be called from another thread so we need to ensure it is executed on the UI thread
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
 
-                    serversLayout.addView(button);
-                }
-            }
-        });
-    }
+				currentConnectionTextView.setText("Selection: NONE");
+			}
+		});
+	}
 
-    private void serverSelected(ServerInfo server) {
+	@Override
+	public void connectionEstablished(ServerInfo server) {
 
-        // Notifying the ConnectionManager
-        ConnectionManager.setConnection(server);
+		// This may be called from another thread so we need to ensure it is executed on the UI thread
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
 
-        // TODO: maybe close the fragment and open a pending fragment? Don't know, it's about UX.
-    }
+				updateConnectionStatus();
+			}
+		});
+	}
 
-    private Button createServerButton(String hostname, String ip, int port) {
+	@Override
+	public void update(final List<ServerInfo> servers) {
 
-        Button button = new Button(serversLayout.getContext());
+		// This may be called from another thread so we need to ensure it is executed on the UI thread
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				serversLayout.removeAllViews();
 
-        button.setLayoutParams(params);
+				for (ServerInfo server : servers) {
 
-        String text = hostname + " - " + ip + ":" + port;
+					Button button = createServerButton(server);
 
-        button.setText(text);
+					serversLayout.addView(button);
+				}
+			}
+		});
+	}
 
-        return button;
-    }
+	private Button createServerButton(final ServerInfo server) {
 
-    // TEST
+		Button button = ViewFactory.getButton(ViewFactory.ButtonType.BUTTON_SERVER_INFO, getActivity());
 
-    private void buttonTest() {
+		String text = server.name + " - " + server.ip + ":" + server.port;
 
-        List<ServerInfo> servers = new LinkedList<>();
-        servers.add(new ServerInfo("192.168.1.1", 3, "Server1"));
-        servers.add(new ServerInfo("192.168.1.2", 5, "Server2"));
-        servers.add(new ServerInfo("666.666.666.666", 9999, "THIS IS SPARTA!"));
+		button.setText(text);
 
-        update(servers);
-    }
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-    // END TEST
+				serverSelected(server);
+			}
+		});
+
+		return button;
+	}
+
+	private void serverSelected(ServerInfo server) {
+
+		// Notifying the ConnectionManager
+		ConnectionManager.setConnection(server);
+
+		// There is no need to update the UI here since this class implements IConnectionListener
+		// and will handle the event in connectionEstablished() when it will be notified
+
+		// TODO: maybe close the fragment and open a pending fragment? Don't know, it's about UX.
+	}
+
+	/**
+	 * Retrieves the current connection status from the ConnectionManager and updates the GUI components accordingly.
+	 * For future uses: adapt the content of this method to the GUI type.
+	 */
+	private void updateConnectionStatus() {
+
+		String text = "Selection: ";
+
+		if (ConnectionManager.hasConnection()) {
+
+			ServerInfo info = ConnectionManager.getConnection();
+
+			text += info.name;
+		}
+		else {
+			text += "NONE";
+		}
+
+		currentConnectionTextView.setText(text);
+	}
+
+	/**
+	 * Listens to onClick events and calls the corresponding method to handle the event.
+	 *
+	 * @param v - the view that was clicked.
+	 */
+	@Override
+	public void onClick(View v) {
+
+		switch (v.getId()) {
+			case R.id.button_manual_connection:
+
+				buttonManualConnection(v);
+				break;
+			case R.id.button_disconnect:
+
+				buttonDisconnect(v);
+				break;
+			default:
+				return;
+		}
+	}
+
+	/**
+	 * Handles the manual connection button click event.
+	 *
+	 * @param view - the manual connection button.
+	 */
+	public void buttonManualConnection(View view) {
+
+	}
+
+	/**
+	 * Handles the disconnect button click event.
+	 *
+	 * @param view - the disconnect button.
+	 */
+	public void buttonDisconnect(View view) {
+
+		ConnectionManager.clearConnection();
+
+		// There is no need to do anything else here since this class implements IConnectionListener
+		// and will handle the event in connectionLost() when it will be notified
+	}
 }

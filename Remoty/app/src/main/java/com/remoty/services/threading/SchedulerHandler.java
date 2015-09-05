@@ -1,8 +1,10 @@
-package com.remoty.services;
+package com.remoty.services.threading;
 
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import com.remoty.gui.MainActivity;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -10,8 +12,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by Bogdan on 8/23/2015.
  */
 public class SchedulerHandler extends Handler {
-
-    public final static int MSG_SCHEDULE = 1000;
 
     LooperThread mThread;
     Runnable mRunnable;
@@ -32,9 +32,9 @@ public class SchedulerHandler extends Handler {
     @Override
     public void handleMessage(Message msg) {
 
-        if (msg.what == MSG_SCHEDULE) {
+        if (msg.what == MainActivity.MSG_SCHEDULE) {
 
-            this.sendMessageDelayed(this.obtainMessage(MSG_SCHEDULE), mInterval.longValue());
+            this.sendMessageDelayed(this.obtainMessage(MainActivity.MSG_SCHEDULE), mInterval.longValue());
             Log.d(TaskScheduler.TAG_TIMER, "Sent with delay: " + mInterval);
 
             mThread.handler.post(mRunnable);
