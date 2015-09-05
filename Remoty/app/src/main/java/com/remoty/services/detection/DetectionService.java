@@ -1,40 +1,27 @@
 package com.remoty.services.detection;
 
-import com.remoty.common.IDetectionListener;
+import com.remoty.abc.EventManager;
 import com.remoty.gui.MainActivity;
 import com.remoty.services.threading.TaskScheduler;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by Bogdan on 8/22/2015.
  */
-public class ServerDetection {
+public class DetectionService {
 
-	private List<IDetectionListener> listeners;
+	EventManager eventManger;
 
 	TaskScheduler timer;
 
 	DetectionRunnable detectionRunnable;
 
-	public ServerDetection() {
+	public DetectionService(EventManager eventManger) {
 
-		listeners = new LinkedList<>();
+		this.eventManger = eventManger;
 
 		timer = new TaskScheduler();
 
 		detectionRunnable = null;
-	}
-
-	public void subscribe(IDetectionListener listener) {
-
-		listeners.add(listener);
-	}
-
-	public void unsubscribe(IDetectionListener listener) {
-
-		listeners.remove(listener);
 	}
 
 	public void init() {
@@ -43,7 +30,7 @@ public class ServerDetection {
 			detectionRunnable.clear();
 		}
 
-		detectionRunnable = new DetectionRunnable(listeners);
+		detectionRunnable = new DetectionRunnable(eventManger);
 	}
 
 	public void start() {
