@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.remoty.R;
 import com.remoty.abc.servicemanager.ServiceManager;
 import com.remoty.common.Configuration;
-import com.remoty.abc.servicemanager.StateManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -90,7 +89,7 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 	private void switchToFragment(Fragment fragment) {
 
-		if (!ServiceManager.getInstance().getStateManager().hasConnection()) {
+		if (!ServiceManager.getInstance().getStateManager().hasSelection()) {
 
 			Toast.makeText(getActivity(), "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
 

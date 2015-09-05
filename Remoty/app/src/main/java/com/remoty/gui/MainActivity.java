@@ -20,11 +20,12 @@ import android.widget.Toast;
 
 import com.remoty.R;
 import com.remoty.abc.events.ConnectionCheckListener;
-import com.remoty.abc.servicemanager.ConnectionCheckService;
+import com.remoty.common.ConnectionCheckService;
 import com.remoty.abc.servicemanager.ServiceManager;
 import com.remoty.abc.servicemanager.StateManager;
 import com.remoty.abc.events.DetectionListener;
 import com.remoty.common.ServerInfo;
+import com.remoty.common.ViewFactory;
 import com.remoty.services.detection.DetectionService;
 import com.remoty.services.threading.TaskScheduler;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 	public final static int ACCELEROMETER_TIMEOUT = 50;
 
 	public final static long DETECTION_INTERVAL = 2000;
+	public final static long CONNECTION_CHECK_INTERVAL = 2000;
 	public final static long ACCELEROMETER_INTERVAL = 20;
 
 	public final static int LOCAL_DETECTION_RESPONSE_PORT = 10000;
@@ -82,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
 	private DetectionService serverDetection;
 	private ConnectionCheckService connectionCheck;
 
+// =================================================================================================
+// 	LIFECYCLE STATES
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -111,16 +116,16 @@ public class MainActivity extends AppCompatActivity {
 		// Restoring the connection info from the saved instance. If there was no connection then
 		// the it is set to null (returned by retrieveFromBundle())
 		ServerInfo connectionInfo = ServerInfo.retrieveFromBundle(savedInstanceState);
-		stateManager.setConnection(connectionInfo);
+		stateManager.setSelection(connectionInfo);
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 
 		// Saving the connection info to the bundle
-		if (stateManager.hasConnection()) {
+		if (stateManager.hasSelection()) {
 
-			ServerInfo connectionInfo = stateManager.getConnection();
+			ServerInfo connectionInfo = stateManager.getSelection();
 			ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
 		}
 
@@ -140,10 +145,10 @@ public class MainActivity extends AppCompatActivity {
 		super.onResume();
 
 		// Updating connection status
-		updateConnectionStatus();
+		updateSelectedConnection();
 
 		// Starting connection check if necessary
-		if (stateManager.hasConnection()) {
+		if (stateManager.hasSelection()) {
 			startConnectionCheck();
 		}
 
@@ -156,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 		super.onPause();
 
 		// Stopping connection check if necessary
-		if (stateManager.hasConnection()) {
+		if (stateManager.hasSelection()) {
 			stopConnectionCheck();
 		}
 
@@ -176,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
 
 		// Clearing connection so that it is not kept in memory as a static object until the OS
 		// decides to stop the process and clear the RAM
-		stateManager.clearConnection();
+		stateManager.clearSelection();
 	}
 
 	@Override
@@ -232,6 +237,9 @@ public class MainActivity extends AppCompatActivity {
 
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
+
+// =================================================================================================
+//	TOOLBAR AND SIDE MENU
 
 	private void configureToolbar(Toolbar toolbar) {
 
@@ -298,61 +306,8 @@ public class MainActivity extends AppCompatActivity {
 		mDrawerToggle.syncState();
 	}
 
-	public ServiceManager getServiceManager() {
-
-		return serviceManager;
-	}
-
-	/**
-	 * TODO: Review this.
-	 * NOTE: Maybe sometimes we will not want to disconnect from the server but just warn the user that
-	 * something is not ok with the connection
-	 * TODO: Open connect page when the connection is lost
-	 * TODO: Subscribe MainActivity to the StateManager and do the job there
-	 * Opens the connect page. It is called either when the user navigates to it or when the connection is lost.
-	 * For future uses: adapt the content of this method to the component type of the connect page.
-	 */
-	private void openConnectPage() {
-
-	}
-
-	public void buttonHelp(View view) {
-
-	}
-
-	public void buttonManualConnection(View view) {
-
-	}
-
-	private Button createServerButton(final String hostname, final String ip, final int port) {
-
-		Button button = new Button(this.getApplicationContext());
-
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-		button.setLayoutParams(params);
-
-		// Commented this so that we have a visual feedback when pressing the buttons
-		// The buttons appearance will be set when the design will be ready
-//        button.setBackgroundColor(Color.TRANSPARENT);
-//        button.setTextColor(Color.DKGRAY);
-
-		String text = hostname + " - " + ip + ":" + port;
-
-		button.setText(text);
-
-		button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				Toast.makeText(getApplicationContext(), "Server selected", Toast.LENGTH_LONG).show();
-
-				serverSelected(new ServerInfo(ip, port, hostname));
-			}
-		});
-
-		return button;
-	}
+// =================================================================================================
+//	SERVICES AND EVENTS
 
 	private void startServerDetection() {
 
@@ -388,36 +343,33 @@ public class MainActivity extends AppCompatActivity {
 	private void serverSelected(ServerInfo server) {
 
 		// Notifying the StateManager
-		stateManager.setConnection(server);
+		stateManager.setSelection(server);
 
-		updateConnectionStatus();
+		updateSelectedConnection();
 	}
 
 	// TODO: call this method when the user chooses to disconnect from the current server
 	private void serverDeselected(ServerInfo server) {
 
-		stateManager.clearConnection();
+		stateManager.clearSelection();
 
-		updateConnectionStatus();
+		updateSelectedConnection();
 	}
 
 	/**
 	 * TODO: Be sure that this works when the side bar is closed
-	 * <p/>
-	 * NOTE: This method is just for now. Connection status update will be defined when the GUI behavior is ready.
-	 * <p/>
-	 * Retrieves the current connection status from the StateManager and updates the GUI components accordingly.
-	 * For future uses: adapt the content of this method to the GUI type.
+	 * Retrieves and updates the current selected server indicator (currently the indicator is a text view)
+	 * For future uses: adapt the content of this method to the indicator type
 	 */
-	private void updateConnectionStatus() {
+	private void updateSelectedConnection() {
 
 		TextView currentConnectionTextView = (TextView) findViewById(R.id.current_selection_text_view);
 
 		String text = "Selection: ";
 
-		if (stateManager.hasConnection()) {
+		if (stateManager.hasSelection()) {
 
-			ServerInfo info = stateManager.getConnection();
+			ServerInfo info = stateManager.getSelection();
 
 			text += info.name;
 		}
@@ -426,49 +378,49 @@ public class MainActivity extends AppCompatActivity {
 		}
 
 		currentConnectionTextView.setText(text);
+	}
 
-		// TODO: also update the status icon
+	/**
+	 * Updates the connection status indicators (color of the side menu toggle button and maybe something in the connect area).
+	 * <p/>
+	 * For future uses: adapt the content of this method to the indicators type.
+	 */
+	private void updateConnectionStatusIndicators(StateManager.State state) {
+
+		// TODO: update connection status
+		// - update Icon
+		// - update state of the connect area in the side menu
+	}
+
+// =================================================================================================
+//	ADDITIONAL ITEMS
+
+	public void buttonManualConnection(View view) {
+
+	}
+
+	// TODO: move this in a better place (maybe in a view factory of something)
+	private Button createServerButton(final String hostname, final String ip, final int port) {
+
+		String text = hostname + " - " + ip + ":" + port;
+
+		Button button = ViewFactory.getButton(getApplicationContext(), ViewFactory.ButtonType.BUTTON_SERVER_INFO, text);
+
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				Toast.makeText(getApplicationContext(), "Server selected", Toast.LENGTH_LONG).show();
+
+				serverSelected(new ServerInfo(ip, port, hostname));
+			}
+		});
+
+		return button;
 	}
 
 // =================================================================================================
 //	LISTENERS
-
-	ConnectionCheckListener connectionCheckListener = new ConnectionCheckListener() {
-
-		@Override
-		public void connectionEstablished() {
-
-			// This may be called from another thread so we need to ensure it is executed on the UI thread
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-
-					// TODO: update connection status
-					// - update Icon
-					// - update state of the connect area in the side menu
-
-					Toast.makeText(getApplicationContext(), "Connection established", Toast.LENGTH_LONG).show();
-				}
-			});
-		}
-
-		@Override
-		public void connectionLost() {
-
-			// This may be called from another thread so we need to ensure it is executed on the UI thread
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-
-					// TODO: update connection status
-					// - update Icon
-					// - update state of the connect area in the side menu
-
-					Toast.makeText(getApplicationContext(), "Connection lost", Toast.LENGTH_LONG).show();
-				}
-			});
-		}
-	};
 
 	DetectionListener detectionListener = new DetectionListener() {
 		@Override
@@ -494,9 +446,28 @@ public class MainActivity extends AppCompatActivity {
 		}
 	};
 
-// =================================================================================================
+	ConnectionCheckListener connectionCheckListener = new ConnectionCheckListener() {
 
-	// TEST METHODS
+		@Override
+		public void stateChanged(final StateManager.State state) {
+
+			// This may be called from another thread so we need to ensure it is executed on the UI thread
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+
+					stateManager.setState(state);
+
+					updateConnectionStatusIndicators(state);
+
+					Toast.makeText(getApplicationContext(), "Connection state changed: " + state.toString(), Toast.LENGTH_LONG).show();
+				}
+			});
+		}
+	};
+
+// =================================================================================================
+// TEST METHODS
 
 	public void testTaskScheduler() {
 

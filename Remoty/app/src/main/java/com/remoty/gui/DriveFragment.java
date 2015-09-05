@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.remoty.R;
 import com.remoty.abc.servicemanager.ServiceManager;
 import com.remoty.common.AccelerometerService;
-import com.remoty.abc.servicemanager.StateManager;
 import com.remoty.common.Message;
 import com.remoty.common.RemoteControlService;
 import com.remoty.common.ServerInfo;
@@ -65,7 +64,7 @@ public class DriveFragment extends LiveDataTransferFragment {
 
 		// This fragment is only launched if there is a connection selected. If it is recreated and
 		// launched from a previous state then the selected connection will also be persisted
-		ServerInfo server = ServiceManager.getInstance().getStateManager().getConnection();
+		ServerInfo server = ServiceManager.getInstance().getStateManager().getSelection();
 		Message.RemoteControlPortsMessage ports = remoteControlService.getRemoteControlPorts(server);
 
 		if(ports == null) {

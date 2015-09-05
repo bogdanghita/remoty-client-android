@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 
 import com.remoty.common.AccelerometerService;
+import com.remoty.common.ConnectionCheckService;
 import com.remoty.common.RemoteControlService;
 import com.remoty.services.detection.DetectionService;
 
@@ -23,7 +24,7 @@ public class ActionManager {
 	public ActionManager(EventManager eventManager) {
 
 		serverDetection = new DetectionService(eventManager);
-		connectionCheck = new ConnectionCheckService();
+		connectionCheck = new ConnectionCheckService(eventManager);
 		remoteControl = new RemoteControlService();
 	}
 

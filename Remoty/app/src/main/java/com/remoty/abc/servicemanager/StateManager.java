@@ -2,53 +2,71 @@ package com.remoty.abc.servicemanager;
 
 import com.remoty.common.ServerInfo;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Created by Bogdan on 8/23/2015.
  */
 public class StateManager {
 
-	private ServerInfo connectionInfo = null;
+	public enum State {
+		CONNECTED,
+		DISCONNECTED
+	}
+
+	private ServerInfo selectedConnection = null;
+
+	private State state = State.DISCONNECTED;
+
+	/**
+	 * TODO: ...
+	 *
+	 * @param state
+	 */
+	public synchronized void setState(State state) {
+
+		this.state = state;
+	}
+
+	/**
+	 * TODO: ...
+	 *
+	 * @return
+	 */
+	public synchronized State getState() {
+
+		return state;
+	}
 
 	/**
 	 * @return - true if there is connection info available and false otherwise
 	 */
-	public synchronized boolean hasConnection() {
-		return connectionInfo != null;
+	public synchronized boolean hasSelection() {
+		return selectedConnection != null;
 	}
 
 	/**
 	 * Sets the connection info. If there is no connection it can be cleared by giving a null
-	 * parameter to this method or by calling clearConnection().
+	 * parameter to this method or by calling clearSelection().
 	 *
 	 * @param connection - info about the server.
 	 */
-	public synchronized void setConnection(ServerInfo connection) {
-		connectionInfo = connection;
+	public synchronized void setSelection(ServerInfo connection) {
 
-//		if (connection == null) {
-//			notifyConnectionLost();
-//		}
-//		else {
-//			notifyConnectionEstablished();
-//		}
+		selectedConnection = connection;
 	}
 
 	/**
-	 * Has the same effect as calling setConnection(null).
+	 * Has the same effect as calling setSelection(null).
 	 */
-	public synchronized void clearConnection() {
-		connectionInfo = null;
+	public synchronized void clearSelection() {
 
-//		notifyConnectionLost();
+		selectedConnection = null;
+		state = State.DISCONNECTED;
 	}
 
 	/**
 	 * @return - the connection info or null if there is no connection.
 	 */
-	public synchronized ServerInfo getConnection() {
-		return connectionInfo;
+	public synchronized ServerInfo getSelection() {
+		return selectedConnection;
 	}
 }

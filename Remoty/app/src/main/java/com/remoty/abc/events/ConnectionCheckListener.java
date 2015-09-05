@@ -1,5 +1,7 @@
 package com.remoty.abc.events;
 
+import com.remoty.abc.servicemanager.StateManager;
+
 /**
  * Created by Bogdan on 9/5/2015.
  */
@@ -7,15 +9,8 @@ public abstract class ConnectionCheckListener implements IServiceEventListener<C
 
 	public void notify(ConnectionCheckEvent event) {
 
-		if(event.getState() == ConnectionCheckEvent.State.ESTABLISHED) {
-			connectionEstablished();
-		}
-		else {
-			connectionLost();
-		}
+		stateChanged(event.getState());
 	}
 
-	public abstract void connectionEstablished();
-
-	public abstract void connectionLost();
+	public abstract void stateChanged(StateManager.State state);
 }
