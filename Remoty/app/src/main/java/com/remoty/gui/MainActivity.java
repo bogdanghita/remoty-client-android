@@ -18,9 +18,9 @@ import android.widget.LinearLayout;
 
 import com.remoty.R;
 import com.remoty.common.ConnectionManager;
+import com.remoty.common.IDetectionListener;
 import com.remoty.common.ServerInfo;
-import com.remoty.services.IDetectionListener;
-import com.remoty.services.TaskScheduler;
+import com.remoty.services.threading.TaskScheduler;
 
 import java.util.LinkedList;
 import java.util.List;
