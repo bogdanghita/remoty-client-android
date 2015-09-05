@@ -3,7 +3,7 @@ package com.remoty.services.detection;
 import android.util.Log;
 
 import com.remoty.abc.events.DetectionEvent;
-import com.remoty.abc.EventManager;
+import com.remoty.abc.servicemanager.EventManager;
 import com.remoty.common.ServerInfo;
 import com.remoty.gui.MainActivity;
 import com.remoty.services.networking.TcpSocket;

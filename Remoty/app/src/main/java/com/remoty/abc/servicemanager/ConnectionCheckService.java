@@ -1,4 +1,4 @@
-package com.remoty.abc;
+package com.remoty.abc.servicemanager;
 
 /**
  * Created by Bogdan on 9/5/2015.

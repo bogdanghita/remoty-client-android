@@ -1,4 +1,4 @@
-package com.remoty.abc;
+package com.remoty.abc.servicemanager;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;

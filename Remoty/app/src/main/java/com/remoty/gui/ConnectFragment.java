@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.remoty.R;
-import com.remoty.abc.StateManager;
+import com.remoty.abc.servicemanager.StateManager;
 import com.remoty.common.ViewFactory;
 import com.remoty.common.ServerInfo;
 import com.remoty.services.detection.DetectionService;
@@ -201,7 +201,7 @@ public class ConnectFragment extends DebugFragment implements /*DetectionListene
 	private void serverSelected(ServerInfo server) {
 
 		// Notifying the StateManager
-		StateManager.setConnection(server);
+//		StateManager.setConnection(server);
 
 		// There is no need to update the UI here since this class implements IConnectionListener
 		// and will handle the event in connectionEstablished() when it will be notified
@@ -217,15 +217,15 @@ public class ConnectFragment extends DebugFragment implements /*DetectionListene
 
 		String text = "Selection: ";
 
-		if (StateManager.hasConnection()) {
-
-			ServerInfo info = StateManager.getConnection();
-
-			text += info.name;
-		}
-		else {
-			text += "NONE";
-		}
+//		if (StateManager.hasConnection()) {
+//
+//			ServerInfo info = StateManager.getConnection();
+//
+//			text += info.name;
+//		}
+//		else {
+//			text += "NONE";
+//		}
 
 		currentConnectionTextView.setText(text);
 	}
@@ -268,7 +268,7 @@ public class ConnectFragment extends DebugFragment implements /*DetectionListene
 	 */
 	public void buttonDisconnect(View view) {
 
-		StateManager.clearConnection();
+//		StateManager.clearConnection();
 
 		// There is no need to do anything else here since this class implements IConnectionListener
 		// and will handle the event in connectionLost() when it will be notified
