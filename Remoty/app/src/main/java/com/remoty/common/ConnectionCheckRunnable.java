@@ -1,8 +1,8 @@
 package com.remoty.common;
 
-import com.remoty.abc.events.ConnectionCheckEvent;
+import com.remoty.abc.events.ConnectionStateEvent;
+import com.remoty.abc.servicemanager.ConnectionManager;
 import com.remoty.abc.servicemanager.EventManager;
-import com.remoty.abc.servicemanager.StateManager;
 
 
 /**
@@ -22,13 +22,12 @@ public class ConnectionCheckRunnable implements Runnable {
 
 		// TODO ...
 		// - do the work
-		// trigger the event
-
+		// - trigger the event
 	}
 
-	private void triggerEvent(StateManager.State state) {
+	private void triggerEvent(ConnectionManager.ConnectionState connectionState) {
 
-		eventManager.triggerEvent(new ConnectionCheckEvent(state));
+		eventManager.triggerEvent(new ConnectionStateEvent(connectionState));
 	}
 
 	// TODO: Think if this method is needed. Delete it if not

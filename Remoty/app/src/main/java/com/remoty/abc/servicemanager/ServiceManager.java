@@ -11,13 +11,13 @@ public class ServiceManager {
 
 	private ActionManager actionManager;
 
-	private StateManager stateManager;
+	private ConnectionManager connectionManager;
 
 	private ServiceManager() {
 
 		eventManager = new EventManager();
 		actionManager = new ActionManager(eventManager);
-		stateManager = new StateManager();
+		connectionManager = new ConnectionManager();
 	}
 
 	public synchronized static ServiceManager getInstance() {
@@ -36,7 +36,17 @@ public class ServiceManager {
 		return actionManager;
 	}
 
-	public StateManager getStateManager() {
-		return stateManager;
+	public ConnectionManager getConnectionManager() {
+		return connectionManager;
+	}
+
+	// TODO: Recheck this implementation. It should be ok, but this is important...
+	public void clear() {
+
+		eventManager.clear();
+		connectionManager.clearSelection();
+
+		// NOTE: This is not needed. Still, you can check again and maybe do a clear for safety...
+//		actionManager.clear();
 	}
 }

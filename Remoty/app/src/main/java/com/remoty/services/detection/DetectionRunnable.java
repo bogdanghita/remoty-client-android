@@ -55,10 +55,8 @@ public class DetectionRunnable implements Runnable {
 		// Sending ping messages to all the servers in the list and update it by removing the ones that did not respond
 		List<ServerInfo> results = pingService.pingServers(pingSockets);
 
-		// Notify all listeners if the list was updated
+		// Trigger event if the list was updated
 		if (results != null) {
-
-			// TODO: Trigger event...
 
 			triggerEvent(results);
 		}
@@ -71,6 +69,7 @@ public class DetectionRunnable implements Runnable {
 	 */
 	public void clear() {
 
+		// Closing ping sockets
 		for (TcpSocket server : pingSockets) {
 
 			try {
@@ -81,11 +80,13 @@ public class DetectionRunnable implements Runnable {
 			}
 		}
 
+		// Clearing list
+		pingSockets.clear();
+
+		// Closing response service
 		if (responseService.isOpen()) {
 			responseService.close();
 		}
-
-		pingSockets.clear();
 	}
 
 	/**

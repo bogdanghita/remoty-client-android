@@ -5,6 +5,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import com.remoty.abc.servicemanager.EventManager;
 import com.remoty.gui.MainActivity;
 import com.remoty.services.threading.TaskScheduler;
 
@@ -13,6 +14,8 @@ import com.remoty.services.threading.TaskScheduler;
  */
 public class AccelerometerService implements SensorEventListener {
 
+	EventManager eventManager;
+
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometerSensor;
 
@@ -20,7 +23,9 @@ public class AccelerometerService implements SensorEventListener {
 
 	MessageDispatchRunnable accRunnable;
 
-	public AccelerometerService(SensorManager sensorManager, Sensor accelerometerSensor) {
+	public AccelerometerService(EventManager eventManager, SensorManager sensorManager, Sensor accelerometerSensor) {
+
+		this.eventManager = eventManager;
 
 		mSensorManager = sensorManager;
 		mAccelerometerSensor = accelerometerSensor;
@@ -37,7 +42,7 @@ public class AccelerometerService implements SensorEventListener {
 			accRunnable.clear();
 		}
 
-		accRunnable = new MessageDispatchRunnable(ip, port);
+		accRunnable = new MessageDispatchRunnable(eventManager, ip, port);
 	}
 
 	public void start() {

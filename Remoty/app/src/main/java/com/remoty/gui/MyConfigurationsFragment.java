@@ -89,7 +89,7 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 	private void switchToFragment(Fragment fragment) {
 
-		if (!ServiceManager.getInstance().getStateManager().hasSelection()) {
+		if (!ServiceManager.getInstance().getConnectionManager().hasSelection()) {
 
 			Toast.makeText(getActivity(), "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
 
@@ -123,7 +123,7 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 		Configuration c = new Configuration();
 		c.setName("Drive");
-		c.setFragment(new DriveFragment());
+		c.setFragment(new RemoteControlFragment());
 
 		configurations.add(c);
 

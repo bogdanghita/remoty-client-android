@@ -5,11 +5,11 @@ import com.remoty.abc.servicemanager.EventManager;
 /**
  * Created by Bogdan on 9/5/2015.
  */
-public class ServiceEvent {
+public class BaseEvent {
 
 	EventManager.EventType type;
 
-	protected ServiceEvent(EventManager.EventType type) {
+	protected BaseEvent(EventManager.EventType type) {
 
 		this.type = type;
 	}
