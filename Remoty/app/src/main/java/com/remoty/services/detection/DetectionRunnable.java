@@ -38,7 +38,7 @@ public class DetectionRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION, "New detection cycle.");
+		Log.d(MainActivity.APP + MainActivity.DETECTION, "New detection cycle.");
 
 		// Sending detection messages on the sendDetectionMessage address
 		broadcastService.sendDetectionMessage();
@@ -61,7 +61,7 @@ public class DetectionRunnable implements Runnable {
 			triggerEvent(results);
 		}
 
-		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION, "Detection cycle finished.");
+		Log.d(MainActivity.APP + MainActivity.DETECTION, "Detection cycle finished.");
 	}
 
 	/**
