@@ -5,25 +5,29 @@ import com.remoty.common.ServerInfo;
 /**
  * Created by Bogdan on 8/23/2015.
  */
-public class StateManager {
+public class ConnectionManager {
 
-	public enum State {
-		CONNECTED,
-		DISCONNECTED
+// =================================================================================================
+//	Connection state
+
+	public enum ConnectionState {
+		ACTIVE,
+		SLOW,
+		LOST
 	}
 
 	private ServerInfo selectedConnection = null;
 
-	private State state = State.DISCONNECTED;
+	private ConnectionState connectionState = ConnectionState.LOST;
 
 	/**
 	 * TODO: ...
 	 *
-	 * @param state
+	 * @param connectionState
 	 */
-	public synchronized void setState(State state) {
+	public synchronized void setConnectionState(ConnectionState connectionState) {
 
-		this.state = state;
+		this.connectionState = connectionState;
 	}
 
 	/**
@@ -31,10 +35,13 @@ public class StateManager {
 	 *
 	 * @return
 	 */
-	public synchronized State getState() {
+	public synchronized ConnectionState getConnectionState() {
 
-		return state;
+		return connectionState;
 	}
+
+// =================================================================================================
+//	Server selection state
 
 	/**
 	 * @return - true if there is connection info available and false otherwise
@@ -60,7 +67,7 @@ public class StateManager {
 	public synchronized void clearSelection() {
 
 		selectedConnection = null;
-		state = State.DISCONNECTED;
+		connectionState = ConnectionState.LOST;
 	}
 
 	/**

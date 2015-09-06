@@ -3,6 +3,9 @@ package com.remoty.common;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.remoty.abc.events.ConnectionStateEvent;
+import com.remoty.abc.servicemanager.ConnectionManager;
+import com.remoty.abc.servicemanager.EventManager;
 import com.remoty.gui.MainActivity;
 import com.remoty.services.networking.TcpSocket;
 
@@ -14,11 +17,15 @@ import java.net.Socket;
  */
 public class MessageDispatchService {
 
+	EventManager eventManager;
+
 	TcpSocket tcpSocket = null;
 
 	private int timeout;
 
-	public MessageDispatchService(int timeout) {
+	public MessageDispatchService(EventManager eventManager, int timeout) {
+
+		this.eventManager = eventManager;
 
 		this.timeout = timeout;
 	}
@@ -45,7 +52,6 @@ public class MessageDispatchService {
 		}
 		catch (IOException e) {
 			e.printStackTrace();
-
 
 			// TODO: do something... This is very important!
 		}
@@ -88,8 +94,15 @@ public class MessageDispatchService {
 			// need to know that this exception occurred
 
 			Log.d("MESSAGE", "Error on send...");
+
+			// TODO: Decide what type of events you want to trigger here. The same as connection check or a different type.
 		}
 
 		Log.d("MESSAGE", "Message sent...");
+	}
+
+	private void triggerEvent(ConnectionManager.ConnectionState connectionState) {
+
+		eventManager.triggerEvent(new ConnectionStateEvent(connectionState));
 	}
 }

@@ -96,7 +96,7 @@ public class PingService {
 			// NOTE: PingAsyncTask will return null if there is a receive problem.
 			if (serverInfo == null) {
 
-				// Removing server and notifying the StateManager if necessary
+				// Removing server and notifying the ConnectionManager if necessary
 				handleNoResponse(ping);
 
 				listChangedFlag = true;
@@ -121,7 +121,7 @@ public class PingService {
 
 	/**
 	 * Closing socket and removing server from the list. Also checking if this server was the current
-	 * selected one (selected by the user in the connect page) and notifying the StateManager.
+	 * selected one (selected by the user in the connect page) and notifying the ConnectionManager.
 	 */
 	private void handleNoResponse(PingAsyncTask ping) {
 
@@ -135,10 +135,10 @@ public class PingService {
 		serverInfoMap.remove(serverIp);
 
 		// TODO: move this from here
-//		//  Notifying the StateManager if this server was the current selected one
-//		if (StateManager.hasSelection() && StateManager.getSelection().ip.equals(serverIp)) {;
+//		//  Notifying the ConnectionManager if this server was the current selected one
+//		if (ConnectionManager.hasSelection() && ConnectionManager.getSelection().ip.equals(serverIp)) {;
 //
-//			StateManager.clearSelection();
+//			ConnectionManager.clearSelection();
 //
 //			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Removed the currently selected server. It did not respond to ping.");
 //		}

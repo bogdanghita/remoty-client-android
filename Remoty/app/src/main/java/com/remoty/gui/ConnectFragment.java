@@ -4,13 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.remoty.R;
-import com.remoty.abc.servicemanager.StateManager;
-import com.remoty.common.ViewFactory;
 import com.remoty.common.ServerInfo;
 import com.remoty.services.detection.DetectionService;
 
@@ -18,7 +15,7 @@ import com.remoty.services.detection.DetectionService;
 /**
  * Created by Bogdan on 8/17/2015.
  */
-public class ConnectFragment extends DebugFragment implements /*DetectionListener,*/ View.OnClickListener {
+public class ConnectFragment extends DebugFragment implements /*DetectionEventListener,*/ View.OnClickListener {
 
 	/* There are two possible ways of handling connection lost events:
 	* 1. (current one) The fragment that is currently active is responsible to report if the
@@ -104,7 +101,7 @@ public class ConnectFragment extends DebugFragment implements /*DetectionListene
 		updateConnectionStatus();
 
 		// Subscribing to events
-//		StateManager.subscribe(this);
+//		ConnectionManager.subscribe(this);
 //		serverDetection.subscribe(this);
 
 		// Start sending detection and state check messages
@@ -119,7 +116,7 @@ public class ConnectFragment extends DebugFragment implements /*DetectionListene
 		serverDetection.stop();
 
 		// Unsubscribing from events
-//		StateManager.unsubscribe(this);
+//		ConnectionManager.unsubscribe(this);
 //		serverDetection.unsubscribe(this);
 	}
 
@@ -200,8 +197,8 @@ public class ConnectFragment extends DebugFragment implements /*DetectionListene
 
 	private void serverSelected(ServerInfo server) {
 
-		// Notifying the StateManager
-//		StateManager.setSelection(server);
+		// Notifying the ConnectionManager
+//		ConnectionManager.setSelection(server);
 
 		// There is no need to update the UI here since this class implements IConnectionListener
 		// and will handle the event in connectionEstablished() when it will be notified
@@ -210,16 +207,16 @@ public class ConnectFragment extends DebugFragment implements /*DetectionListene
 	}
 
 	/**
-	 * Retrieves the current connection status from the StateManager and updates the GUI components accordingly.
+	 * Retrieves the current connection status from the ConnectionManager and updates the GUI components accordingly.
 	 * For future uses: adapt the content of this method to the GUI type.
 	 */
 	private void updateConnectionStatus() {
 
 		String text = "Selection: ";
 
-//		if (StateManager.hasSelection()) {
+//		if (ConnectionManager.hasSelection()) {
 //
-//			ServerInfo info = StateManager.getSelection();
+//			ServerInfo info = ConnectionManager.getSelection();
 //
 //			text += info.name;
 //		}
@@ -268,7 +265,7 @@ public class ConnectFragment extends DebugFragment implements /*DetectionListene
 	 */
 	public void buttonDisconnect(View view) {
 
-//		StateManager.clearSelection();
+//		ConnectionManager.clearSelection();
 
 		// There is no need to do anything else here since this class implements IConnectionListener
 		// and will handle the event in connectionLost() when it will be notified

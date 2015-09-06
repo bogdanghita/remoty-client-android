@@ -15,6 +15,8 @@ public class ActionManager {
 
 	// TODO: This class is similar to a factory class. Think about this...
 
+	private EventManager eventManager;
+
 	private DetectionService serverDetection;
 
 	private ConnectionCheckService connectionCheck;
@@ -22,6 +24,8 @@ public class ActionManager {
 	private RemoteControlService remoteControl;
 
 	public ActionManager(EventManager eventManager) {
+
+		this.eventManager = eventManager;
 
 		serverDetection = new DetectionService(eventManager);
 		connectionCheck = new ConnectionCheckService(eventManager);
@@ -45,6 +49,6 @@ public class ActionManager {
 
 	public AccelerometerService getAccelerometerService(SensorManager sensorManager, Sensor accelerometerSensor) {
 
-		return new AccelerometerService(sensorManager, accelerometerSensor);
+		return new AccelerometerService(eventManager, sensorManager, accelerometerSensor);
 	}
 }

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Bogdan on 8/22/2015.
  */
-public abstract class DetectionListener implements IServiceEventListener<DetectionEvent> {
+public abstract class DetectionEventListener implements IEventListener<DetectionEvent> {
 
 	@Override
 	public void notify(DetectionEvent event) {

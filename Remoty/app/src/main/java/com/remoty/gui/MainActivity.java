@@ -19,11 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.remoty.R;
-import com.remoty.abc.events.ConnectionCheckListener;
+import com.remoty.abc.events.ConnectionStateEventListener;
+import com.remoty.abc.events.DetectionEventListener;
+import com.remoty.abc.events.RemoteControlEvent;
+import com.remoty.abc.events.RemoteControlEventListener;
+import com.remoty.abc.servicemanager.ConnectionManager;
 import com.remoty.common.ConnectionCheckService;
 import com.remoty.abc.servicemanager.ServiceManager;
-import com.remoty.abc.servicemanager.StateManager;
-import com.remoty.abc.events.DetectionListener;
 import com.remoty.common.ServerInfo;
 import com.remoty.common.ViewFactory;
 import com.remoty.services.detection.DetectionService;
@@ -59,17 +61,17 @@ public class MainActivity extends AppCompatActivity {
 	public final static int MSG_SCHEDULE = 1000;
 
 	// Logging tags
-	public static final String TAG_SERVICES = "SERVICES";
+	public static final String TAG_SERVICES = "SERV-";
 
-	public final static String LIFECYCLE = "LIFECYCLE";
+	public final static String LIFECYCLE = "LIFEC-";
 
-	public static final String DETECTION = "DETECTION";
+	public static final String DETECTION = "DET-";
 
-	public static final String BROADCAST = "BROADCAST";
+	public static final String BROADCAST = "BROAD-";
 
-	public static final String RESPONSE = "RESPONSE";
+	public static final String RESPONSE = "RESP-";
 
-	public static final String PING_SERVICE = "PING_SERVICE";
+	public static final String PING_SERVICE = "PING-";
 
 	public static final String PING_TASK = "PING_TASK";
 
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 	public static MainActivity Instance;
 
 	private ServiceManager serviceManager;
-	private StateManager stateManager;
+	private ConnectionManager connectionManager;
 	private DetectionService serverDetection;
 	private ConnectionCheckService connectionCheck;
 
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 		Instance = this;
 
 		serviceManager = ServiceManager.getInstance();
-		stateManager = serviceManager.getStateManager();
+		connectionManager = serviceManager.getConnectionManager();
 		serverDetection = serviceManager.getActionManager().getServerDetectionService();
 		connectionCheck = serviceManager.getActionManager().getConnectionCheckService();
 
@@ -116,16 +118,16 @@ public class MainActivity extends AppCompatActivity {
 		// Restoring the connection info from the saved instance. If there was no connection then
 		// the it is set to null (returned by retrieveFromBundle())
 		ServerInfo connectionInfo = ServerInfo.retrieveFromBundle(savedInstanceState);
-		stateManager.setSelection(connectionInfo);
+		connectionManager.setSelection(connectionInfo);
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 
 		// Saving the connection info to the bundle
-		if (stateManager.hasSelection()) {
+		if (connectionManager.hasSelection()) {
 
-			ServerInfo connectionInfo = stateManager.getSelection();
+			ServerInfo connectionInfo = connectionManager.getSelection();
 			ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
 		}
 
@@ -145,10 +147,11 @@ public class MainActivity extends AppCompatActivity {
 		super.onResume();
 
 		// Updating connection status
-		updateSelectedConnection();
+		updateSelectionStatusIndicators();
 
 		// Starting connection check if necessary
-		if (stateManager.hasSelection()) {
+		if (connectionManager.hasSelection()) {
+			serviceManager.getEventManager().subscribe(connectionStateEventListener);
 			startConnectionCheck();
 		}
 
@@ -161,8 +164,9 @@ public class MainActivity extends AppCompatActivity {
 		super.onPause();
 
 		// Stopping connection check if necessary
-		if (stateManager.hasSelection()) {
+		if (connectionManager.hasSelection()) {
 			stopConnectionCheck();
+			serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
 		}
 
 		// Stopping server detection
@@ -179,9 +183,9 @@ public class MainActivity extends AppCompatActivity {
 	public void onDestroy() {
 		super.onDestroy();
 
-		// Clearing connection so that it is not kept in memory as a static object until the OS
+		// Clearing this so that it is not kept in memory as a static object until the OS
 		// decides to stop the process and clear the RAM
-		stateManager.clearSelection();
+		serviceManager.clear();
 	}
 
 	@Override
@@ -311,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
 
 	private void startServerDetection() {
 
-		serviceManager.getEventManager().subscribe(detectionListener);
+		serviceManager.getEventManager().subscribe(detectionEventListener);
 
 		serverDetection.init();
 		serverDetection.start();
@@ -322,38 +326,44 @@ public class MainActivity extends AppCompatActivity {
 		serverDetection.stop();
 		serverDetection.clear();
 
-		serviceManager.getEventManager().unsubscribe(detectionListener);
+		serviceManager.getEventManager().unsubscribe(detectionEventListener);
 	}
 
 	private void startConnectionCheck() {
 
-		serviceManager.getEventManager().subscribe(connectionCheckListener);
-
+		connectionCheck.init();
 		connectionCheck.start();
 	}
 
 	private void stopConnectionCheck() {
 
 		connectionCheck.stop();
-
-		serviceManager.getEventManager().unsubscribe(connectionCheckListener);
+		connectionCheck.clear();
 	}
 
 	// This is called when a server is chosen as the current connection
 	private void serverSelected(ServerInfo server) {
 
-		// Notifying the StateManager
-		stateManager.setSelection(server);
+		Toast.makeText(getApplicationContext(), "Server selected", Toast.LENGTH_LONG).show();
 
-		updateSelectedConnection();
+		// Notifying the ConnectionManager
+		connectionManager.setSelection(server);
+
+		updateSelectionStatusIndicators();
+
+		serviceManager.getEventManager().subscribe(connectionStateEventListener);
+		startConnectionCheck();
 	}
 
 	// TODO: call this method when the user chooses to disconnect from the current server
 	private void serverDeselected(ServerInfo server) {
 
-		stateManager.clearSelection();
+		connectionManager.clearSelection();
 
-		updateSelectedConnection();
+		updateSelectionStatusIndicators();
+
+		stopConnectionCheck();
+		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
 	}
 
 	/**
@@ -361,15 +371,15 @@ public class MainActivity extends AppCompatActivity {
 	 * Retrieves and updates the current selected server indicator (currently the indicator is a text view)
 	 * For future uses: adapt the content of this method to the indicator type
 	 */
-	private void updateSelectedConnection() {
+	private void updateSelectionStatusIndicators() {
 
 		TextView currentConnectionTextView = (TextView) findViewById(R.id.current_selection_text_view);
 
 		String text = "Selection: ";
 
-		if (stateManager.hasSelection()) {
+		if (connectionManager.hasSelection()) {
 
-			ServerInfo info = stateManager.getSelection();
+			ServerInfo info = connectionManager.getSelection();
 
 			text += info.name;
 		}
@@ -381,15 +391,20 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	/**
+	 * CAUTION: This may be called when a remote control fragment is running.
+	 * TODO: This must be reviewed after the GUI behavior for remote control fragment is defined
+	 * <p/>
 	 * Updates the connection status indicators (color of the side menu toggle button and maybe something in the connect area).
 	 * <p/>
 	 * For future uses: adapt the content of this method to the indicators type.
 	 */
-	private void updateConnectionStatusIndicators(StateManager.State state) {
+	private void updateConnectionStatusIndicators(ConnectionManager.ConnectionState connectionState) {
 
 		// TODO: update connection status
-		// - update Icon
-		// - update state of the connect area in the side menu
+		// - update toggle button icon color
+		// - update connectionState in the connect area of the side menu
+
+		// TODO: add some simple text view showing this status
 	}
 
 // =================================================================================================
@@ -410,8 +425,6 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 
-				Toast.makeText(getApplicationContext(), "Server selected", Toast.LENGTH_LONG).show();
-
 				serverSelected(new ServerInfo(ip, port, hostname));
 			}
 		});
@@ -422,7 +435,7 @@ public class MainActivity extends AppCompatActivity {
 // =================================================================================================
 //	LISTENERS
 
-	DetectionListener detectionListener = new DetectionListener() {
+	DetectionEventListener detectionEventListener = new DetectionEventListener() {
 		@Override
 		public void update(final List<ServerInfo> servers) {
 
@@ -430,6 +443,8 @@ public class MainActivity extends AppCompatActivity {
 			MainActivity.Instance.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
+
+					Toast.makeText(getApplicationContext(), "Detection Event", Toast.LENGTH_LONG).show();
 
 					container = (LinearLayout) findViewById(R.id.connections_layout);
 
@@ -446,23 +461,52 @@ public class MainActivity extends AppCompatActivity {
 		}
 	};
 
-	ConnectionCheckListener connectionCheckListener = new ConnectionCheckListener() {
+	ConnectionStateEventListener connectionStateEventListener = new ConnectionStateEventListener() {
 
 		@Override
-		public void stateChanged(final StateManager.State state) {
+		public void stateChanged(final ConnectionManager.ConnectionState connectionState) {
 
 			// This may be called from another thread so we need to ensure it is executed on the UI thread
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 
-					stateManager.setState(state);
+					Toast.makeText(getApplicationContext(), "Connection connectionState changed: " + connectionState.toString(), Toast.LENGTH_LONG).show();
 
-					updateConnectionStatusIndicators(state);
+					connectionManager.setConnectionState(connectionState);
 
-					Toast.makeText(getApplicationContext(), "Connection state changed: " + state.toString(), Toast.LENGTH_LONG).show();
+					updateConnectionStatusIndicators(connectionState);
 				}
 			});
+		}
+	};
+
+	RemoteControlEventListener remoteControlEventListener = new RemoteControlEventListener() {
+		@Override
+		public void stateChanged(final RemoteControlEvent.Action action) {
+
+			// Posting toast from the UI thread
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+
+					Toast.makeText(getApplicationContext(), "Connection connectionState changed: " + action.toString(), Toast.LENGTH_LONG).show();
+				}
+			});
+
+			// NOTE: This is not necessary to be run on the UI thread because it does not interact with the GUI
+			if (action == RemoteControlEvent.Action.START) {
+
+				// Stopping detection and connection check services
+				stopServerDetection();
+				stopConnectionCheck();
+			}
+			else if (action == RemoteControlEvent.Action.STOP) {
+
+				// Starting detection and connection check services
+				startServerDetection();
+				startConnectionCheck();
+			}
 		}
 	};
 

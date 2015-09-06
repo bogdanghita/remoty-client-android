@@ -1,5 +1,6 @@
 package com.remoty.common;
 
+import com.remoty.abc.servicemanager.EventManager;
 import com.remoty.gui.MainActivity;
 
 /**
@@ -20,12 +21,12 @@ public class MessageDispatchRunnable implements Runnable {
 	private String ip;
 	private int port;
 
-	public MessageDispatchRunnable(String ip, int port) {
+	public MessageDispatchRunnable(EventManager eventManager, String ip, int port) {
 
 		this.ip = ip;
 		this.port= port;
 
-		messageDispatcher = new MessageDispatchService(MainActivity.ACCELEROMETER_TIMEOUT);
+		messageDispatcher = new MessageDispatchService(eventManager, MainActivity.ACCELEROMETER_TIMEOUT);
 
 		message = new Message.AbstractMessage();
 	}
