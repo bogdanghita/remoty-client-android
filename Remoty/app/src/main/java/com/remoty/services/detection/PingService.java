@@ -53,7 +53,7 @@ public class PingService {
 	}
 
 	private void sendPingMessages() {
-		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Setting up all the pingers.");
+		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Setting up all the pingers.");
 
 		for (TcpSocket socket : sockets) {
 
@@ -63,11 +63,11 @@ public class PingService {
 			pingTaskList.add(ping);
 		}
 
-		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "All the pingers have started.");
+		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "All the pingers have started.");
 	}
 
 	private List<ServerInfo> receivePingResponses() {
-		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Start receiving ping responses.");
+		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Start receiving ping responses.");
 
 		boolean listChangedFlag = false;
 
@@ -77,14 +77,14 @@ public class PingService {
 
 			// Retrieving the result of the ping
 			try {
-				Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Receiving ping response from " + ping.getSocket().getInetAddress().getHostAddress());
+				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Receiving ping response from " + ping.getSocket().getInetAddress().getHostAddress());
 
 				serverInfo = ping.get(MainActivity.ASYNC_TASK_GET_TIMEOUT, TimeUnit.MILLISECONDS);
 
-				Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Received ping response from " + ping.getSocket().getInetAddress().getHostAddress());
+				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Received ping response from " + ping.getSocket().getInetAddress().getHostAddress());
 			}
 			catch (InterruptedException | ExecutionException | TimeoutException e) {
-				Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Failed to receive ping response from " + ping.getSocket().getInetAddress().getHostAddress());
+				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Failed to receive ping response from " + ping.getSocket().getInetAddress().getHostAddress());
 
 				e.printStackTrace();
 
@@ -125,7 +125,7 @@ public class PingService {
 	 */
 	private void handleNoResponse(PingAsyncTask ping) {
 
-		Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Receiving ping response from " + ping.getSocket().getInetAddress().getHostAddress());
+		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Receiving ping response from " + ping.getSocket().getInetAddress().getHostAddress());
 
 		TcpSocket socket = ping.getSocket();
 		String serverIp = socket.getInetAddress().getHostAddress();
@@ -140,19 +140,19 @@ public class PingService {
 //
 //			ConnectionManager.clearSelection();
 //
-//			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Removed the currently selected server. It did not respond to ping.");
+//			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Removed the currently selected server. It did not respond to ping.");
 //		}
 
 		// Closing socket
 		try {
-			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Closing the server that did not respond to ping...");
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Closing the server that did not respond to ping...");
 
 			socket.close();
 
-			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Closed the server that did not respond to ping.");
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Closed the server that did not respond to ping.");
 		}
 		catch (IOException e) {
-			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Failed to close the server that did not respond to ping!");
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Failed to close the server that did not respond to ping!");
 
 			e.printStackTrace();
 

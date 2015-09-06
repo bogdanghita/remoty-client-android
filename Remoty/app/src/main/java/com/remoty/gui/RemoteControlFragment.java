@@ -60,7 +60,7 @@ public class RemoteControlFragment extends DebugFragment {
 		super.onStart();
 
 		// Triggering start event
-		serviceManager.getEventManager().triggerEvent(new RemoteControlEvent(RemoteControlEvent.Action.STOP));
+		serviceManager.getEventManager().triggerEvent(new RemoteControlEvent(RemoteControlEvent.Action.START));
 	}
 
 	@Override
@@ -73,7 +73,6 @@ public class RemoteControlFragment extends DebugFragment {
 		Message.RemoteControlPortsMessage ports = remoteControlService.getRemoteControlPorts(server);
 
 		if(ports == null) {
-//			Toast.makeText(getActivity(), "Unable to get RC port. Should open ConnectPage.", Toast.LENGTH_LONG).show();
 
 			// Triggering connection LOST event
 			serviceManager.getEventManager().triggerEvent(new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST));

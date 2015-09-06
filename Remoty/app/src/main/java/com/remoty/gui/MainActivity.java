@@ -6,7 +6,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +19,7 @@ import android.widget.Toast;
 
 import com.remoty.R;
 import com.remoty.abc.events.ConnectionStateEventListener;
+import com.remoty.abc.events.DetectionEvent;
 import com.remoty.abc.events.DetectionEventListener;
 import com.remoty.abc.events.RemoteControlEvent;
 import com.remoty.abc.events.RemoteControlEventListener;
@@ -39,9 +39,9 @@ import java.util.List;
 
 // TODO: Don't forget about the join that blocks the UI when detection closes (see if it is still doing it and make a decision)
 
-// TODO: Implement logic for opening the connect page when connection is lost (see openConnectPage())
+// TODO: When the app starts both MyConfigurationsFragment and MarketFragment start. Solve it!
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends DebugActivity {
 
 	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
 	public final static int DETECTION_RESPONSE_TIMEOUT = 500;
@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
 	// Logging tags
 	public static final String TAG_SERVICES = "SERV-";
+
+	public final static String APP = "APP-";
 
 	public final static String LIFECYCLE = "LIFEC-";
 
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 	private ConnectionCheckService connectionCheck;
 
 // =================================================================================================
-// 	LIFECYCLE STATES
+// 	APP STATES
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
 	public void onStart() {
 		super.onStart();
 
-		// Start detection
+		// Subscribing to remote control start/stop events
+		serviceManager.getEventManager().subscribe(remoteControlEventListener);
 	}
 
 	@Override
@@ -177,6 +180,8 @@ public class MainActivity extends AppCompatActivity {
 	public void onStop() {
 		super.onStop();
 
+		// Unsubscribing from remote control start/stop events
+		serviceManager.getEventManager().unsubscribe(remoteControlEventListener);
 	}
 
 	@Override
@@ -326,6 +331,9 @@ public class MainActivity extends AppCompatActivity {
 		serverDetection.stop();
 		serverDetection.clear();
 
+		// Triggering event to clear available servers list
+		serviceManager.getEventManager().triggerEvent(new DetectionEvent(null));
+
 		serviceManager.getEventManager().unsubscribe(detectionEventListener);
 	}
 
@@ -365,6 +373,9 @@ public class MainActivity extends AppCompatActivity {
 		stopConnectionCheck();
 		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
 	}
+
+// =================================================================================================
+//	EVENT-TRIGGERED GUI UPDATES
 
 	/**
 	 * TODO: Be sure that this works when the side bar is closed
@@ -407,6 +418,26 @@ public class MainActivity extends AppCompatActivity {
 		// TODO: add some simple text view showing this status
 	}
 
+	private void updateAvailableServersList(List<ServerInfo> servers) {
+
+		Toast.makeText(getApplicationContext(), "Detection Event", Toast.LENGTH_LONG).show();
+
+		container = (LinearLayout) findViewById(R.id.connections_layout);
+
+		container.removeAllViews();
+
+		if (servers == null) {
+			return;
+		}
+
+		for (ServerInfo server : servers) {
+
+			Button button = createServerButton(server.name, server.ip, server.port);
+
+			container.addView(button);
+		}
+	}
+
 // =================================================================================================
 //	ADDITIONAL ITEMS
 
@@ -444,18 +475,7 @@ public class MainActivity extends AppCompatActivity {
 				@Override
 				public void run() {
 
-					Toast.makeText(getApplicationContext(), "Detection Event", Toast.LENGTH_LONG).show();
-
-					container = (LinearLayout) findViewById(R.id.connections_layout);
-
-					container.removeAllViews();
-
-					for (ServerInfo server : servers) {
-
-						Button button = createServerButton(server.name, server.ip, server.port);
-
-						container.addView(button);
-					}
+					updateAvailableServersList(servers);
 				}
 			});
 		}
@@ -490,7 +510,7 @@ public class MainActivity extends AppCompatActivity {
 				@Override
 				public void run() {
 
-					Toast.makeText(getApplicationContext(), "Connection connectionState changed: " + action.toString(), Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), "Remote control: " + action.toString(), Toast.LENGTH_LONG).show();
 				}
 			});
 
@@ -499,12 +519,14 @@ public class MainActivity extends AppCompatActivity {
 
 				// Stopping detection and connection check services
 				stopServerDetection();
+				// NOTE: No need to call hasSelection(). At this point it is guaranteed that there is one.
 				stopConnectionCheck();
 			}
 			else if (action == RemoteControlEvent.Action.STOP) {
 
 				// Starting detection and connection check services
 				startServerDetection();
+				// NOTE: No need to call hasSelection(). At this point it is guaranteed that there is one.
 				startConnectionCheck();
 			}
 		}

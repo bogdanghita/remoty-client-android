@@ -32,15 +32,15 @@ public class PingAsyncTask extends AsyncTask<Void, Void, ServerInfo> {
 
 		// Send ping.
 		try {
-			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Sending ping to " + server.getInetAddress());
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Sending ping to " + server.getInetAddress());
 
 			Message.AbstractMessage pingMessage = new Message.AbstractMessage();
 			server.sendObject(pingMessage);
 
-			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Sent ping to " + server.getInetAddress());
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Sent ping to " + server.getInetAddress());
 		}
 		catch (IOException e) {
-			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Failed to send ping to " + server.getInetAddress() + " Server will be deleted.");
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Failed to send ping to " + server.getInetAddress() + " Server will be deleted.");
 
 			return null;
 		}
@@ -49,20 +49,20 @@ public class PingAsyncTask extends AsyncTask<Void, Void, ServerInfo> {
 		// Receive ping response.
 		try {
 
-			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Waiting to receive ping response from " + server.getInetAddress().getHostAddress());
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Waiting to receive ping response from " + server.getInetAddress().getHostAddress());
 
 			pingResponseMessage = server.receiveObject(Message.HostInfoMessage.class);
 
-			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Ping response received successfully from " + server.getInetAddress().getHostAddress());
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Ping response received successfully from " + server.getInetAddress().getHostAddress());
 		}
 		catch (IOException e) {
-			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Failed to receive ping response from " + server.getInetAddress().getHostAddress() + " Server will be deleted.");
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Failed to receive ping response from " + server.getInetAddress().getHostAddress() + " Server will be deleted.");
 
 			e.printStackTrace();
 			return null;
 		}
 		catch (ClassNotFoundException e) {
-			Log.d(MainActivity.LIFECYCLE + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Receiced INVALID ping response from " + server.getInetAddress().getHostAddress() + " Server will be deleted.");
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE + MainActivity.PING_TASK, "Receiced INVALID ping response from " + server.getInetAddress().getHostAddress() + " Server will be deleted.");
 
 			e.printStackTrace();
 			return null;
