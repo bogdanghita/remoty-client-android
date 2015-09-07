@@ -44,20 +44,56 @@
         android:background="#FFFFFF"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/user_profile"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:background="#ffffa17a"
-            android:orientation="vertical">
+            android:layout_height="178dp"
+            android:background="#b6b6b6"
+            android:orientation="vertical"
+            android:weightSum="1">
 
-            <TextView
-                android:id="@+id/current_selection_text_view"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Selection: NONE"/>
+                android:layout_height="56dp"
+                android:orientation="vertical"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="#ffffff"
+                    android:text="User Name"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+
+                    />
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="5dp"
+                    android:text="email@gmail.com"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+
+                    />
+            </LinearLayout>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="38dp"
+                android:id="@+id/circleView"
+                />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/connect_layout"
@@ -70,6 +106,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Your available connections:"/>
+
+            <TextView
+                android:id="@+id/current_selection_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selection: NONE"/>
 
             <LinearLayout
                 android:id="@+id/connections_layout"
