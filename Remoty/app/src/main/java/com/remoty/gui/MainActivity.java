@@ -1,6 +1,7 @@
 package com.remoty.gui;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -33,6 +34,8 @@ import com.remoty.services.threading.TaskScheduler;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 // TODO: get more details on the thing with "in some cases the fragment is called with the empty constructor"
@@ -110,6 +113,8 @@ public class MainActivity extends DebugActivity {
 
 		DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		configureNavigationDrawer(drawerLayout, toolbar);
+
+		createUserPofile();
 	}
 
 	@Override
@@ -313,6 +318,14 @@ public class MainActivity extends DebugActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		mDrawerToggle.syncState();
+	}
+
+	private void createUserPofile(){
+		TextView name = (TextView) findViewById(R.id.name);
+		TextView email = (TextView) findViewById(R.id.email);
+		CircleImageView image = (CircleImageView) findViewById(R.id.circleView);
+		image.setImageResource(R.drawable.ic_account_circle_white_48dp);
+		image.setBorderColor(Color.BLACK);
 	}
 
 // =================================================================================================
