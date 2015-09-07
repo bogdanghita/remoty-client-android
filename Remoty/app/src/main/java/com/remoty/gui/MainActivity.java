@@ -509,6 +509,8 @@ public class MainActivity extends DebugActivity {
 					connectionManager.setConnectionState(connectionState);
 
 					updateConnectionStatusIndicators(connectionState);
+
+					// TODO: if connection state LOST do something intelligent (maybe stop sending)
 				}
 			});
 		}

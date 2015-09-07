@@ -4,7 +4,6 @@ DCWA-V2-GamePad/.gradle/**
 DCWA-V2-GamePad/.idea/**
 DCWA-V2-GamePad/app/build/**
 DCWA-V2-GamePad/app/app.iml
-DCWA-V2-GamePad/app/build.gradle
 DCWA-V2-GamePad/build**
 DCWA-V2-GamePad/gradle**
 DCWA-V2-GamePad/build.gradle
@@ -19,7 +18,6 @@ AccelerometerPOC/.gradle/**
 AccelerometerPOC/.idea/**
 AccelerometerPOC/app/build/**
 AccelerometerPOC/app/app.iml
-AccelerometerPOC/app/build.gradle
 AccelerometerPOC/build**
 AccelerometerPOC/gradle**
 AccelerometerPOC/build.gradle
@@ -34,7 +32,6 @@ ProtocolTester/.idea/**
 ProtocolTester/app/build/**
 ProtocolTester/app/.gitignore
 ProtocolTester/app/app.iml
-ProtocolTester/app/build.gradle
 ProtocolTester/app/proguard-rules.pro
 ProtocolTester/build**
 ProtocolTester/gradle**
@@ -51,7 +48,6 @@ MemoryAllocationTest/.idea/**
 MemoryAllocationTest/app/build/**
 MemoryAllocationTest/app/.gitignore
 MemoryAllocationTest/app/app.iml
-MemoryAllocationTest/app/build.gradle
 MemoryAllocationTest/app/proguard-rules.pro
 MemoryAllocationTest/build**
 MemoryAllocationTest/gradle**
@@ -68,7 +64,6 @@ ProtocolTesterFramework/.idea/**
 ProtocolTesterFramework/app/build/**
 ProtocolTesterFramework/app/.gitignore
 ProtocolTesterFramework/app/app.iml
-ProtocolTesterFramework/app/build.gradle
 ProtocolTesterFramework/app/proguard-rules.pro
 ProtocolTesterFramework/build**
 ProtocolTesterFramework/gradle**
@@ -85,7 +80,6 @@ Remoty/.idea/**
 Remoty/app/build/**
 Remoty/app/.gitignore
 Remoty/app/app.iml
-Remoty/app/build.gradle
 Remoty/app/proguard-rules.pro
 Remoty/build**
 Remoty/gradle**
