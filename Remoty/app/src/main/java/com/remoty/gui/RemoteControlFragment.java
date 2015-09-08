@@ -4,6 +4,7 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,10 @@ public class RemoteControlFragment extends DebugFragment {
 	ServiceManager serviceManager;
 	AccelerometerService accService;
 	RemoteControlService remoteControlService;
+
+	String remoteIp;
+	Message.RemoteControlPortsMessage remoteControlPorts;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,18 +77,22 @@ public class RemoteControlFragment extends DebugFragment {
 		ServerInfo server = serviceManager.getConnectionManager().getSelection();
 		Message.RemoteControlPortsMessage ports = remoteControlService.getRemoteControlPorts(server);
 
-		if(ports == null) {
+		if (ports == null) {
 
 			// Triggering connection LOST event
 			serviceManager.getEventManager().triggerEvent(new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST));
 
-			// TODO: Open connect page
+			// TODO: Open connect page???
 
 			return;
 		}
 
+		// Setting info for reconnect action.
+		remoteIp = server.ip;
+		remoteControlPorts = ports;
+
 		// Starting services
-		startServices(server.ip, ports);
+		startServices(remoteIp, remoteControlPorts);
 	}
 
 	@Override
@@ -104,22 +113,27 @@ public class RemoteControlFragment extends DebugFragment {
 
 	private void startServices(String ip, Message.RemoteControlPortsMessage ports) {
 
+		Toast.makeText(getActivity(), "Starting connection services", Toast.LENGTH_LONG).show();
+
 		// Initializing accelerometer service
 		accService.init(ip, ports.accelerometerPort);
 
 		// Starting accelerometer service
-		if(accService.isReady()) {
-			accService.start();
-		}
+		if (accService.isReady()) {
 
-		// Subscribing to connection state events
-		serviceManager.getEventManager().subscribe(connectionStateEventListener);
+			accService.start();
+
+			// Subscribing to connection state events
+			serviceManager.getEventManager().subscribe(connectionStateEventListener);
+		}
 	}
 
 	private void stopServices() {
 
+		Toast.makeText(getActivity(), "Stopping connection services", Toast.LENGTH_LONG).show();
+
 		// Stopping accelerometer service
-		if(accService.isRunning()) {
+		if (accService.isRunning()) {
 			accService.stop();
 		}
 
@@ -128,6 +142,25 @@ public class RemoteControlFragment extends DebugFragment {
 
 		// Unsubscribing to connection state events
 		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
+	}
+
+// =================================================================================================
+//	GUI... see main activity for better description
+
+	private void displaySnackbar() {
+
+		final View coordinatorLayoutView = getActivity().findViewById(R.id.snackbar_position);
+
+		final View.OnClickListener clickListener = new View.OnClickListener() {
+			public void onClick(View v) {
+
+				startServices(remoteIp, remoteControlPorts);
+			}
+		};
+
+		Snackbar.make(coordinatorLayoutView, "Connection state: TODO", Snackbar.LENGTH_INDEFINITE)
+				.setAction("RETRY", clickListener)
+				.show();
 	}
 
 // =================================================================================================
@@ -144,6 +177,13 @@ public class RemoteControlFragment extends DebugFragment {
 				public void run() {
 
 					Toast.makeText(getActivity(), "Connection connectionState changed: " + connectionState.toString(), Toast.LENGTH_LONG).show();
+
+					if (connectionState == ConnectionManager.ConnectionState.LOST || connectionState == ConnectionManager.ConnectionState.SLOW) {
+
+						stopServices();
+
+						displaySnackbar();
+					}
 				}
 			});
 		}

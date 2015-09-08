@@ -10,6 +10,7 @@ import com.remoty.gui.MainActivity;
 import com.remoty.services.networking.TcpSocket;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -43,7 +44,8 @@ public class MessageDispatchService {
 		try {
 
 			// Initializing connection to server and creating socket that will be used to send messages
-			Socket socket = new Socket(ip, port);
+			Socket socket = new Socket();
+			socket.connect(new InetSocketAddress(ip, port), MainActivity.CONNECT_TIMEOUT);
 
 			tcpSocket = new TcpSocket(socket);
 			tcpSocket.setTimeout(timeout);
@@ -53,7 +55,11 @@ public class MessageDispatchService {
 		catch (IOException e) {
 			e.printStackTrace();
 
-			// TODO: do something... This is very important!
+			// TODO: do something... This is very important! (think if you should do something else here)
+			// NOTE: the runnable (caller) does not perform send if socket is not active
+			triggerEvent(ConnectionManager.ConnectionState.LOST);
+
+			tcpSocket = null;
 		}
 	}
 
@@ -95,7 +101,9 @@ public class MessageDispatchService {
 
 			Log.d("MESSAGE", "Error on send...");
 
-			// TODO: Decide what type of events you want to trigger here. The same as connection check or a different type.
+			// TODO: Decide what type of events you want to trigger here: LOST or SLOW.
+			// Currently triggering connection LOST event.
+			triggerEvent(ConnectionManager.ConnectionState.LOST);
 		}
 
 		Log.d("MESSAGE", "Message sent...");

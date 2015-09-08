@@ -108,10 +108,16 @@
                 android:text="Your available connections:"/>
 
             <TextView
-                android:id="@+id/current_selection_text_view"
+                android:id="@+id/selection_state_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Selection: NONE"/>
+
+            <TextView
+                android:id="@+id/connection_state_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Connection: NONE"/>
 
             <LinearLayout
                 android:id="@+id/connections_layout"

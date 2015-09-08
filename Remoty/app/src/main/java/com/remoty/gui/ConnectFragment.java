@@ -64,7 +64,7 @@ public class ConnectFragment extends DebugFragment implements /*DetectionEventLi
 
 		// TODO: think if this should be moved to another place or wrapped inside a method
 		serversLayout = (LinearLayout) parentView.findViewById(R.id.servers_layout);
-		currentConnectionTextView = (TextView) parentView.findViewById(R.id.current_selection_text_view);
+		currentConnectionTextView = (TextView) parentView.findViewById(R.id.selection_state_text_view);
 
 		// TODO: think if this should be moved to another place or wrapped inside a method
 		// Subscribe class as OnClickListener for the buttons in its layout

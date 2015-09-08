@@ -24,7 +24,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/current_selection_text_view"
+            android:id="@+id/selection_state_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Selection: NONE"/>

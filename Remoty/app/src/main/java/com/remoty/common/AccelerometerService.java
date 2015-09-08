@@ -47,10 +47,11 @@ public class AccelerometerService implements SensorEventListener {
 
 	public void start() {
 
-		// Registering sensor listener
-		mSensorManager.registerListener(this, mAccelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
-
 		if (!timer.isRunning()) {
+
+			// Registering sensor listener
+			mSensorManager.registerListener(this, mAccelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
+
 			timer.start(accRunnable, MainActivity.ACCELEROMETER_INTERVAL);
 		}
 	}
