@@ -39,6 +39,14 @@ public class MessageDispatchRunnable implements Runnable {
 			messageDispatcher.init(ip, port);
 		}
 
+		// Checking if init() succeeded
+		if(!messageDispatcher.isOpen()) {
+
+			// Bad luck ... init() did not succeed.
+			// TODO: Do something intelligent here
+			return;
+		}
+
 		// TODO: In the future maybe we will want to send the object only if it is necessary
 		//Sending the message
 		messageDispatcher.send(message);

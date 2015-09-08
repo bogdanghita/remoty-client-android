@@ -53,6 +53,7 @@ public class MainActivity extends DebugActivity {
 
 	// TODO: rename and see if it is relevant since at this moment only send operations are performed
 	public final static int ACCELEROMETER_TIMEOUT = 50;
+	public final static int CONNECT_TIMEOUT = 500;
 
 	public final static long DETECTION_INTERVAL = 2000;
 	public final static long CONNECTION_CHECK_INTERVAL = 2000;
@@ -320,7 +321,7 @@ public class MainActivity extends DebugActivity {
 		mDrawerToggle.syncState();
 	}
 
-	private void createUserPofile(){
+	private void createUserPofile() {
 		TextView name = (TextView) findViewById(R.id.name);
 		TextView email = (TextView) findViewById(R.id.email);
 		CircleImageView image = (CircleImageView) findViewById(R.id.circleView);
@@ -377,7 +378,9 @@ public class MainActivity extends DebugActivity {
 	}
 
 	// TODO: call this method when the user chooses to disconnect from the current server
-	private void serverDeselected(ServerInfo server) {
+	private void serverDeselected() {
+
+		Toast.makeText(getApplicationContext(), "Server deselected", Toast.LENGTH_LONG).show();
 
 		connectionManager.clearSelection();
 
@@ -397,7 +400,7 @@ public class MainActivity extends DebugActivity {
 	 */
 	private void updateSelectionStatusIndicators() {
 
-		TextView currentConnectionTextView = (TextView) findViewById(R.id.current_selection_text_view);
+		TextView currentSelectionTextView = (TextView) findViewById(R.id.selection_state_text_view);
 
 		String text = "Selection: ";
 
@@ -411,7 +414,7 @@ public class MainActivity extends DebugActivity {
 			text += "NONE";
 		}
 
-		currentConnectionTextView.setText(text);
+		currentSelectionTextView.setText(text);
 	}
 
 	/**
@@ -428,7 +431,14 @@ public class MainActivity extends DebugActivity {
 		// - update toggle button icon color
 		// - update connectionState in the connect area of the side menu
 
-		// TODO: add some simple text view showing this status
+		// Simple text view showing this status. To be replaced with actual indicators
+		TextView currentConnectionTextView = (TextView) findViewById(R.id.connection_state_text_view);
+
+		String text = "Connection: ";
+
+		text += connectionState.toString();
+
+		currentConnectionTextView.setText(text);
 	}
 
 	private void updateAvailableServersList(List<ServerInfo> servers) {
@@ -466,10 +476,16 @@ public class MainActivity extends DebugActivity {
 		Button button = ViewFactory.getButton(getApplicationContext(), ViewFactory.ButtonType.BUTTON_SERVER_INFO, text);
 
 		button.setOnClickListener(new View.OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
 
-				serverSelected(new ServerInfo(ip, port, hostname));
+				if (serviceManager.getConnectionManager().hasSelection()) {
+					serverDeselected();
+				}
+				else {
+					serverSelected(new ServerInfo(ip, port, hostname));
+				}
 			}
 		});
 
@@ -510,7 +526,7 @@ public class MainActivity extends DebugActivity {
 
 					updateConnectionStatusIndicators(connectionState);
 
-					// TODO: if connection state LOST do something intelligent (maybe stop sending)
+					// TODO: if connection state LOST or SLOW do something intelligent (maybe stop sending)
 				}
 			});
 		}
