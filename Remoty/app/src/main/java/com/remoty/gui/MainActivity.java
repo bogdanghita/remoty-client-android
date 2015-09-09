@@ -84,10 +84,10 @@ public class MainActivity extends DebugActivity{
 
 	private ActionBarDrawerToggle mDrawerToggle;
 	private LinearLayout container;
-    public static Boolean homeAsBack = false;
 
 	// TODO: Talk with Alina about this.
 	public static MainActivity Instance;
+	public static Boolean homeAsBack = false;
 
 	private ServiceManager serviceManager;
 	private ConnectionManager connectionManager;

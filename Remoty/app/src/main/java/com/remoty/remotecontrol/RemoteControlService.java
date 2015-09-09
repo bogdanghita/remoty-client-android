@@ -8,6 +8,7 @@ import com.remoty.gui.MainActivity;
 import com.remoty.services.networking.TcpSocket;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,8 @@ public class RemoteControlService {
 
 			try {
 				// TODO: put a timeout for connection
-				Socket socket = new Socket(info.ip, info.port);
+				Socket socket = new Socket();
+				socket.connect(new InetSocketAddress(info.ip, info.port), MainActivity.CONNECT_TIMEOUT);
 				TcpSocket tcpSocket = new TcpSocket(socket);
 
 				Message.RemoteControlPortsMessage message;
