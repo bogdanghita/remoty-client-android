@@ -1,11 +1,11 @@
-package com.remoty.abc.servicemanager;
+package com.remoty.common.servicemanager;
 
 import com.google.common.collect.HashMultimap;
-import com.remoty.abc.events.ConnectionStateEventListener;
-import com.remoty.abc.events.DetectionEventListener;
-import com.remoty.abc.events.IEventListener;
-import com.remoty.abc.events.BaseEvent;
-import com.remoty.abc.events.RemoteControlEventListener;
+import com.remoty.common.events.ConnectionStateEventListener;
+import com.remoty.common.events.DetectionEventListener;
+import com.remoty.common.events.IEventListener;
+import com.remoty.common.events.BaseEvent;
+import com.remoty.common.events.RemoteControlEventListener;
 
 /**
  * Created by Bogdan on 9/5/2015.

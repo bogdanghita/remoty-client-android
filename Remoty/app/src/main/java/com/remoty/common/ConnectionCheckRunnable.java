@@ -1,8 +1,8 @@
 package com.remoty.common;
 
-import com.remoty.abc.events.ConnectionStateEvent;
-import com.remoty.abc.servicemanager.ConnectionManager;
-import com.remoty.abc.servicemanager.EventManager;
+import com.remoty.common.events.ConnectionStateEvent;
+import com.remoty.common.servicemanager.ConnectionManager;
+import com.remoty.common.servicemanager.EventManager;
 
 
 /**

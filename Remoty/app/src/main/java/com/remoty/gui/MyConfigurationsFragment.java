@@ -13,8 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.remoty.R;
-import com.remoty.abc.servicemanager.ServiceManager;
-import com.remoty.common.Configuration;
+import com.remoty.common.servicemanager.ServiceManager;
+import com.remoty.remotecontrol.ConfigurationInfo;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,12 +36,12 @@ public class MyConfigurationsFragment extends DebugFragment {
 		configurations_layout = (LinearLayout) parentView.findViewById(R.id.configurations_layout);
 
 		// generateTestConfigurations() will be replaced by the actual user configurations
-		updateConfigurations(generateTestConfigurations());
+		updateConfigurationsList(generateTestConfigurations());
 
 		return parentView;
 	}
 
-	private void updateConfigurations(List<Configuration> configurations) {
+	private void updateConfigurationsList(List<ConfigurationInfo> configurations) {
 
 		configurations_layout.removeAllViews();
 
@@ -52,14 +52,14 @@ public class MyConfigurationsFragment extends DebugFragment {
 			return;
 		}
 
-		for (Configuration config : configurations) {
+		for (ConfigurationInfo config : configurations) {
 
 			Button button = createConfigurationButton(config);
 			configurations_layout.addView(button);
 		}
 	}
 
-	private Button createConfigurationButton(final Configuration config) {
+	private Button createConfigurationButton(final ConfigurationInfo config) {
 
 		Button button = new Button(MainActivity.Instance);
 
@@ -78,7 +78,7 @@ public class MyConfigurationsFragment extends DebugFragment {
 			@Override
 			public void onClick(View v) {
 
-				Fragment fragment = config.getFragment();
+				Fragment fragment = RemoteControlFragment.newInstance(config);
 
 				switchToFragment(fragment);
 			}
@@ -117,13 +117,11 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 	//TEST METHODS
 
-	public List<Configuration> generateTestConfigurations() {
+	public List<ConfigurationInfo> generateTestConfigurations() {
 
-		List<Configuration> configurations = new LinkedList<>();
+		List<ConfigurationInfo> configurations = new LinkedList<>();
 
-		Configuration c = new Configuration();
-		c.setName("Drive");
-		c.setFragment(new RemoteControlFragment());
+		ConfigurationInfo c = new ConfigurationInfo("Drive", "drive_config_file");
 
 		configurations.add(c);
 

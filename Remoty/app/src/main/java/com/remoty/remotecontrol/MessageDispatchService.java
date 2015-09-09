@@ -1,11 +1,10 @@
-package com.remoty.common;
+package com.remoty.remotecontrol;
 
 import android.util.Log;
-import android.widget.Toast;
 
-import com.remoty.abc.events.ConnectionStateEvent;
-import com.remoty.abc.servicemanager.ConnectionManager;
-import com.remoty.abc.servicemanager.EventManager;
+import com.remoty.common.events.ConnectionStateEvent;
+import com.remoty.common.servicemanager.ConnectionManager;
+import com.remoty.common.servicemanager.EventManager;
 import com.remoty.gui.MainActivity;
 import com.remoty.services.networking.TcpSocket;
 

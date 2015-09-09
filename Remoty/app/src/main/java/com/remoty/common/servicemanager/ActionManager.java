@@ -1,11 +1,11 @@
-package com.remoty.abc.servicemanager;
+package com.remoty.common.servicemanager;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 
-import com.remoty.common.AccelerometerService;
+import com.remoty.remotecontrol.AccelerometerService;
 import com.remoty.common.ConnectionCheckService;
-import com.remoty.common.RemoteControlService;
+import com.remoty.remotecontrol.RemoteControlService;
 import com.remoty.services.detection.DetectionService;
 
 /**

@@ -1,6 +1,6 @@
-package com.remoty.common;
+package com.remoty.remotecontrol;
 
-import com.remoty.abc.servicemanager.EventManager;
+import com.remoty.common.servicemanager.EventManager;
 import com.remoty.gui.MainActivity;
 
 /**

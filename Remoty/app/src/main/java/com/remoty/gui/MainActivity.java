@@ -19,14 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.remoty.R;
-import com.remoty.abc.events.ConnectionStateEventListener;
-import com.remoty.abc.events.DetectionEvent;
-import com.remoty.abc.events.DetectionEventListener;
-import com.remoty.abc.events.RemoteControlEvent;
-import com.remoty.abc.events.RemoteControlEventListener;
-import com.remoty.abc.servicemanager.ConnectionManager;
+import com.remoty.common.events.ConnectionStateEventListener;
+import com.remoty.common.events.DetectionEvent;
+import com.remoty.common.events.DetectionEventListener;
+import com.remoty.common.events.RemoteControlEvent;
+import com.remoty.common.events.RemoteControlEventListener;
+import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.ConnectionCheckService;
-import com.remoty.abc.servicemanager.ServiceManager;
+import com.remoty.common.servicemanager.ServiceManager;
 import com.remoty.common.ServerInfo;
 import com.remoty.common.ViewFactory;
 import com.remoty.services.detection.DetectionService;
@@ -39,6 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 // TODO: get more details on the thing with "in some cases the fragment is called with the empty constructor"
+// See this: http://stackoverflow.com/questions/10798489/proper-way-to-give-initial-data-to-fragments
 
 // TODO: Don't forget about the join that blocks the UI when detection closes (see if it is still doing it and make a decision)
 

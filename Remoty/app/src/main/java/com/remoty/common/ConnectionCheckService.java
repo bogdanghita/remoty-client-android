@@ -1,8 +1,7 @@
 package com.remoty.common;
 
-import com.remoty.abc.servicemanager.EventManager;
+import com.remoty.common.servicemanager.EventManager;
 import com.remoty.gui.MainActivity;
-import com.remoty.services.detection.DetectionRunnable;
 import com.remoty.services.threading.TaskScheduler;
 
 /**

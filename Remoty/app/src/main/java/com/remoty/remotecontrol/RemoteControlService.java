@@ -1,8 +1,9 @@
-package com.remoty.common;
+package com.remoty.remotecontrol;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.remoty.common.ServerInfo;
 import com.remoty.gui.MainActivity;
 import com.remoty.services.networking.TcpSocket;
 

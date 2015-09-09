@@ -11,20 +11,24 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.remoty.R;
-import com.remoty.abc.events.ConnectionStateEvent;
-import com.remoty.abc.events.ConnectionStateEventListener;
-import com.remoty.abc.events.RemoteControlEvent;
-import com.remoty.abc.servicemanager.ConnectionManager;
-import com.remoty.abc.servicemanager.ServiceManager;
-import com.remoty.common.AccelerometerService;
-import com.remoty.common.Message;
-import com.remoty.common.RemoteControlService;
+import com.remoty.common.events.ConnectionStateEvent;
+import com.remoty.common.events.ConnectionStateEventListener;
+import com.remoty.common.events.RemoteControlEvent;
+import com.remoty.common.servicemanager.ConnectionManager;
+import com.remoty.common.servicemanager.ServiceManager;
+import com.remoty.remotecontrol.AccelerometerService;
+import com.remoty.remotecontrol.ConfigurationInfo;
+import com.remoty.remotecontrol.Message;
+import com.remoty.remotecontrol.RemoteControlService;
 import com.remoty.common.ServerInfo;
 
 /**
  * Created by Bogdan on 8/17/2015.
  */
 public class RemoteControlFragment extends DebugFragment {
+
+	private final static String KEY_FILE = "KEY_CONFIGURATION_FILE";
+	private final static String KEY_NAME = "KEY_CONFIGURATION_NAME";
 
 	ServiceManager serviceManager;
 	AccelerometerService accService;
@@ -33,6 +37,36 @@ public class RemoteControlFragment extends DebugFragment {
 	String remoteIp;
 	Message.RemoteControlPortsMessage remoteControlPorts;
 
+	/**
+	 * TODO: Put a proper description here
+	 * If you don't know why is this needed see this link:
+	 * http://stackoverflow.com/questions/10798489/proper-way-to-give-initial-data-to-fragments
+	 *
+	 * @param configuration
+	 * @return
+	 */
+	public static RemoteControlFragment newInstance(ConfigurationInfo configuration) {
+
+		RemoteControlFragment instance = new RemoteControlFragment();
+
+		Bundle args = new Bundle();
+
+		args.putString(KEY_NAME, configuration.getName());
+		args.putString(KEY_FILE, configuration.getFile());
+		instance.setArguments(args);
+
+		return instance;
+	}
+
+	public ConfigurationInfo getConfiguration() {
+
+		Bundle args = getArguments();
+
+		String name = args.getString(KEY_NAME);
+		String file = args.getString(KEY_FILE);
+
+		return new ConfigurationInfo(name, file);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +75,12 @@ public class RemoteControlFragment extends DebugFragment {
 
 		View parentView = inflater.inflate(R.layout.fragment_drive, container, false);
 
+		// TODO: Somewhere around here you should:
+		/* - getConfiguration() from bundle
+		 * - read modules from file
+		 * - add each module
+		 */
+
 		return parentView;
 	}
 
@@ -48,6 +88,7 @@ public class RemoteControlFragment extends DebugFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// Accelerometer initialization
 		// TODO: Think if we want this to be done by the accelerometer service
 		// TODO: Also think if this is ok to be done in onCreate() or it should be done in onStart()
 		// TODO: Do this things the right way (check if the sensor is there etc.)
@@ -115,6 +156,7 @@ public class RemoteControlFragment extends DebugFragment {
 
 		Toast.makeText(getActivity(), "Starting connection services", Toast.LENGTH_LONG).show();
 
+		// Starting Accelerometer
 		// Initializing accelerometer service
 		accService.init(ip, ports.accelerometerPort);
 
@@ -126,12 +168,15 @@ public class RemoteControlFragment extends DebugFragment {
 			// Subscribing to connection state events
 			serviceManager.getEventManager().subscribe(connectionStateEventListener);
 		}
+
+		// Starting Keys
 	}
 
 	private void stopServices() {
 
 		Toast.makeText(getActivity(), "Stopping connection services", Toast.LENGTH_LONG).show();
 
+		// Stopping Accelerometer
 		// Stopping accelerometer service
 		if (accService.isRunning()) {
 			accService.stop();
@@ -142,6 +187,9 @@ public class RemoteControlFragment extends DebugFragment {
 
 		// Unsubscribing to connection state events
 		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
+
+		// Stopping Keys
+
 	}
 
 // =================================================================================================
