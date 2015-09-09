@@ -111,8 +111,6 @@ public class MyConfigurationsFragment extends DebugFragment {
 		// TODO: This is strange... the Drive button remains there...
 		transaction.replace(R.id.fragment_my_configurations, fragment);
 
-        MainActivity.Instance.disableToolbar();
-
 		transaction.addToBackStack(null);
 		transaction.commit();
 	}
