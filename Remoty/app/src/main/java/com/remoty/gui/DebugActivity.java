@@ -19,6 +19,20 @@ public class DebugActivity extends AppCompatActivity {
 	}
 
 	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+
+		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onRestoreInstanceState");
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+
+		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onSaveInstanceState");
+	}
+
+	@Override
 	public void onStart() {
 		super.onStart();
 
@@ -55,36 +69,17 @@ public class DebugActivity extends AppCompatActivity {
 
 	@Override
 	public void onBackPressed() {
-        if(!MainActivity.Instance.homeAsBack)
-		    super.onBackPressed();
+		super.onBackPressed();
 
 		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onBackPressed");
 	}
 
-
 	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
+	public boolean onMenuOpened(final int featureId, final Menu menu) {
+		boolean result = super.onMenuOpened(featureId, menu);
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onRestoreInstanceState");
+		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onMenuOpened");
+
+		return result;
 	}
-
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
-
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onSaveInstanceState");
-	}
-
-    @Override
-    public boolean onMenuOpened(final int featureId, final Menu menu) {
-        Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onMenuOpened");
-
-        if(MainActivity.Instance.homeAsBack) {
-            super.onMenuOpened(featureId, menu);
-            return false;
-        } else {
-            return true;
-        }
-    }
 }
