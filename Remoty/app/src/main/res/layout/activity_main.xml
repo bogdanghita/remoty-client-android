@@ -38,6 +38,7 @@
 
     <!-- TODO: Think if it is ok to have a fixed size for the sidebar given in dp -->
     <LinearLayout
+        android:id="@+id/sidebar"
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="left"

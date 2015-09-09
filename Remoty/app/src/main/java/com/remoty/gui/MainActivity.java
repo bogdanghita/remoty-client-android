@@ -44,7 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 // TODO: When the app starts both MyConfigurationsFragment and MarketFragment start. Solve it!
 
-public class MainActivity extends DebugActivity {
+public class MainActivity extends DebugActivity{
 
 	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
 	public final static int DETECTION_RESPONSE_TIMEOUT = 500;
@@ -83,6 +83,7 @@ public class MainActivity extends DebugActivity {
 
 	private ActionBarDrawerToggle mDrawerToggle;
 	private LinearLayout container;
+    public static Boolean homeAsBack = false;
 
 	// TODO: Talk with Alina about this.
 	public static MainActivity Instance;
@@ -217,10 +218,9 @@ public class MainActivity extends DebugActivity {
 
 		switch (id) {
 			case R.id.home: {
-				if (mDrawerLayout.isDrawerOpen(container)) {
-					mDrawerLayout.closeDrawer(container);
-				}
-				else {
+                if (mDrawerLayout.isDrawerOpen(container)) {
+                    mDrawerLayout.closeDrawer(container);
+                } else {
 					mDrawerLayout.openDrawer(container);
 				}
 				break;
@@ -252,6 +252,62 @@ public class MainActivity extends DebugActivity {
 
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
+
+    public void disableToolbar(){
+        View decorView = getWindow().getDecorView();
+       // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setVisibility(View.GONE);
+
+        LinearLayout configurationsLayout = (LinearLayout) findViewById(R.id.configurations_layout);
+        configurationsLayout.setVisibility(View.GONE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        toggle.setDrawerIndicatorEnabled(false);
+
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                homeAsBack = false;
+
+                onBackPressed();
+
+                enableToolbar();
+            }
+        });
+
+        homeAsBack = true;
+
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_white_24dp);
+
+        drawer.setDrawerListener(toggle);
+
+    }
+
+
+    public void enableToolbar(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        configureNavigationDrawer(drawer, toolbar);
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setVisibility(View.VISIBLE);
+
+        LinearLayout configurationsLayout = (LinearLayout) findViewById(R.id.configurations_layout);
+        configurationsLayout.setVisibility(View.VISIBLE);
+
+    }
 
 // =================================================================================================
 //	TOOLBAR AND SIDE MENU
@@ -298,9 +354,6 @@ public class MainActivity extends DebugActivity {
 			@Override
 			public void onDrawerOpened(View v) {
 				super.onDrawerOpened(v);
-
-				// This is just for testing
-//				MainActivity.Instance.update(generateTestList());
 
 				invalidateOptionsMenu();
 				syncState();
