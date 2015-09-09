@@ -93,7 +93,7 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 			Toast.makeText(getActivity(), "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
 
-			// TODO: Review this from the point of view of UX
+			// TODO: Review this from  the point of view of UX
 //			openConnectPage();
 
 			return;
@@ -110,6 +110,8 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 		// TODO: This is strange... the Drive button remains there...
 		transaction.replace(R.id.fragment_my_configurations, fragment);
+
+        MainActivity.Instance.disableToolbar();
 
 		transaction.addToBackStack(null);
 		transaction.commit();

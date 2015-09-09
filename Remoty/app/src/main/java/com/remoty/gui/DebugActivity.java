@@ -3,6 +3,8 @@ package com.remoty.gui;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
 
 /**
  * Created by Bogdan on 8/21/2015.
@@ -53,10 +55,12 @@ public class DebugActivity extends AppCompatActivity {
 
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
+        if(!MainActivity.Instance.homeAsBack)
+		    super.onBackPressed();
 
 		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onBackPressed");
 	}
+
 
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -71,4 +75,16 @@ public class DebugActivity extends AppCompatActivity {
 
 		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onSaveInstanceState");
 	}
+
+    @Override
+    public boolean onMenuOpened(final int featureId, final Menu menu) {
+        Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onMenuOpened");
+
+        if(MainActivity.Instance.homeAsBack) {
+            super.onMenuOpened(featureId, menu);
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
