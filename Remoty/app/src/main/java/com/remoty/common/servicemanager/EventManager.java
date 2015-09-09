@@ -26,12 +26,11 @@ public class EventManager {
 	}
 
 	public void subscribe(ConnectionStateEventListener l) {
-
 		listeners.put(EventType.CONNECTION_STATE, l);
 	}
 
 	public void unsubscribe(ConnectionStateEventListener l) {
-		listeners.put(EventType.CONNECTION_STATE, l);
+		listeners.remove(EventType.CONNECTION_STATE, l);
 	}
 
 	public void subscribe(DetectionEventListener l) {
@@ -39,7 +38,7 @@ public class EventManager {
 	}
 
 	public void unsubscribe(DetectionEventListener l) {
-		listeners.put(EventType.DETECTION, l);
+		listeners.remove(EventType.DETECTION, l);
 	}
 
 	public void subscribe(RemoteControlEventListener l) {
@@ -47,7 +46,7 @@ public class EventManager {
 	}
 
 	public void unsubscribe(RemoteControlEventListener l) {
-		listeners.put(EventType.REMOTE_CONTROL, l);
+		listeners.remove(EventType.REMOTE_CONTROL, l);
 	}
 
 	public void triggerEvent(BaseEvent event) {

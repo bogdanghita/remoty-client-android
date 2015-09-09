@@ -34,9 +34,6 @@ public class RemoteControlFragment extends DebugFragment {
 	AccelerometerService accService;
 	RemoteControlService remoteControlService;
 
-	String remoteIp;
-	Message.RemoteControlPortsMessage remoteControlPorts;
-
 	/**
 	 * TODO: Put a proper description here
 	 * If you don't know why is this needed see this link:
@@ -113,27 +110,11 @@ public class RemoteControlFragment extends DebugFragment {
 	public void onResume() {
 		super.onResume();
 
-		// This fragment is only launched if there is a connection selected. If it is recreated and
-		// launched from a previous state then the selected connection will also be persisted
-		ServerInfo server = serviceManager.getConnectionManager().getSelection();
-		Message.RemoteControlPortsMessage ports = remoteControlService.getRemoteControlPorts(server);
-
-		if (ports == null) {
-
-			// Triggering connection LOST event
-			serviceManager.getEventManager().triggerEvent(new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST));
-
-			// TODO: Open connect page???
-
-			return;
-		}
-
-		// Setting info for reconnect action.
-		remoteIp = server.ip;
-		remoteControlPorts = ports;
+		// Subscribing to connection state events
+		serviceManager.getEventManager().subscribe(connectionStateEventListener);
 
 		// Starting services
-		startServices(remoteIp, remoteControlPorts);
+		startServices();
 	}
 
 	@Override
@@ -142,6 +123,9 @@ public class RemoteControlFragment extends DebugFragment {
 
 		// Stopping services
 		stopServices();
+
+		// Unsubscribing to connection state events
+		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
 	}
 
 	@Override
@@ -152,21 +136,30 @@ public class RemoteControlFragment extends DebugFragment {
 		serviceManager.getEventManager().triggerEvent(new RemoteControlEvent(RemoteControlEvent.Action.STOP));
 	}
 
-	private void startServices(String ip, Message.RemoteControlPortsMessage ports) {
+	private void startServices() {
 
 		Toast.makeText(getActivity(), "Starting connection services", Toast.LENGTH_LONG).show();
 
+		// This fragment is only launched if there is a connection selected. If it is recreated and
+		// launched from a previous state then the selected connection will also be persisted
+		ServerInfo server = serviceManager.getConnectionManager().getSelection();
+		Message.RemoteControlPortsMessage ports = remoteControlService.getRemoteControlPorts(server);
+
+		// Checking if the data was successfully retrieved. If not, then the connection is lost
+		if (ports == null) {
+			// Triggering connection LOST event
+			serviceManager.getEventManager().triggerEvent(new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST));
+			return;
+		}
+
 		// Starting Accelerometer
 		// Initializing accelerometer service
-		accService.init(ip, ports.accelerometerPort);
+		accService.init(server.ip, ports.accelerometerPort);
 
 		// Starting accelerometer service
 		if (accService.isReady()) {
 
 			accService.start();
-
-			// Subscribing to connection state events
-			serviceManager.getEventManager().subscribe(connectionStateEventListener);
 		}
 
 		// Starting Keys
@@ -185,9 +178,6 @@ public class RemoteControlFragment extends DebugFragment {
 		// Clearing accelerometer service
 		accService.clear();
 
-		// Unsubscribing to connection state events
-		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
-
 		// Stopping Keys
 
 	}
@@ -202,7 +192,7 @@ public class RemoteControlFragment extends DebugFragment {
 		final View.OnClickListener clickListener = new View.OnClickListener() {
 			public void onClick(View v) {
 
-				startServices(remoteIp, remoteControlPorts);
+				startServices();
 			}
 		};
 
