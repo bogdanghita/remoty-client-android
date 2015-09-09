@@ -118,6 +118,11 @@ public class MainActivity extends DebugActivity{
 		configureNavigationDrawer(drawerLayout, toolbar);
 
 		createUserPofile();
+
+		// This is and not in onStart() because it needs to happen before the fragment's onStart()
+		// and if the activity is recreated the fragment's onStart() is called before this onStart()
+		// Subscribing to remote control start/stop events
+		serviceManager.getEventManager().subscribe(remoteControlEventListener);
 	}
 
 	@Override
@@ -148,9 +153,6 @@ public class MainActivity extends DebugActivity{
 	@Override
 	public void onStart() {
 		super.onStart();
-
-		// Subscribing to remote control start/stop events
-		serviceManager.getEventManager().subscribe(remoteControlEventListener);
 	}
 
 	@Override
@@ -187,14 +189,15 @@ public class MainActivity extends DebugActivity{
 	@Override
 	public void onStop() {
 		super.onStop();
-
-		// Unsubscribing from remote control start/stop events
-		serviceManager.getEventManager().unsubscribe(remoteControlEventListener);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+
+		// For explanations about why this is done here, see comment in onCreate()
+		// Unsubscribing from remote control start/stop events
+		serviceManager.getEventManager().unsubscribe(remoteControlEventListener);
 
 		// Clearing this so that it is not kept in memory as a static object until the OS
 		// decides to stop the process and clear the RAM
@@ -255,7 +258,6 @@ public class MainActivity extends DebugActivity{
 	}
 
     public void disableToolbar(){
-        View decorView = getWindow().getDecorView();
        // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -287,7 +289,6 @@ public class MainActivity extends DebugActivity{
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_white_24dp);
 
         drawer.setDrawerListener(toggle);
-
     }
 
 
