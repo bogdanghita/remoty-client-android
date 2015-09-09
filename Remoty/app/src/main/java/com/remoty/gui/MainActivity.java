@@ -279,8 +279,6 @@ public class MainActivity extends DebugActivity{
                 homeAsBack = false;
 
                 onBackPressed();
-
-                enableToolbar();
             }
         });
 
@@ -606,6 +604,9 @@ public class MainActivity extends DebugActivity{
 				stopServerDetection();
 				// NOTE: No need to call hasSelection(). At this point it is guaranteed that there is one.
 				stopConnectionCheck();
+
+				// Disabling toolbar
+				disableToolbar();
 			}
 			else if (action == RemoteControlEvent.Action.STOP) {
 
@@ -613,6 +614,9 @@ public class MainActivity extends DebugActivity{
 				startServerDetection();
 				// NOTE: No need to call hasSelection(). At this point it is guaranteed that there is one.
 				startConnectionCheck();
+
+				// Enabling toolbar
+				enableToolbar();
 			}
 		}
 	};
