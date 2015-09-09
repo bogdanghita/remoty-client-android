@@ -1,6 +1,6 @@
-package com.remoty.abc.events;
+package com.remoty.common.events;
 
-import com.remoty.abc.servicemanager.EventManager;
+import com.remoty.common.servicemanager.EventManager;
 import com.remoty.common.ServerInfo;
 
 import java.util.List;

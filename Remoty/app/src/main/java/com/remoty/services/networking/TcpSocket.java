@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.remoty.common.Message;
+import com.remoty.remotecontrol.Message;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

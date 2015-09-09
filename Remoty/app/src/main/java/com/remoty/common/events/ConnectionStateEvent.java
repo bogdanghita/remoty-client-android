@@ -1,8 +1,8 @@
-package com.remoty.abc.events;
+package com.remoty.common.events;
 
 
-import com.remoty.abc.servicemanager.ConnectionManager;
-import com.remoty.abc.servicemanager.EventManager;
+import com.remoty.common.servicemanager.ConnectionManager;
+import com.remoty.common.servicemanager.EventManager;
 
 /**
  * Created by Bogdan on 9/5/2015.

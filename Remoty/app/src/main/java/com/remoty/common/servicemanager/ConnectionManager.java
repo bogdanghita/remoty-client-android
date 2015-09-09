@@ -1,4 +1,4 @@
-package com.remoty.abc.servicemanager;
+package com.remoty.common.servicemanager;
 
 import com.remoty.common.ServerInfo;
 

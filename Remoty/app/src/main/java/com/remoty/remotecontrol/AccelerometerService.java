@@ -1,11 +1,11 @@
-package com.remoty.common;
+package com.remoty.remotecontrol;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import com.remoty.abc.servicemanager.EventManager;
+import com.remoty.common.servicemanager.EventManager;
 import com.remoty.gui.MainActivity;
 import com.remoty.services.threading.TaskScheduler;
 

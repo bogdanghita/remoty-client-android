@@ -1,4 +1,4 @@
-package com.remoty.abc.events;
+package com.remoty.common.events;
 
 /**
  * Created by Bogdan on 9/5/2015.
