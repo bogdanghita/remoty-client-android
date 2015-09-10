@@ -1,5 +1,6 @@
 package com.remoty.gui;
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -327,6 +328,8 @@ public class MainActivity extends DebugActivity {
 
 	public void enableToolbar() {
         // enable previously disabled views
+        MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -341,6 +344,8 @@ public class MainActivity extends DebugActivity {
 
 		LinearLayout configurationsLayout = (LinearLayout) findViewById(R.id.configurations_layout);
 		configurationsLayout.setVisibility(View.VISIBLE);
+
+        MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
 	}
 
