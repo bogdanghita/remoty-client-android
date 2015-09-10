@@ -196,7 +196,7 @@ public class RemoteControlFragment extends DebugFragment {
 			}
 		};
 
-		Snackbar.make(coordinatorLayoutView, "Connection state: TODO", Snackbar.LENGTH_INDEFINITE)
+		Snackbar.make(coordinatorLayoutView, "Connection state: TODO", Snackbar.LENGTH_LONG)
 				.setAction("RETRY", clickListener)
 				.show();
 	}
