@@ -58,7 +58,7 @@ public class MainActivity extends DebugActivity {
 
 	public final static long DETECTION_INTERVAL = 2000;
 	public final static long CONNECTION_CHECK_INTERVAL = 2000;
-	public final static long ACCELEROMETER_INTERVAL = 100;
+	public final static long ACCELEROMETER_INTERVAL = 20;
 
 	public final static int LOCAL_DETECTION_RESPONSE_PORT = 10000;
 	public final static int REMOTE_DETECTION_PORT = 9001;
