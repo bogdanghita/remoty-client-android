@@ -35,6 +35,7 @@ public class RemoteControlFragment extends DebugFragment {
 	RemoteControlService remoteControlService;
 
 	/**
+	 * TODO: Think about moving this in a separate Factory class, so that the instances don not have access to it
 	 * TODO: Put a proper description here
 	 * If you don't know why is this needed see this link:
 	 * http://stackoverflow.com/questions/10798489/proper-way-to-give-initial-data-to-fragments
