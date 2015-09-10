@@ -2,11 +2,16 @@ package com.remoty.common.servicemanager;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.widget.RelativeLayout;
 
 import com.remoty.remotecontrol.AccelerometerService;
 import com.remoty.common.ConnectionCheckService;
+import com.remoty.remotecontrol.KeysButtonInfo;
+import com.remoty.remotecontrol.KeysService;
 import com.remoty.remotecontrol.RemoteControlService;
 import com.remoty.services.detection.DetectionService;
+
+import java.util.List;
 
 /**
  * Created by Bogdan on 9/5/2015.
@@ -50,5 +55,10 @@ public class ActionManager {
 	public AccelerometerService getAccelerometerService(SensorManager sensorManager, Sensor accelerometerSensor) {
 
 		return new AccelerometerService(eventManager, sensorManager, accelerometerSensor);
+	}
+
+	public KeysService getKeysService(List<KeysButtonInfo> buttonInfoList, RelativeLayout layout) {
+
+		return new KeysService(eventManager, buttonInfoList, layout);
 	}
 }

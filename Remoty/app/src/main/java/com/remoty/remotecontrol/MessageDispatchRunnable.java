@@ -14,6 +14,7 @@ public class MessageDispatchRunnable implements Runnable {
 	//			- selective sending of the message - only when needed (on demand)
 	//			- etc. I'm sure there are more...
 
+	private Message.AbstractMessage emptyMessage;
 	private Message.AbstractMessage message;
 
 	private MessageDispatchService messageDispatcher;
@@ -21,14 +22,16 @@ public class MessageDispatchRunnable implements Runnable {
 	private String ip;
 	private int port;
 
-	public MessageDispatchRunnable(EventManager eventManager, String ip, int port) {
+	public MessageDispatchRunnable(EventManager eventManager, String ip, int port, Message.AbstractMessage emptyMessage) {
 
 		this.ip = ip;
 		this.port= port;
 
 		messageDispatcher = new MessageDispatchService(eventManager, MainActivity.ACCELEROMETER_TIMEOUT);
 
-		message = new Message.AbstractMessage();
+		this.emptyMessage = emptyMessage;
+		this.emptyMessage.empty = true;
+		message = this.emptyMessage;
 	}
 
 	@Override
@@ -50,6 +53,9 @@ public class MessageDispatchRunnable implements Runnable {
 		// TODO: In the future maybe we will want to send the object only if it is necessary
 		//Sending the message
 		messageDispatcher.send(message);
+
+		// Resetting message
+		setMessage(emptyMessage);
 	}
 
 	public void setMessage(Message.AbstractMessage message) {

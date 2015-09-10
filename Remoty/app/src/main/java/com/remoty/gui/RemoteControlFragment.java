@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.remoty.R;
@@ -18,9 +19,14 @@ import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.ServiceManager;
 import com.remoty.remotecontrol.AccelerometerService;
 import com.remoty.remotecontrol.ConfigurationInfo;
+import com.remoty.remotecontrol.KeysButtonInfo;
+import com.remoty.remotecontrol.KeysService;
 import com.remoty.remotecontrol.Message;
 import com.remoty.remotecontrol.RemoteControlService;
 import com.remoty.common.ServerInfo;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Bogdan on 8/17/2015.
@@ -31,8 +37,12 @@ public class RemoteControlFragment extends DebugFragment {
 	private final static String KEY_NAME = "KEY_CONFIGURATION_NAME";
 
 	ServiceManager serviceManager;
-	AccelerometerService accService;
 	RemoteControlService remoteControlService;
+
+	AccelerometerService accService;
+	KeysService keysService;
+
+	RelativeLayout keysLayout;
 
 	/**
 	 * TODO: Think about moving this in a separate Factory class, so that the instances don not have access to it
@@ -79,12 +89,17 @@ public class RemoteControlFragment extends DebugFragment {
 		 * - add each module
 		 */
 
+		keysLayout = (RelativeLayout) parentView.findViewById(R.id.configuration_holder_layout);
+
 		return parentView;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		serviceManager = ServiceManager.getInstance();
+		remoteControlService = serviceManager.getActionManager().getRemoteControlService();
 
 		// Accelerometer initialization
 		// TODO: Think if we want this to be done by the accelerometer service
@@ -94,9 +109,7 @@ public class RemoteControlFragment extends DebugFragment {
 		SensorManager mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
 		Sensor mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-		serviceManager = ServiceManager.getInstance();
 		accService = serviceManager.getActionManager().getAccelerometerService(mSensorManager, mAccelerometerSensor);
-		remoteControlService = serviceManager.getActionManager().getRemoteControlService();
 	}
 
 	@Override
@@ -110,6 +123,10 @@ public class RemoteControlFragment extends DebugFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		// Keys initialization
+		List<KeysButtonInfo> buttonInfoList = generateTestKeys();
+		keysService = serviceManager.getActionManager().getKeysService(buttonInfoList, keysLayout);
 
 		// Subscribing to connection state events
 		serviceManager.getEventManager().subscribe(connectionStateEventListener);
@@ -153,34 +170,30 @@ public class RemoteControlFragment extends DebugFragment {
 			return;
 		}
 
-		// Starting Accelerometer
-		// Initializing accelerometer service
 		accService.init(server.ip, ports.accelerometerPort);
+		keysService.init(server.ip, ports.buttonPort);
 
-		// Starting accelerometer service
 		if (accService.isReady()) {
-
 			accService.start();
 		}
-
-		// Starting Keys
+		if (keysService.isReady()) {
+			keysService.start();
+		}
 	}
 
 	private void stopServices() {
 
 		Toast.makeText(getActivity(), "Stopping connection services", Toast.LENGTH_LONG).show();
 
-		// Stopping Accelerometer
-		// Stopping accelerometer service
 		if (accService.isRunning()) {
 			accService.stop();
 		}
+		if (keysService.isRunning()) {
+			keysService.stop();
+		}
 
-		// Clearing accelerometer service
 		accService.clear();
-
-		// Stopping Keys
-
+		keysService.clear();
 	}
 
 // =================================================================================================
@@ -227,4 +240,20 @@ public class RemoteControlFragment extends DebugFragment {
 			});
 		}
 	};
+
+// =================================================================================================
+//	TESTING
+
+	private List<KeysButtonInfo> generateTestKeys() {
+
+		List<KeysButtonInfo> list = new LinkedList<>();
+
+		KeysButtonInfo buttonInfo = new KeysButtonInfo();
+		buttonInfo.action = "ButtonRT_";
+		buttonInfo.name = "NiceName";
+
+		list.add(buttonInfo);
+
+		return list;
+	}
 }

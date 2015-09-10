@@ -10,6 +10,7 @@ public class Message {
 
 		public long id;
 		public long timestamp;
+		public boolean empty = false;
 	}
 
 	public static class LargeMessage extends AbstractMessage {
@@ -34,7 +35,7 @@ public class Message {
 
 	public static class KeysMessage extends AbstractMessage {
 
-		// TODO:
+		public String buttonAction;
 	}
 
 	public static class RemoteControlPortsMessage extends AbstractMessage {
@@ -43,6 +44,7 @@ public class Message {
 
 		public int mousePort;
 		public int keyPort;
+		public int buttonPort;
 		public int accelerometerPort;
 	}
 }
