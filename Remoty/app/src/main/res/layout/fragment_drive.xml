@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Drive"/>
 
-    <android.support.design.widget.CoordinatorLayout
+    <RelativeLayout
+        android:id="@+id/configuration_holder_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/snackbar_position">
-    </android.support.design.widget.CoordinatorLayout>
+        android:background="@color/highlighted_text_material_light">
+
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/snackbar_position"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true">
+        </android.support.design.widget.CoordinatorLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>

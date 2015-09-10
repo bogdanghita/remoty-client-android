@@ -42,7 +42,8 @@ public class AccelerometerService implements SensorEventListener {
 			accRunnable.clear();
 		}
 
-		accRunnable = new MessageDispatchRunnable(eventManager, ip, port);
+		Message.AccelerometerMessage emptyMessage = new Message.AccelerometerMessage();
+		accRunnable = new MessageDispatchRunnable(eventManager, ip, port, emptyMessage);
 	}
 
 	public void start() {
