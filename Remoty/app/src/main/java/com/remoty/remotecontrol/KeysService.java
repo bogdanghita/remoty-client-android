@@ -37,8 +37,9 @@ public class KeysService {
 
 		for (KeysButtonInfo buttonInfo : buttonInfoList) {
 
+			// TODO: give the actual layout dimensions here
 			// Creating button
-			Button button = getButton(buttonInfo, layout);
+			Button button = getButton(buttonInfo, layout, 0, 0);
 
 			// Adding click listener
 			addClickListener(button, buttonInfo.action);
@@ -48,8 +49,9 @@ public class KeysService {
 		}
 	}
 
-	private Button getButton(KeysButtonInfo buttonInfo, RelativeLayout layout) {
+	private Button getButton(KeysButtonInfo buttonInfo, RelativeLayout layout, int layoutWidth, int layoutHeight) {
 
+		// TODO: Claudiu
 		// TODO: compute this with the percent in buttonInfo and with the height and width of
 		// the layout (think when to get them, I think from outside ...)
 		int startX = 30;
@@ -149,6 +151,7 @@ public class KeysService {
 		return timer.isRunning();
 	}
 
+	// This is not needed to be synchronised because the calls are made on the same thread
 	private void setMessage(Message.KeysMessage keys) {
 
 		keysRunnable.setMessage(keys);

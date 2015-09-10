@@ -256,4 +256,14 @@ public class RemoteControlFragment extends DebugFragment {
 
 		return list;
 	}
+
+	// Generates the buttons config for bla bla bla
+	private List<KeysButtonInfo> generateNFS2012Buttons() {
+
+		List<KeysButtonInfo> list = new LinkedList<>();
+
+		// TODO: Claudiu
+
+		return list;
+	}
 }
