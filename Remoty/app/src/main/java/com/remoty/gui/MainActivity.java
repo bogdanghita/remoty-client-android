@@ -67,20 +67,14 @@ public class MainActivity extends DebugActivity {
 
 	// Logging tags
 	public static final String TAG_SERVICES = "SERV-";
-
 	public final static String APP = "APP-";
-
 	public final static String LIFECYCLE = "LIFEC-";
-
 	public static final String DETECTION = "DET-";
-
 	public static final String BROADCAST = "BROAD-";
-
 	public static final String RESPONSE = "RESP-";
-
 	public static final String PING_SERVICE = "PING-";
-
 	public static final String PING_TASK = "PING_TASK";
+	public final static String KEYS = "KEYS-";
 
 	private ActionBarDrawerToggle mDrawerToggle;
 	private LinearLayout container;

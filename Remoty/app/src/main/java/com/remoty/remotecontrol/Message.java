@@ -32,6 +32,11 @@ public class Message {
 		public float x, y, z;
 	}
 
+	public static class KeysMessage extends AbstractMessage {
+
+		// TODO:
+	}
+
 	public static class RemoteControlPortsMessage extends AbstractMessage {
 
 		public int userId;
