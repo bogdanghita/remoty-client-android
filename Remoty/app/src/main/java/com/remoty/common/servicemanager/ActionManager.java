@@ -57,8 +57,8 @@ public class ActionManager {
 		return new AccelerometerService(eventManager, sensorManager, accelerometerSensor);
 	}
 
-	public KeysService getKeysService(List<KeysButtonInfo> buttonInfoList, RelativeLayout layout) {
+	public KeysService getKeysService() {
 
-		return new KeysService(eventManager, buttonInfoList, layout);
+		return new KeysService(eventManager);
 	}
 }
