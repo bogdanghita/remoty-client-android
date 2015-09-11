@@ -22,24 +22,22 @@ public class KeysService {
 	MessageDispatchRunnable keysRunnable;
 
 	// TODO: Decide what type the layout should be
-	public KeysService(EventManager eventManager, List<KeysButtonInfo> buttonInfoList, RelativeLayout layout) {
+	public KeysService(EventManager eventManager) {
 
 		this.eventManager = eventManager;
-
-		populateLayout(buttonInfoList, layout);
 
 		timer = new TaskScheduler();
 
 		keysRunnable = null;
 	}
 
-	private void populateLayout(List<KeysButtonInfo> buttonInfoList, RelativeLayout layout) {
+	public void populateLayout(List<KeysButtonInfo> buttonInfoList, RelativeLayout layout,
+							   int layoutWidth, int layoutHeight) {
 
 		for (KeysButtonInfo buttonInfo : buttonInfoList) {
 
-			// TODO: give the actual layout dimensions here
 			// Creating button
-			Button button = getButton(buttonInfo, layout, 0, 0);
+			Button button = getButton(buttonInfo, layoutWidth, layoutHeight);
 
 			// Adding click listener
 			addClickListener(button, buttonInfo.action);
@@ -49,15 +47,7 @@ public class KeysService {
 		}
 	}
 
-	private Button getButton(KeysButtonInfo buttonInfo, RelativeLayout layout, int layoutWidth, int layoutHeight) {
-
-		// TODO: Claudiu
-		// TODO: compute this with the percent in buttonInfo and with the height and width of
-		// the layout (think when to get them, I think from outside ...)
-
-		// TODO: Remove this!!!
-		layoutHeight = 775;
-		layoutWidth = 2000;
+	private Button getButton(KeysButtonInfo buttonInfo, int layoutWidth, int layoutHeight) {
 
 		int startX = (int) (buttonInfo.startXPercent * layoutWidth);
 		int startY = (int) (buttonInfo.startYPercent * layoutHeight);

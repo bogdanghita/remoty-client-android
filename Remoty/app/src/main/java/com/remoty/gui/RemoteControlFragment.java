@@ -3,11 +3,14 @@ package com.remoty.gui;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -41,8 +44,6 @@ public class RemoteControlFragment extends DebugFragment {
 
 	AccelerometerService accService;
 	KeysService keysService;
-
-	RelativeLayout keysLayout;
 
 	/**
 	 * TODO: Think about moving this in a separate Factory class, so that the instances don not have access to it
@@ -81,15 +82,39 @@ public class RemoteControlFragment extends DebugFragment {
 
 		setHasOptionsMenu(true);
 
-		View parentView = inflater.inflate(R.layout.fragment_drive, container, false);
+		final View parentView = inflater.inflate(R.layout.fragment_drive, container, false);
 
-		// TODO: Somewhere around here you should:
-		/* - getConfiguration() from bundle
+		// Adding layout change listener
+		parentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				View keysL = parentView.findViewById(R.id.configuration_holder_layout);
+
+				Toast.makeText(getActivity(), "onGlobalLayout()" /*+ cnt++*/, Toast.LENGTH_SHORT).show();
+
+				// Now we can retrieve the width and height
+				int keysLayoutWidth = keysL.getWidth();
+				int keysLayoutHeight = keysL.getHeight();
+
+				// Removing listener
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+					parentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+				}
+				else {
+					parentView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				}
+
+				// TODO: refine this, think of it and make it safe (check if key service is ok etc.)
+				RelativeLayout keysLayout = (RelativeLayout) parentView.findViewById(R.id.configuration_holder_layout);
+				keysService.populateLayout(generateNFS2012Buttons(), keysLayout, keysLayoutWidth, keysLayoutHeight);
+			}
+		});
+
+		/* TODO: Somewhere around here you should:
+		 * - getConfiguration() from bundle
 		 * - read modules from file
 		 * - add each module
 		 */
-
-		keysLayout = (RelativeLayout) parentView.findViewById(R.id.configuration_holder_layout);
 
 		return parentView;
 	}
@@ -126,7 +151,7 @@ public class RemoteControlFragment extends DebugFragment {
 
 		// Keys initialization
 		List<KeysButtonInfo> buttonInfoList = generateNFS2012Buttons();
-		keysService = serviceManager.getActionManager().getKeysService(buttonInfoList, keysLayout);
+		keysService = serviceManager.getActionManager().getKeysService();
 
 		// Subscribing to connection state events
 		serviceManager.getEventManager().subscribe(connectionStateEventListener);
@@ -287,13 +312,13 @@ public class RemoteControlFragment extends DebugFragment {
 		list.add(buttonInfo);
 
 		// Small buttons
-		buttonInfo = new KeysButtonInfo("^", "ButtonUp_", (float) 0.45, (float) 0.5, (float) 0.10, (float) (1/6.));
+		buttonInfo = new KeysButtonInfo("^", "ButtonUp_", (float) 0.45, (float) 0.5, (float) 0.10, (float) (1 / 6.));
 		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("v", "ButtonDown_", (float) 0.45, (float) (0.5+2/6.), (float) 0.10, (float) (1/6.));
+		buttonInfo = new KeysButtonInfo("v", "ButtonDown_", (float) 0.45, (float) (0.5 + 2 / 6.), (float) 0.10, (float) (1 / 6.));
 		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("<", "ButtonLeft_", (float) 0.35, (float) (0.5+1/6.), (float) 0.10, (float) (1/6.));
+		buttonInfo = new KeysButtonInfo("<", "ButtonLeft_", (float) 0.35, (float) (0.5 + 1 / 6.), (float) 0.10, (float) (1 / 6.));
 		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo(">", "ButtonRight_", (float) 0.55, (float) (0.5+1/6.), (float) 0.10, (float) (1/6.));
+		buttonInfo = new KeysButtonInfo(">", "ButtonRight_", (float) 0.55, (float) (0.5 + 1 / 6.), (float) 0.10, (float) (1 / 6.));
 		list.add(buttonInfo);
 
 		return list;
