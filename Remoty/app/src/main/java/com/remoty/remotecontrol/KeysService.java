@@ -54,10 +54,15 @@ public class KeysService {
 		// TODO: Claudiu
 		// TODO: compute this with the percent in buttonInfo and with the height and width of
 		// the layout (think when to get them, I think from outside ...)
-		int startX = 30;
-		int startY = 30;
-		int height = 300;
-		int width = 500;
+
+		// TODO: Remove this!!!
+		layoutHeight = 775;
+		layoutWidth = 2000;
+
+		int startX = (int) (buttonInfo.startXPercent * layoutWidth);
+		int startY = (int) (buttonInfo.startYPercent * layoutHeight);
+		int width = (int) (buttonInfo.widthPercent * layoutWidth);
+		int height = (int) (buttonInfo.heightPercent * layoutHeight);
 
 		// Creating view
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
