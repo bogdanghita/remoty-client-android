@@ -1,5 +1,6 @@
 package com.remoty.gui;
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -77,6 +78,7 @@ public class MainActivity extends DebugActivity {
 	public final static String KEYS = "KEYS-";
 
 	private ActionBarDrawerToggle mDrawerToggle;
+    private ActionBarDrawerToggle mBackDrawerToggle;
 	private LinearLayout container;
 
 	// TODO: Talk with Alina about this.
@@ -113,10 +115,17 @@ public class MainActivity extends DebugActivity {
 
 		createUserPofile();
 
-		// This is and not in onStart() because it needs to happen before the fragment's onStart()
+        // keep the home icon as a back button
+        if (MainActivity.Instance.homeAsBack){
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        }
+
+
+        // This is and not in onStart() because it needs to happen before the fragment's onStart()
 		// and if the activity is recreated the fragment's onStart() is called before this onStart()
 		// Subscribing to remote control start/stop events
 		serviceManager.getEventManager().subscribe(remoteControlEventListener);
+
 	}
 
 	@Override
@@ -249,7 +258,10 @@ public class MainActivity extends DebugActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
+        Log.d("MAIN","onconfigurationchanged");
+
 		mDrawerToggle.onConfigurationChanged(newConfig);
+        mDrawerToggle.syncState();
 	}
 
 	@Override
@@ -270,8 +282,10 @@ public class MainActivity extends DebugActivity {
 	}
 
 	public void disableToolbar() {
-		// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        // home button as back flag
+        homeAsBack = true;
 
+        // disable unwanted views
 		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 		tabLayout.setVisibility(View.GONE);
 
@@ -280,33 +294,40 @@ public class MainActivity extends DebugActivity {
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        // lock side menu
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+        // set back functionality for home button
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar,
 				R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-		toggle.setDrawerIndicatorEnabled(false);
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
 
-		toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				homeAsBack = false;
+        mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                homeAsBack = false;
 
-				onBackPressed();
-			}
-		});
+                onBackPressed();
 
-		homeAsBack = true;
+                enableToolbar();
+            }
+        });
 
-		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_white_24dp);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
 
-		drawer.setDrawerListener(toggle);
+		drawer.setDrawerListener(mDrawerToggle);
 	}
 
 	public void enableToolbar() {
+        // enable previously disabled views
+        MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
 		configureNavigationDrawer(drawer, toolbar);
 
@@ -317,6 +338,8 @@ public class MainActivity extends DebugActivity {
 
 		LinearLayout configurationsLayout = (LinearLayout) findViewById(R.id.configurations_layout);
 		configurationsLayout.setVisibility(View.VISIBLE);
+
+        MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
 	}
 
@@ -628,7 +651,7 @@ public class MainActivity extends DebugActivity {
 				startConnectionCheck();
 
 				// Enabling toolbar
-				enableToolbar();
+			//	enableToolbar();
 			}
 		}
 	};

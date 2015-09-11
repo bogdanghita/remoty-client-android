@@ -1,5 +1,6 @@
 package com.remoty.gui;
 
+import android.content.pm.ActivityInfo;
 import android.support.v4.app.FragmentTransaction;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -105,6 +106,11 @@ public class MyConfigurationsFragment extends DebugFragment {
 		// or we should define a different layout for the configurations fragments which will replace the layout of the main
 		// activity (I think this is better because the layouts will be automatically restored when the fragment closes)
 		// This needs research...
+
+        // TODO - remove this if not needed
+        // This is only for Drive configuration
+        // if we still want the fixed landscape orientation for Drive
+        MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
