@@ -125,7 +125,7 @@ public class RemoteControlFragment extends DebugFragment {
 		super.onResume();
 
 		// Keys initialization
-		List<KeysButtonInfo> buttonInfoList = generateTestKeys();
+		List<KeysButtonInfo> buttonInfoList = generateNFS2012Buttons();
 		keysService = serviceManager.getActionManager().getKeysService(buttonInfoList, keysLayout);
 
 		// Subscribing to connection state events
@@ -263,6 +263,38 @@ public class RemoteControlFragment extends DebugFragment {
 		List<KeysButtonInfo> list = new LinkedList<>();
 
 		// TODO: Claudiu
+
+		KeysButtonInfo buttonInfo;
+
+		// Main buttons
+		buttonInfo = new KeysButtonInfo("NOS", "ButtonA_", (float) 0, (float) 0, (float) 0.3, (float) 0.5);
+		list.add(buttonInfo);
+		buttonInfo = new KeysButtonInfo("HandBr", "ButtonX_", (float) 0, (float) 0.5, (float) 0.3, (float) 0.5);
+		list.add(buttonInfo);
+		buttonInfo = new KeysButtonInfo("Acc", "ButtonRT_", (float) 0.7, (float) 0, (float) 0.3, (float) 0.5);
+		list.add(buttonInfo);
+		buttonInfo = new KeysButtonInfo("Br/Rev", "ButtonLT_", (float) 0.7, (float) 0.5, (float) 0.3, (float) 0.5);
+		list.add(buttonInfo);
+
+		// Medium buttons
+		buttonInfo = new KeysButtonInfo("swap", "ButtonY_", (float) 0.35, (float) 0, (float) 0.15, (float) 0.25);
+		list.add(buttonInfo);
+		buttonInfo = new KeysButtonInfo("back", "ButtonB_", (float) 0.35, (float) 0.25, (float) 0.15, (float) 0.25);
+		list.add(buttonInfo);
+		buttonInfo = new KeysButtonInfo("start", "ButtonStart_", (float) 0.5, (float) 0, (float) 0.15, (float) 0.25);
+		list.add(buttonInfo);
+		buttonInfo = new KeysButtonInfo("enter", "ButtonA_", (float) 0.5, (float) 0.25, (float) 0.15, (float) 0.25);
+		list.add(buttonInfo);
+
+		// Small buttons
+		buttonInfo = new KeysButtonInfo("^", "ButtonUp_", (float) 0.45, (float) 0.5, (float) 0.10, (float) (1/6.));
+		list.add(buttonInfo);
+		buttonInfo = new KeysButtonInfo("v", "ButtonDown_", (float) 0.45, (float) (0.5+2/6.), (float) 0.10, (float) (1/6.));
+		list.add(buttonInfo);
+		buttonInfo = new KeysButtonInfo("<", "ButtonLeft_", (float) 0.35, (float) (0.5+1/6.), (float) 0.10, (float) (1/6.));
+		list.add(buttonInfo);
+		buttonInfo = new KeysButtonInfo(">", "ButtonRight_", (float) 0.55, (float) (0.5+1/6.), (float) 0.10, (float) (1/6.));
+		list.add(buttonInfo);
 
 		return list;
 	}
