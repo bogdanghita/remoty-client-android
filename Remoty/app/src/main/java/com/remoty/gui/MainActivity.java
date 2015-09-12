@@ -333,9 +333,6 @@ public class MainActivity extends DebugActivity {
 
 		LinearLayout configurationsLayout = (LinearLayout) findViewById(R.id.configurations_layout);
 		configurationsLayout.setVisibility(View.VISIBLE);
-
-		MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-
 	}
 
 // =================================================================================================
