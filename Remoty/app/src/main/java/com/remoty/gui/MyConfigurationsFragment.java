@@ -107,9 +107,8 @@ public class MyConfigurationsFragment extends DebugFragment {
 		// activity (I think this is better because the layouts will be automatically restored when the fragment closes)
 		// This needs research...
 
-        // TODO - remove this if not needed
-        // This is only for Drive configuration
-        // if we still want the fixed landscape orientation for Drive
+		// TODO - I think this should be put somewhere else
+        // NOTE: This is only for Drive configuration (if we still want the fixed landscape orientation for Drive)
         MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
