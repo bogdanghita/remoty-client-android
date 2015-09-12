@@ -20,13 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.remoty.R;
+import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.events.ConnectionStateEventListener;
 import com.remoty.common.events.DetectionEvent;
 import com.remoty.common.events.DetectionEventListener;
 import com.remoty.common.events.RemoteControlEvent;
 import com.remoty.common.events.RemoteControlEventListener;
 import com.remoty.common.servicemanager.ConnectionManager;
-import com.remoty.common.ConnectionCheckService;
 import com.remoty.common.servicemanager.ServiceManager;
 import com.remoty.common.ServerInfo;
 import com.remoty.common.ViewFactory;
@@ -58,7 +58,6 @@ public class MainActivity extends DebugActivity {
 	public final static int CONNECT_TIMEOUT = 500;
 
 	public final static long DETECTION_INTERVAL = 2000;
-	public final static long CONNECTION_CHECK_INTERVAL = 2000;
 	public final static long ACCELEROMETER_INTERVAL = 20;
 
 	public final static int LOCAL_DETECTION_RESPONSE_PORT = 10000;
@@ -78,7 +77,6 @@ public class MainActivity extends DebugActivity {
 	public final static String KEYS = "KEYS-";
 
 	private ActionBarDrawerToggle mDrawerToggle;
-    private ActionBarDrawerToggle mBackDrawerToggle;
 	private LinearLayout container;
 
 	// TODO: Talk with Alina about this.
@@ -88,7 +86,6 @@ public class MainActivity extends DebugActivity {
 	private ServiceManager serviceManager;
 	private ConnectionManager connectionManager;
 	private DetectionService serverDetection;
-	private ConnectionCheckService connectionCheck;
 
 // =================================================================================================
 // 	APP STATES
@@ -103,7 +100,6 @@ public class MainActivity extends DebugActivity {
 		serviceManager = ServiceManager.getInstance();
 		connectionManager = serviceManager.getConnectionManager();
 		serverDetection = serviceManager.getActionManager().getServerDetectionService();
-		connectionCheck = serviceManager.getActionManager().getConnectionCheckService();
 
 		setContentView(R.layout.activity_main);
 
@@ -113,15 +109,15 @@ public class MainActivity extends DebugActivity {
 		DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		configureNavigationDrawer(drawerLayout, toolbar);
 
-		createUserPofile();
+		createUserProfile();
 
-        // keep the home icon as a back button
-        if (MainActivity.Instance.homeAsBack){
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-        }
+		// keep the home icon as a back button
+		if (MainActivity.Instance.homeAsBack) {
+			getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+		}
 
 
-        // This is and not in onStart() because it needs to happen before the fragment's onStart()
+		// This is and not in onStart() because it needs to happen before the fragment's onStart()
 		// and if the activity is recreated the fragment's onStart() is called before this onStart()
 		// Subscribing to remote control start/stop events
 		serviceManager.getEventManager().subscribe(remoteControlEventListener);
@@ -168,7 +164,6 @@ public class MainActivity extends DebugActivity {
 		// Starting connection check if necessary
 		if (connectionManager.hasSelection()) {
 			serviceManager.getEventManager().subscribe(connectionStateEventListener);
-			startConnectionCheck();
 		}
 
 		// Starting server detection
@@ -181,7 +176,6 @@ public class MainActivity extends DebugActivity {
 
 		// Stopping connection check if necessary
 		if (connectionManager.hasSelection()) {
-			stopConnectionCheck();
 			serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
 		}
 
@@ -258,34 +252,35 @@ public class MainActivity extends DebugActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
-        Log.d("MAIN","onconfigurationchanged");
+		Log.d("MAIN", "onconfigurationchanged");
 
 		mDrawerToggle.onConfigurationChanged(newConfig);
-        mDrawerToggle.syncState();
+		mDrawerToggle.syncState();
 	}
 
 	@Override
 	public void onBackPressed() {
-		if(!MainActivity.Instance.homeAsBack)
+		if (!MainActivity.Instance.homeAsBack)
 			super.onBackPressed();
 	}
 
 	@Override
 	public boolean onMenuOpened(final int featureId, final Menu menu) {
 
-		if(MainActivity.Instance.homeAsBack) {
+		if (MainActivity.Instance.homeAsBack) {
 			super.onMenuOpened(featureId, menu);
 			return false;
-		} else {
+		}
+		else {
 			return true;
 		}
 	}
 
 	public void disableToolbar() {
-        // home button as back flag
-        homeAsBack = true;
+		// home button as back flag
+		homeAsBack = true;
 
-        // disable unwanted views
+		// disable unwanted views
 		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 		tabLayout.setVisibility(View.GONE);
 
@@ -294,40 +289,40 @@ public class MainActivity extends DebugActivity {
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        // lock side menu
+		// lock side menu
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        // set back functionality for home button
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+		// set back functionality for home button
+		mDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar,
 				R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        mDrawerToggle.setDrawerIndicatorEnabled(false);
+		mDrawerToggle.setDrawerIndicatorEnabled(false);
 
-        mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                homeAsBack = false;
+		mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				homeAsBack = false;
 
-                onBackPressed();
+				onBackPressed();
 
-                enableToolbar();
-            }
-        });
+				enableToolbar();
+			}
+		});
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
 
 		drawer.setDrawerListener(mDrawerToggle);
 	}
 
 	public void enableToolbar() {
-        // enable previously disabled views
-        MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		// enable previously disabled views
+		MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
 		configureNavigationDrawer(drawer, toolbar);
 
@@ -339,7 +334,7 @@ public class MainActivity extends DebugActivity {
 		LinearLayout configurationsLayout = (LinearLayout) findViewById(R.id.configurations_layout);
 		configurationsLayout.setVisibility(View.VISIBLE);
 
-        MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
 	}
 
@@ -408,7 +403,7 @@ public class MainActivity extends DebugActivity {
 		mDrawerToggle.syncState();
 	}
 
-	private void createUserPofile() {
+	private void createUserProfile() {
 		TextView name = (TextView) findViewById(R.id.name);
 		TextView email = (TextView) findViewById(R.id.email);
 		CircleImageView image = (CircleImageView) findViewById(R.id.circleView);
@@ -433,21 +428,10 @@ public class MainActivity extends DebugActivity {
 		serverDetection.clear();
 
 		// Triggering event to clear available servers list
-		serviceManager.getEventManager().triggerEvent(new DetectionEvent(null));
+		DetectionEvent clearEvent =  new DetectionEvent(new LinkedList<ServerInfo>());
+		serviceManager.getEventManager().triggerEvent(clearEvent);
 
 		serviceManager.getEventManager().unsubscribe(detectionEventListener);
-	}
-
-	private void startConnectionCheck() {
-
-		connectionCheck.init();
-		connectionCheck.start();
-	}
-
-	private void stopConnectionCheck() {
-
-		connectionCheck.stop();
-		connectionCheck.clear();
 	}
 
 	// This is called when a server is chosen as the current connection
@@ -457,11 +441,12 @@ public class MainActivity extends DebugActivity {
 
 		// Notifying the ConnectionManager
 		connectionManager.setSelection(server);
+		connectionManager.setConnectionState(ConnectionManager.ConnectionState.ACTIVE);
 
 		updateSelectionStatusIndicators();
+		updateConnectionStatusIndicators(ConnectionManager.ConnectionState.ACTIVE);
 
 		serviceManager.getEventManager().subscribe(connectionStateEventListener);
-		startConnectionCheck();
 	}
 
 	// TODO: call this method when the user chooses to disconnect from the current server
@@ -470,10 +455,11 @@ public class MainActivity extends DebugActivity {
 		Toast.makeText(getApplicationContext(), "Server deselected", Toast.LENGTH_LONG).show();
 
 		connectionManager.clearSelection();
+		connectionManager.setConnectionState(ConnectionManager.ConnectionState.NONE);
 
 		updateSelectionStatusIndicators();
+		updateConnectionStatusIndicators(ConnectionManager.ConnectionState.NONE);
 
-		stopConnectionCheck();
 		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
 	}
 
@@ -530,15 +516,9 @@ public class MainActivity extends DebugActivity {
 
 	private void updateAvailableServersList(List<ServerInfo> servers) {
 
-		Toast.makeText(getApplicationContext(), "Detection Event", Toast.LENGTH_LONG).show();
-
 		container = (LinearLayout) findViewById(R.id.connections_layout);
 
 		container.removeAllViews();
-
-		if (servers == null) {
-			return;
-		}
 
 		for (ServerInfo server : servers) {
 
@@ -579,6 +559,40 @@ public class MainActivity extends DebugActivity {
 		return button;
 	}
 
+	/**
+	 * Checking connection state changes and triggering appropriate events if needed
+	 *
+	 * @param servers
+	 */
+	private void handleConnectionStateChanges(List<ServerInfo> servers) {
+
+		ConnectionManager connectionManager = serviceManager.getConnectionManager();
+		if (connectionManager.hasSelection()) {
+			ServerInfo currentSelection = connectionManager.getSelection();
+			ConnectionManager.ConnectionState currentConnectionState = connectionManager.getConnectionState();
+
+			// Checking if connection with selected server was reestablished and triggering event if true
+			if (currentConnectionState == ConnectionManager.ConnectionState.LOST
+					&& servers.contains(currentSelection)) {
+
+				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.ACTIVE);
+				serviceManager.getEventManager().triggerEvent(event);
+
+				return;
+			}
+
+			// Checking if connection with selected server was lost and triggering event if true
+			if (currentConnectionState != ConnectionManager.ConnectionState.LOST
+					&& !servers.contains(currentSelection)) {
+
+				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST);
+				serviceManager.getEventManager().triggerEvent(event);
+
+				return;
+			}
+		}
+	}
+
 // =================================================================================================
 //	LISTENERS
 
@@ -591,7 +605,11 @@ public class MainActivity extends DebugActivity {
 				@Override
 				public void run() {
 
+					Toast.makeText(getApplicationContext(), "Detection Event", Toast.LENGTH_LONG).show();
+
 					updateAvailableServersList(servers);
+
+					handleConnectionStateChanges(servers);
 				}
 			});
 		}
@@ -613,7 +631,7 @@ public class MainActivity extends DebugActivity {
 
 					updateConnectionStatusIndicators(connectionState);
 
-					// TODO: if connection state LOST or SLOW do something intelligent (maybe stop sending)
+					// NOTE: Remote control services are stopped by the remote control fragment
 				}
 			});
 		}
@@ -637,8 +655,6 @@ public class MainActivity extends DebugActivity {
 
 				// Stopping detection and connection check services
 				stopServerDetection();
-				// NOTE: No need to call hasSelection(). At this point it is guaranteed that there is one.
-				stopConnectionCheck();
 
 				// Disabling toolbar
 				disableToolbar();
@@ -647,11 +663,6 @@ public class MainActivity extends DebugActivity {
 
 				// Starting detection and connection check services
 				startServerDetection();
-				// NOTE: No need to call hasSelection(). At this point it is guaranteed that there is one.
-				startConnectionCheck();
-
-				// Enabling toolbar
-			//	enableToolbar();
 			}
 		}
 	};

@@ -13,12 +13,13 @@ public class ConnectionManager {
 	public enum ConnectionState {
 		ACTIVE,
 		SLOW,
-		LOST
+		LOST,
+		NONE
 	}
 
 	private ServerInfo selectedConnection = null;
 
-	private ConnectionState connectionState = ConnectionState.LOST;
+	private ConnectionState connectionState = ConnectionState.NONE;
 
 	/**
 	 * TODO: ...

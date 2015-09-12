@@ -2,11 +2,8 @@ package com.remoty.common.servicemanager;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.widget.RelativeLayout;
 
 import com.remoty.remotecontrol.AccelerometerService;
-import com.remoty.common.ConnectionCheckService;
-import com.remoty.remotecontrol.KeysButtonInfo;
 import com.remoty.remotecontrol.KeysService;
 import com.remoty.remotecontrol.RemoteControlService;
 import com.remoty.services.detection.DetectionService;
@@ -24,8 +21,6 @@ public class ActionManager {
 
 	private DetectionService serverDetection;
 
-	private ConnectionCheckService connectionCheck;
-
 	private RemoteControlService remoteControl;
 
 	public ActionManager(EventManager eventManager) {
@@ -33,18 +28,12 @@ public class ActionManager {
 		this.eventManager = eventManager;
 
 		serverDetection = new DetectionService(eventManager);
-		connectionCheck = new ConnectionCheckService(eventManager);
 		remoteControl = new RemoteControlService();
 	}
 
 	public DetectionService getServerDetectionService() {
 
 		return serverDetection;
-	}
-
-	public ConnectionCheckService getConnectionCheckService() {
-
-		return connectionCheck;
 	}
 
 	public RemoteControlService getRemoteControlService() {

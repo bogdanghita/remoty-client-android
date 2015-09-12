@@ -6,7 +6,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +105,7 @@ public class RemoteControlFragment extends DebugFragment {
 
 				// TODO: refine this, think of it and make it safe (check if key service is ok etc.)
 				RelativeLayout keysLayout = (RelativeLayout) parentView.findViewById(R.id.configuration_holder_layout);
-				keysService.populateLayout(generateNFS2012Buttons(), keysLayout, keysLayoutWidth, keysLayoutHeight);
+				keysService.populateLayout(generateNFSMW2012Buttons(), keysLayout, keysLayoutWidth, keysLayoutHeight);
 			}
 		});
 
@@ -150,7 +149,7 @@ public class RemoteControlFragment extends DebugFragment {
 		super.onResume();
 
 		// Keys initialization
-		List<KeysButtonInfo> buttonInfoList = generateNFS2012Buttons();
+		List<KeysButtonInfo> buttonInfoList = generateNFSMW2012Buttons();
 		keysService = serviceManager.getActionManager().getKeysService();
 
 		// Subscribing to connection state events
@@ -260,6 +259,8 @@ public class RemoteControlFragment extends DebugFragment {
 						stopServices();
 
 						displaySnackbar();
+
+						// NOTE: State is updated by activity main
 					}
 				}
 			});
@@ -282,12 +283,10 @@ public class RemoteControlFragment extends DebugFragment {
 		return list;
 	}
 
-	// Generates the buttons config for bla bla bla
-	private List<KeysButtonInfo> generateNFS2012Buttons() {
+	// Generates the buttons configuration for NFS Most Wanted 2012
+	private List<KeysButtonInfo> generateNFSMW2012Buttons() {
 
 		List<KeysButtonInfo> list = new LinkedList<>();
-
-		// TODO: Claudiu
 
 		KeysButtonInfo buttonInfo;
 
