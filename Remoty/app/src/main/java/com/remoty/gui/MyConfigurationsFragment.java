@@ -114,7 +114,6 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
-		// TODO: This is strange... the Drive button remains there...
 		transaction.replace(R.id.fragment_my_configurations, fragment);
 
 		transaction.addToBackStack(null);
