@@ -134,15 +134,6 @@ public class PingService {
 		sockets.remove(socket);
 		serverInfoMap.remove(serverIp);
 
-		// TODO: move this from here
-//		//  Notifying the ConnectionManager if this server was the current selected one
-//		if (ConnectionManager.hasSelection() && ConnectionManager.getSelection().ip.equals(serverIp)) {;
-//
-//			ConnectionManager.clearSelection();
-//
-//			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Removed the currently selected server. It did not respond to ping.");
-//		}
-
 		// Closing socket
 		try {
 			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.PING_SERVICE, "Closing the server that did not respond to ping...");

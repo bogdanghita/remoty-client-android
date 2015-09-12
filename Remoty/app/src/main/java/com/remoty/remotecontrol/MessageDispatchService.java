@@ -50,6 +50,8 @@ public class MessageDispatchService {
 			tcpSocket.setTimeout(timeout);
 			tcpSocket.setTcpNoDelay(true);
 			tcpSocket.setKeepAlive(true);
+
+			triggerEvent(ConnectionManager.ConnectionState.ACTIVE);
 		}
 		catch (IOException e) {
 			e.printStackTrace();

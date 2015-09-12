@@ -149,6 +149,13 @@ public class KeysService {
 	// This is not needed to be synchronised because the calls are made on the same thread
 	private void setMessage(Message.KeysMessage keys) {
 
+		// NOTE: keys runnable is set to null if connection is lost
+		// This is an option of making the app not crash if a button is pressed when connection is lost
+		// TODO: Think of a better solution for this problem
+		if(keysRunnable == null) {
+			return;
+		}
+
 		keysRunnable.setMessage(keys);
 	}
 }
