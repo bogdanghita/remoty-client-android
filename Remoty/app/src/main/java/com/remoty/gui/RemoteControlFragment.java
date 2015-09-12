@@ -252,9 +252,11 @@ public class RemoteControlFragment extends DebugFragment {
 				@Override
 				public void run() {
 
-					Toast.makeText(getActivity(), "Connection connectionState changed: " + connectionState.toString(), Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), "Connection connectionState changed: " +
+							connectionState.toString(), Toast.LENGTH_LONG).show();
 
-					if (connectionState == ConnectionManager.ConnectionState.LOST || connectionState == ConnectionManager.ConnectionState.SLOW) {
+					if (connectionState == ConnectionManager.ConnectionState.LOST ||
+							connectionState == ConnectionManager.ConnectionState.SLOW) {
 
 						stopServices();
 
