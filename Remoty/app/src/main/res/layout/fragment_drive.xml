@@ -11,8 +11,7 @@
         <RelativeLayout
             android:id="@+id/configuration_holder_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/highlighted_text_material_light">
+            android:layout_height="match_parent">
 
         </RelativeLayout>
 

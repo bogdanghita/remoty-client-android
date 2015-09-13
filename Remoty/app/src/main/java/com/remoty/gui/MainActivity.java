@@ -80,9 +80,9 @@ public class MainActivity extends DebugActivity {
 
 	private ActionBarDrawerToggle mDrawerToggle;
 	private LinearLayout container;
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
-    public ConnectionsListAdapter mAdapter;
+	private RecyclerView mRecyclerView;
+	private LinearLayoutManager mLayoutManager;
+	public ConnectionsListAdapter mAdapter;
 
 	// TODO: Talk with Alina about this.
 	public static MainActivity Instance;
@@ -284,7 +284,7 @@ public class MainActivity extends DebugActivity {
 		// home button as back flag
 		homeAsBack = true;
 
-        Log.d("MAIN", "disable toolbar");
+		Log.d("MAIN", "disable toolbar");
 
 		// disable unwanted views
 		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -320,19 +320,19 @@ public class MainActivity extends DebugActivity {
 
 		drawer.setDrawerListener(mDrawerToggle);
 
-        CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.view_pager);
-        viewPager.setPagingEnabled(false);
+		CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.view_pager);
+		viewPager.setPagingEnabled(false);
 	}
 
 	public void enableToolbar() {
 
-        Log.d("MAIN", "enable toolbar");
+		Log.d("MAIN", "enable toolbar");
 		// enable previously disabled views
 		MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        // Unlocking side menu
+		// Unlocking side menu
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
@@ -346,9 +346,9 @@ public class MainActivity extends DebugActivity {
 		RecyclerView configurationsLayout = (RecyclerView) findViewById(R.id.configurations_layout);
 		configurationsLayout.setVisibility(View.VISIBLE);
 
-        // Unlocking page sliding
-        CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.view_pager);
-        viewPager.setPagingEnabled(true);
+		// Unlocking page sliding
+		CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.view_pager);
+		viewPager.setPagingEnabled(true);
 	}
 
 // =================================================================================================
@@ -369,23 +369,23 @@ public class MainActivity extends DebugActivity {
 		final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
 		final PagerAdapter adapter = new FragmentTabListener(getSupportFragmentManager(), tabLayout.getTabCount());
 		viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+			@Override
+			public void onTabSelected(TabLayout.Tab tab) {
+				viewPager.setCurrentItem(tab.getPosition());
+			}
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+			@Override
+			public void onTabUnselected(TabLayout.Tab tab) {
 
-            }
+			}
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+			@Override
+			public void onTabReselected(TabLayout.Tab tab) {
 
-            }
-        });
+			}
+		});
 	}
 
 	private void configureNavigationDrawer(DrawerLayout mDrawerLayout, Toolbar toolbar) {
@@ -415,26 +415,26 @@ public class MainActivity extends DebugActivity {
 		getSupportActionBar().setHomeButtonEnabled(true);
 		mDrawerToggle.syncState();
 
-        configureConnectionsLayout();
+		configureConnectionsLayout();
 	}
 
-    private void configureConnectionsLayout(){
+	private void configureConnectionsLayout() {
 
-        // Setting up recycleView (Listview)
-        mRecyclerView = (RecyclerView) findViewById(R.id.connections_layout);
+		// Setting up recycleView (Listview)
+		mRecyclerView = (RecyclerView) findViewById(R.id.connections_layout);
 
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+		// use a linear layout manager
+		mLayoutManager = new LinearLayoutManager(this);
+		mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // set an adapter
-        mAdapter = new ConnectionsListAdapter(this, serviceManager, connectionManager);
-        mRecyclerView.setAdapter(mAdapter);
-    }
+		// set an adapter
+		mAdapter = new ConnectionsListAdapter(this, serviceManager, connectionManager);
+		mRecyclerView.setAdapter(mAdapter);
+	}
 
 	private void createUserProfile() {
 
-        // Setting up user profile
+		// Setting up user profile
 		TextView name = (TextView) findViewById(R.id.name);
 		TextView email = (TextView) findViewById(R.id.email);
 		CircleImageView image = (CircleImageView) findViewById(R.id.circleView);
@@ -458,7 +458,7 @@ public class MainActivity extends DebugActivity {
 		serverDetection.clear();
 
 		// Triggering event to clear available servers list
-		DetectionEvent clearEvent =  new DetectionEvent(new LinkedList<ServerInfo>());
+		DetectionEvent clearEvent = new DetectionEvent(new LinkedList<ServerInfo>());
 		serviceManager.getEventManager().triggerEvent(clearEvent);
 
 		serviceManager.getEventManager().unsubscribe(detectionEventListener);
@@ -531,7 +531,7 @@ public class MainActivity extends DebugActivity {
 	private void updateConnectionStatusIndicators(ConnectionManager.ConnectionState connectionState) {
 
 
-        Log.d("ADAPTER", "updateConnectionStatusIndicators " + connectionState.toString());
+		Log.d("ADAPTER", "updateConnectionStatusIndicators " + connectionState.toString());
 
 		// TODO: update connection status
 		// - update toggle button icon color
@@ -551,22 +551,23 @@ public class MainActivity extends DebugActivity {
 	// AICI
 	private void updateAvailableServersList(List<ServerInfo> servers) {
 
-        Log.d("ADAPTER", "updateAvailableServersList " + servers.size());
-        if(serviceManager.getConnectionManager().hasSelection()){
-            if(!servers.contains(serviceManager.getConnectionManager().getSelection())){
-                servers.add(serviceManager.getConnectionManager().getSelection());
-                Collections.sort(servers);
-            }
-        } else {
-            if(servers.size() == 0){
-                servers.add(new ServerInfo("0",0,"No available devices :("));
-            }
-        }
+		Log.d("ADAPTER", "updateAvailableServersList " + servers.size());
+		if (serviceManager.getConnectionManager().hasSelection()) {
+			if (!servers.contains(serviceManager.getConnectionManager().getSelection())) {
+				servers.add(serviceManager.getConnectionManager().getSelection());
+				Collections.sort(servers);
+			}
+		}
+		else {
+			if (servers.size() == 0) {
+				servers.add(new ServerInfo("0", 0, "No available devices :("));
+			}
+		}
 
-        mAdapter.setServerList(servers);
-        mAdapter.notifyDataSetChanged();
+		mAdapter.setServerList(servers);
+		mAdapter.notifyDataSetChanged();
 
-        servers.remove(serviceManager.getConnectionManager().getSelection());
+		servers.remove(serviceManager.getConnectionManager().getSelection());
 	}
 
 // =================================================================================================
@@ -577,9 +578,9 @@ public class MainActivity extends DebugActivity {
 	}
 
 
-    public void buttonDevices(View view){
+	public void buttonDevices(View view) {
 
-    }
+	}
 
 	/**
 	 * Checking connection state changes and triggering appropriate events if needed
@@ -597,7 +598,7 @@ public class MainActivity extends DebugActivity {
 			if (currentConnectionState == ConnectionManager.ConnectionState.LOST
 					&& servers.contains(currentSelection)) {
 
-                Log.d("ADAPTER", "handleConnectionStateChanges LOST & contains");
+				Log.d("ADAPTER", "handleConnectionStateChanges LOST & contains");
 				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.ACTIVE);
 				serviceManager.getEventManager().triggerEvent(event);
 
@@ -609,7 +610,7 @@ public class MainActivity extends DebugActivity {
 					&& !servers.contains(currentSelection)) {
 
 
-                Log.d("ADAPTER", "handleConnectionStateChanges LOST & !contains");
+				Log.d("ADAPTER", "handleConnectionStateChanges LOST & !contains");
 				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST);
 				serviceManager.getEventManager().triggerEvent(event);
 
@@ -682,8 +683,8 @@ public class MainActivity extends DebugActivity {
 				stopServerDetection();
 
 				// Disabling toolbar
-                Log.d("MAIN", "disable toolbar remotecontroleventlistener");
-                    disableToolbar();
+				Log.d("MAIN", "disable toolbar remotecontroleventlistener");
+				disableToolbar();
 
 			}
 			else if (action == RemoteControlEvent.Action.STOP) {
