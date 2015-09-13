@@ -89,7 +89,7 @@ public class RemoteControlFragment extends DebugFragment {
 			public void onGlobalLayout() {
 				View keysL = parentView.findViewById(R.id.configuration_holder_layout);
 
-				Toast.makeText(getActivity(), "onGlobalLayout()" /*+ cnt++*/, Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getActivity(), "onGlobalLayout()" /*+ cnt++*/, Toast.LENGTH_SHORT).show();
 
 				// Now we can retrieve the width and height
 				int keysLayoutWidth = keysL.getWidth();
@@ -180,7 +180,7 @@ public class RemoteControlFragment extends DebugFragment {
 
 	private void startServices() {
 
-		Toast.makeText(getActivity(), "Starting connection services", Toast.LENGTH_LONG).show();
+//		Toast.makeText(getActivity(), "Starting connection services", Toast.LENGTH_LONG).show();
 
 		// This fragment is only launched if there is a connection selected. If it is recreated and
 		// launched from a previous state then the selected connection will also be persisted
@@ -207,7 +207,7 @@ public class RemoteControlFragment extends DebugFragment {
 
 	private void stopServices() {
 
-		Toast.makeText(getActivity(), "Stopping connection services", Toast.LENGTH_LONG).show();
+//		Toast.makeText(getActivity(), "Stopping connection services", Toast.LENGTH_LONG).show();
 
 		if (accService.isRunning()) {
 			accService.stop();
@@ -252,8 +252,8 @@ public class RemoteControlFragment extends DebugFragment {
 				@Override
 				public void run() {
 
-					Toast.makeText(getActivity(), "Connection connectionState changed: " +
-							connectionState.toString(), Toast.LENGTH_LONG).show();
+//					Toast.makeText(getActivity(), "Connection connectionState changed: " +
+//							connectionState.toString(), Toast.LENGTH_LONG).show();
 
 					if (connectionState == ConnectionManager.ConnectionState.LOST ||
 							connectionState == ConnectionManager.ConnectionState.SLOW) {
