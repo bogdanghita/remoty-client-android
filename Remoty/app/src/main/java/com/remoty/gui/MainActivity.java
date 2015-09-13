@@ -327,10 +327,7 @@ public class MainActivity extends DebugActivity {
 
 	public void enableToolbar() {
 
-		Log.d("MAIN", "enable toolbar");
-		// enable previously disabled views
-		MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-
+		// Enable previously disabled views
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 		// Unlocking side menu
@@ -689,6 +686,11 @@ public class MainActivity extends DebugActivity {
 				// Disabling toolbar
 				Log.d("MAIN", "disable toolbar remotecontroleventlistener");
 				disableToolbar();
+
+//				// TODO - remove this if not needed
+//				// This is only for Drive configuration
+//				// if we still want the fixed landscape orientation for Drive
+//				MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			}
 			else if (action == RemoteControlEvent.Action.STOP) {
 
@@ -697,6 +699,12 @@ public class MainActivity extends DebugActivity {
 
 				// Starting detection and connection check services
 				startServerDetection();
+
+				// Enabling toolbar
+				Log.d("MAIN", "enable toolbar");
+				enableToolbar();
+
+//				MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
 		}
 	};

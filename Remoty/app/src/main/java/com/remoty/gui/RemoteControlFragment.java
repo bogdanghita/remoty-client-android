@@ -1,6 +1,7 @@
 package com.remoty.gui;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
