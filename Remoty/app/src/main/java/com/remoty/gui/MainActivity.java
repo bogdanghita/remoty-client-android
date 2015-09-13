@@ -338,10 +338,7 @@ public class MainActivity extends DebugActivity {
 
 		RecyclerView configurationsLayout = (RecyclerView) findViewById(R.id.configurations_layout);
 		configurationsLayout.setVisibility(View.VISIBLE);
-
         // Unlocking screen orientation
-		MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-
 	}
 
 // =================================================================================================
