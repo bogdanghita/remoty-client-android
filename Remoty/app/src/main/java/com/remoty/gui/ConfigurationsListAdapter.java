@@ -89,20 +89,6 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 				switchToFragment(fragment);
 			}
 		});
-
-//		holder.mNameContainer.setOnTouchListener(new View.OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//
-//				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//					holder.mItemContainer.setPressed(true);
-//				}
-//				else if (event.getAction() == MotionEvent.ACTION_UP) {
-//					holder.mItemContainer.setPressed(false);
-//				}
-//				return false;
-//			}
-//		});
 	}
 
 	// Return the size of your dataset (invoked by the layout manager)
@@ -136,6 +122,8 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 		MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		FragmentTransaction transaction = MainActivity.Instance.getSupportFragmentManager().beginTransaction();
+
+
 
 		// TODO: This is strange... the Drive button remains there...
 		transaction.replace(R.id.fragment_my_configurations, fragment);
