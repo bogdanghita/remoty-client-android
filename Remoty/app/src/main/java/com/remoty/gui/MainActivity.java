@@ -538,6 +538,7 @@ public class MainActivity extends DebugActivity {
 
 	}
 
+	// AICI
 	private void updateAvailableServersList(List<ServerInfo> servers) {
 
         Log.d("ADAPTER", "updateAvailableServersList " + servers.size());
@@ -552,13 +553,10 @@ public class MainActivity extends DebugActivity {
             }
         }
 
-
         mAdapter.setServerList(servers);
         mAdapter.notifyDataSetChanged();
-        mRecyclerView.setAdapter(mAdapter);
 
         servers.remove(serviceManager.getConnectionManager().getSelection());
-
 	}
 
 // =================================================================================================

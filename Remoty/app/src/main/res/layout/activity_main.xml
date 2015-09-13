@@ -94,7 +94,7 @@
                 android:layout_height="70dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="38dp"/>
-            
+
         </RelativeLayout>
 
         <LinearLayout
@@ -121,10 +121,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1">
 
-                <ImageButton
-                    android:onClick="buttonDeivces"
+                <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -139,22 +140,24 @@
                     android:textSize="25dip"
                     android:textStyle="bold"
                     android:textColor="#212121"/>
+
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/connections_layout"
                 android:scrollbars="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1000"
                 />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top|end">
+                android:layout_gravity="top|end"
+                android:layout_weight="1">
 
-                <ImageButton
-                    android:onClick="buttonManualConnection"
+                <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
