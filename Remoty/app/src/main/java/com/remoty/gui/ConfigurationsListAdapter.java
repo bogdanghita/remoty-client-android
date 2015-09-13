@@ -101,7 +101,7 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 
 		if (!ServiceManager.getInstance().getConnectionManager().hasSelection()) {
 
-			Toast.makeText(MainActivity.Instance, "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
+//			Toast.makeText(MainActivity.Instance, "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
 
 			// TODO: Review this from  the point of view of UX
 //			openConnectPage();
