@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.TabLayout;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +57,7 @@ public class MainActivity extends DebugActivity {
 	public final static int INIT_REMOTE_CONTROL_TIMEOUT = 2000;
 
 	// TODO: rename and see if it is relevant since at this moment only send operations are performed
-	public final static int ACCELEROMETER_TIMEOUT = 50;
+	public final static int ACCELEROMETER_TIMEOUT = 100;
 	public final static int CONNECT_TIMEOUT = 500;
 
 	public final static long DETECTION_INTERVAL = 2000;
@@ -326,10 +327,7 @@ public class MainActivity extends DebugActivity {
 
 	public void enableToolbar() {
 
-		Log.d("MAIN", "enable toolbar");
-		// enable previously disabled views
-		MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-
+		// Enable previously disabled views
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 		// Unlocking side menu
@@ -467,7 +465,7 @@ public class MainActivity extends DebugActivity {
 	// This is called when a server is chosen as the current connection
 	public void serverSelected(ServerInfo server) {
 
-		Toast.makeText(getApplicationContext(), "Server selected", Toast.LENGTH_LONG).show();
+//		Toast.makeText(getApplicationContext(), "Server selected", Toast.LENGTH_LONG).show();
 
 		// Notifying the ConnectionManager
 		connectionManager.setSelection(server);
@@ -631,7 +629,7 @@ public class MainActivity extends DebugActivity {
 				@Override
 				public void run() {
 
-					Toast.makeText(getApplicationContext(), "Detection Event", Toast.LENGTH_LONG).show();
+//					Toast.makeText(getApplicationContext(), "Detection Event", Toast.LENGTH_LONG).show();
 
 					updateAvailableServersList(servers);
 
@@ -651,7 +649,7 @@ public class MainActivity extends DebugActivity {
 				@Override
 				public void run() {
 
-					Toast.makeText(getApplicationContext(), "Connection connectionState changed: " + connectionState.toString(), Toast.LENGTH_LONG).show();
+//					Toast.makeText(getApplicationContext(), "Connection connectionState changed: " + connectionState.toString(), Toast.LENGTH_LONG).show();
 
 					connectionManager.setConnectionState(connectionState);
 
@@ -667,17 +665,20 @@ public class MainActivity extends DebugActivity {
 		@Override
 		public void stateChanged(final RemoteControlEvent.Action action) {
 
-			// Posting toast from the UI thread
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-
-					Toast.makeText(getApplicationContext(), "Remote control: " + action.toString(), Toast.LENGTH_LONG).show();
-				}
-			});
+//			// Posting toast from the UI thread
+//			runOnUiThread(new Runnable() {
+//				@Override
+//				public void run() {
+//
+//					Toast.makeText(getApplicationContext(), "Remote control: " + action.toString(), Toast.LENGTH_LONG).show();
+//				}
+//			});
 
 			// NOTE: This is not necessary to be run on the UI thread because it does not interact with the GUI
 			if (action == RemoteControlEvent.Action.START) {
+
+				// Disabling screen timeout
+				getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 				// Stopping detection and connection check services
 				stopServerDetection();
@@ -686,11 +687,24 @@ public class MainActivity extends DebugActivity {
 				Log.d("MAIN", "disable toolbar remotecontroleventlistener");
 				disableToolbar();
 
+//				// TODO - remove this if not needed
+//				// This is only for Drive configuration
+//				// if we still want the fixed landscape orientation for Drive
+//				MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			}
 			else if (action == RemoteControlEvent.Action.STOP) {
 
+				// Enabling screen timeout
+				getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 				// Starting detection and connection check services
 				startServerDetection();
+
+				// Enabling toolbar
+				Log.d("MAIN", "enable toolbar");
+				enableToolbar();
+
+//				MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
 		}
 	};

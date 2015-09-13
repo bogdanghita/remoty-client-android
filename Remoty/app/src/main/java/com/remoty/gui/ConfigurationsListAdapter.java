@@ -101,7 +101,7 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 
 		if (!ServiceManager.getInstance().getConnectionManager().hasSelection()) {
 
-			Toast.makeText(MainActivity.Instance, "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
+//			Toast.makeText(MainActivity.Instance, "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
 
 			// TODO: Review this from  the point of view of UX
 //			openConnectPage();
@@ -116,16 +116,8 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 		// activity (I think this is better because the layouts will be automatically restored when the fragment closes)
 		// This needs research...
 
-		// TODO - remove this if not needed
-		// This is only for Drive configuration
-		// if we still want the fixed landscape orientation for Drive
-		MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
 		FragmentTransaction transaction = MainActivity.Instance.getSupportFragmentManager().beginTransaction();
 
-
-
-		// TODO: This is strange... the Drive button remains there...
 		transaction.replace(R.id.fragment_my_configurations, fragment);
 
 		transaction.addToBackStack(null);
