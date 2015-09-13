@@ -50,10 +50,12 @@ public class KeysService {
 
 	private Button getButton(KeysButtonInfo buttonInfo, int layoutWidth, int layoutHeight) {
 
-		int startX = (int) (buttonInfo.startXPercent * layoutWidth);
-		int startY = (int) (buttonInfo.startYPercent * layoutHeight);
-		int width = (int) (buttonInfo.widthPercent * layoutWidth);
-		int height = (int) (buttonInfo.heightPercent * layoutHeight);
+		final int padding = 10;
+
+		int startX = (int) (buttonInfo.startXPercent * layoutWidth) - padding;
+		int startY = (int) (buttonInfo.startYPercent * layoutHeight) - padding;
+		int width = (int) (buttonInfo.widthPercent * layoutWidth) - padding;
+		int height = (int) (buttonInfo.heightPercent * layoutHeight) - padding;
 
 		// Creating view
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
@@ -63,9 +65,12 @@ public class KeysService {
 		// TODO: change the MainActivity.Instance thing
 		// Creating linear layout to hold the two text views
 		final Button button = new Button(MainActivity.Instance);
+		// This removes the default toUpper a button makes to it's text.
+		button.setTransformationMethod(null);
 		button.setText(buttonInfo.name);
 		button.setLayoutParams(params);
-        button.setBackgroundColor(Color.parseColor("#b6b6b6"));
+		button.setBackgroundColor(Color.parseColor("#727272"));
+//		button.setBackgroundColor(Color.parseColor("#b6b6b6"));
 
 		return button;
 	}
@@ -154,7 +159,7 @@ public class KeysService {
 		// NOTE: keys runnable is set to null if connection is lost
 		// This is an option of making the app not crash if a button is pressed when connection is lost
 		// TODO: Think of a better solution for this problem
-		if(keysRunnable == null) {
+		if (keysRunnable == null) {
 			return;
 		}
 
