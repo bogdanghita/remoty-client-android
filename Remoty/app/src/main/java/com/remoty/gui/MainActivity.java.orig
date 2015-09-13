@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.TabLayout;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +35,6 @@ import com.remoty.common.ViewFactory;
 import com.remoty.services.detection.DetectionService;
 import com.remoty.services.threading.TaskScheduler;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -82,7 +82,7 @@ public class MainActivity extends DebugActivity {
 	private LinearLayout container;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    public ConnectionsListAdapter mAdapter;
+    private ConnectionsListAdapter mAdapter;
 
 	// TODO: Talk with Alina about this.
 	public static MainActivity Instance;
@@ -121,7 +121,12 @@ public class MainActivity extends DebugActivity {
 			getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
 		}
 
+<<<<<<< working copy
+        // This is and not in onStart() because it needs to happen before the fragment's onStart()
+=======
+
 		// This is and not in onStart() because it needs to happen before the fragment's onStart()
+>>>>>>> destination
 		// and if the activity is recreated the fragment's onStart() is called before this onStart()
 		// Subscribing to remote control start/stop events
 		serviceManager.getEventManager().subscribe(remoteControlEventListener);
@@ -288,7 +293,7 @@ public class MainActivity extends DebugActivity {
 		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 		tabLayout.setVisibility(View.GONE);
 
-		RecyclerView configurationsLayout = (RecyclerView) findViewById(R.id.configurations_layout);
+		LinearLayout configurationsLayout = (LinearLayout) findViewById(R.id.configurations_layout);
 		configurationsLayout.setVisibility(View.GONE);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -336,11 +341,15 @@ public class MainActivity extends DebugActivity {
 		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 		tabLayout.setVisibility(View.VISIBLE);
 
-		RecyclerView configurationsLayout = (RecyclerView) findViewById(R.id.configurations_layout);
+		LinearLayout configurationsLayout = (LinearLayout) findViewById(R.id.configurations_layout);
 		configurationsLayout.setVisibility(View.VISIBLE);
 
+<<<<<<< working copy
         // Unlocking screen orientation
+        MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+=======
 		MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+>>>>>>> destination
 
 	}
 
@@ -353,7 +362,7 @@ public class MainActivity extends DebugActivity {
 		setSupportActionBar(toolbar);
 
 		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-		tabLayout.addTab(tabLayout.newTab().setText("Remoties"));
+		tabLayout.addTab(tabLayout.newTab().setText("My Configurations"));
 		tabLayout.addTab(tabLayout.newTab().setText("Market"));
 		tabLayout.addTab(tabLayout.newTab().setText("Social"));
 		tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -364,21 +373,21 @@ public class MainActivity extends DebugActivity {
 		viewPager.setAdapter(adapter);
 		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+			@Override
+			public void onTabSelected(TabLayout.Tab tab) {
+				viewPager.setCurrentItem(tab.getPosition());
+			}
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+			@Override
+			public void onTabUnselected(TabLayout.Tab tab) {
 
-            }
+			}
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+			@Override
+			public void onTabReselected(TabLayout.Tab tab) {
 
-            }
-        });
+			}
+		});
 	}
 
 	private void configureNavigationDrawer(DrawerLayout mDrawerLayout, Toolbar toolbar) {
@@ -411,9 +420,8 @@ public class MainActivity extends DebugActivity {
         configureConnectionsLayout();
 	}
 
+<<<<<<< working copy
     private void configureConnectionsLayout(){
-
-        // Setting up recycleView (Listview)
         mRecyclerView = (RecyclerView) findViewById(R.id.connections_layout);
 
         // use a linear layout manager
@@ -421,17 +429,23 @@ public class MainActivity extends DebugActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // set an adapter
+
+        //test
+        //String[] s = {"a","b","c","d","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","x","y","z"};
+
         mAdapter = new ConnectionsListAdapter(this, serviceManager, connectionManager);
         mRecyclerView.setAdapter(mAdapter);
     }
 
+	private void createUserPofile() {
+=======
 	private void createUserProfile() {
-
-        // Setting up user profile
+>>>>>>> destination
 		TextView name = (TextView) findViewById(R.id.name);
 		TextView email = (TextView) findViewById(R.id.email);
 		CircleImageView image = (CircleImageView) findViewById(R.id.circleView);
 		image.setImageResource(R.drawable.ic_account_circle_white_48dp);
+		image.setBorderColor(Color.BLACK);
 	}
 
 // =================================================================================================
@@ -523,9 +537,6 @@ public class MainActivity extends DebugActivity {
 	 */
 	private void updateConnectionStatusIndicators(ConnectionManager.ConnectionState connectionState) {
 
-
-        Log.d("ADAPTER", "updateConnectionStatusIndicators " + connectionState.toString());
-
 		// TODO: update connection status
 		// - update toggle button icon color
 		// - update connectionState in the connect area of the side menu
@@ -538,30 +549,40 @@ public class MainActivity extends DebugActivity {
 		text += connectionState.toString();
 
 		currentConnectionTextView.setText(text);
-
 	}
 
 	private void updateAvailableServersList(List<ServerInfo> servers) {
 
-        Log.d("ADAPTER", "updateAvailableServersList " + servers.size());
-        if(serviceManager.getConnectionManager().hasSelection()){
-            if(!servers.contains(serviceManager.getConnectionManager().getSelection())){
-                servers.add(serviceManager.getConnectionManager().getSelection());
-                Collections.sort(servers);
-            }
-        } else {
-            if(servers.size() == 0){
-                servers.add(new ServerInfo("0",0,"No available devices :("));
-            }
-        }
+<<<<<<< working copy
+		Toast.makeText(getApplicationContext(), "Detection Event", Toast.LENGTH_LONG).show();
 
+//		container = (LinearLayout) findViewById(R.id.connections_layout);
+//
+//		container.removeAllViews();
+=======
+		container = (LinearLayout) findViewById(R.id.connections_layout);
+
+		container.removeAllViews();
+>>>>>>> destination
+
+<<<<<<< working copy
+		if (servers == null) {
+			return;
+		}
 
         mAdapter.setServerList(servers);
         mAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(mAdapter);
+=======
+		for (ServerInfo server : servers) {
+>>>>>>> destination
 
-        servers.remove(serviceManager.getConnectionManager().getSelection());
-
+//		for (ServerInfo server : servers) {
+//
+//			Button button = createServerButton(server.name, server.ip, server.port);
+//
+//			container.addView(button);
+//		}
 	}
 
 // =================================================================================================
@@ -571,11 +592,36 @@ public class MainActivity extends DebugActivity {
 
 	}
 
+	// TODO: move this in a better place (maybe in a view factory of something)
+	private Button createServerButton(final String hostname, final String ip, final int port) {
 
+		String text = hostname + " - " + ip + ":" + port;
+
+		Button button = ViewFactory.getButton(getApplicationContext(), ViewFactory.ButtonType.BUTTON_SERVER_INFO, text);
+
+		button.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				if (serviceManager.getConnectionManager().hasSelection()) {
+					serverDeselected();
+				}
+				else {
+					serverSelected(new ServerInfo(ip, port, hostname));
+				}
+			}
+		});
+
+		return button;
+	}
+
+<<<<<<< working copy
     public void buttonDevices(View view){
 
     }
 
+=======
 	/**
 	 * Checking connection state changes and triggering appropriate events if needed
 	 *
@@ -592,7 +638,6 @@ public class MainActivity extends DebugActivity {
 			if (currentConnectionState == ConnectionManager.ConnectionState.LOST
 					&& servers.contains(currentSelection)) {
 
-                Log.d("ADAPTER", "handleConnectionStateChanges LOST & contains");
 				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.ACTIVE);
 				serviceManager.getEventManager().triggerEvent(event);
 
@@ -603,8 +648,6 @@ public class MainActivity extends DebugActivity {
 			if (currentConnectionState != ConnectionManager.ConnectionState.LOST
 					&& !servers.contains(currentSelection)) {
 
-
-                Log.d("ADAPTER", "handleConnectionStateChanges LOST & !contains");
 				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST);
 				serviceManager.getEventManager().triggerEvent(event);
 
@@ -613,6 +656,7 @@ public class MainActivity extends DebugActivity {
 		}
 	}
 
+>>>>>>> destination
 // =================================================================================================
 //	LISTENERS
 

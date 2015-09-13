@@ -4,6 +4,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+/**
+ * Created by alina on 9/2/2015.
+ */
+
 public class FragmentTabListener extends FragmentStatePagerAdapter {
 
 	int mNumOfTabs;

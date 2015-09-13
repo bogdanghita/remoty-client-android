@@ -13,6 +13,7 @@
         android:id="@+id/action_help"
         android:orderInCategory="10"
         android:title="Help"
+        android:icon="@drawable/ic_action_question_mark_24dp"
         app:showAsAction="always"/>
 
 </menu>

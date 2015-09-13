@@ -1,5 +1,6 @@
 package com.remoty.remotecontrol;
 
+import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -64,6 +65,7 @@ public class KeysService {
 		final Button button = new Button(MainActivity.Instance);
 		button.setText(buttonInfo.name);
 		button.setLayoutParams(params);
+        button.setBackgroundColor(Color.parseColor("#b6b6b6"));
 
 		return button;
 	}

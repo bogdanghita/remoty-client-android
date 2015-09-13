@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "com.remoty"
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:design:23.0.1'
     compile 'com.android.support:appcompat-v7:22.0.1'
     compile 'com.google.code.gson:gson:2.3'
     compile group: 'com.google.guava', name: 'guava', version: '18.0'
