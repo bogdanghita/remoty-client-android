@@ -295,11 +295,11 @@ public class RemoteControlFragment extends DebugFragment {
 		// Main buttons
 		buttonInfo = new KeysButtonInfo("NOS", "ButtonA_", (float) 0, (float) 0, (float) 0.3, (float) 0.5);
 		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("HandBr", "ButtonX_", (float) 0, (float) 0.5, (float) 0.3, (float) 0.5);
+		buttonInfo = new KeysButtonInfo("Handbrake", "ButtonX_", (float) 0, (float) 0.5, (float) 0.3, (float) 0.5);
 		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("Acc", "ButtonRT_", (float) 0.7, (float) 0, (float) 0.3, (float) 0.5);
+		buttonInfo = new KeysButtonInfo("Acceleration", "ButtonRT_", (float) 0.7, (float) 0, (float) 0.3, (float) 0.5);
 		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("Br/Rev", "ButtonLT_", (float) 0.7, (float) 0.5, (float) 0.3, (float) 0.5);
+		buttonInfo = new KeysButtonInfo("Brake/Reverse", "ButtonLT_", (float) 0.7, (float) 0.5, (float) 0.3, (float) 0.5);
 		list.add(buttonInfo);
 
 		// Medium buttons
