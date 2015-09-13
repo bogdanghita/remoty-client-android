@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,8 @@ import java.util.List;
  */
 public class MyConfigurationsFragment extends DebugFragment {
 
-	LinearLayout configurations_layout;
+	RecyclerView configurations_layout;
+    ConfigurationsListAdapter mAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,91 +37,19 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 		View parentView = inflater.inflate(R.layout.fragment_my_configurations, container, false);
 
-		configurations_layout = (LinearLayout) parentView.findViewById(R.id.configurations_layout);
+		configurations_layout = (RecyclerView) parentView.findViewById(R.id.configurations_layout);
+
+        mAdapter = new ConfigurationsListAdapter(MainActivity.Instance);
 
 		// generateTestConfigurations() will be replaced by the actual user configurations
-		updateConfigurationsList(generateTestConfigurations());
+
+        mAdapter.setConfigurationInfos(generateTestConfigurations());
+
+        configurations_layout.setLayoutManager(new LinearLayoutManager(MainActivity.Instance));
+
+        configurations_layout.setAdapter(mAdapter);
 
 		return parentView;
-	}
-
-	private void updateConfigurationsList(List<ConfigurationInfo> configurations) {
-
-		configurations_layout.removeAllViews();
-
-		if (configurations.isEmpty()) {
-			TextView textView = new TextView(getActivity());
-			textView.setText("You don't have any configurations yet :( ");
-			configurations_layout.addView(textView);
-			return;
-		}
-
-		for (ConfigurationInfo config : configurations) {
-
-			Button button = createConfigurationButton(config);
-			configurations_layout.addView(button);
-		}
-	}
-
-	private Button createConfigurationButton(final ConfigurationInfo config) {
-
-		Button button = new Button(MainActivity.Instance);
-
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-		button.setLayoutParams(params);
-
-		button.setTextColor(Color.DKGRAY);
-
-		button.setPadding(0, 0, 0, 10);
-
-		button.setText(config.getName());
-
-		button.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				Fragment fragment = RemoteControlFragment.newInstance(config);
-
-				switchToFragment(fragment);
-			}
-		});
-
-		return button;
-	}
-
-	private void switchToFragment(Fragment fragment) {
-
-		if (!ServiceManager.getInstance().getConnectionManager().hasSelection()) {
-
-			Toast.makeText(getActivity(), "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
-
-			// TODO: Review this from  the point of view of UX
-//			openConnectPage();
-
-			return;
-		}
-
-		// TODO: Open the new fragment.
-		// NOTE: A configuration page is going to be launched so the screen should not contain the action bar and the tabs
-		// You should either hide them and show them back when we return to the previous fragment (this can be problematic...)
-		// or we should define a different layout for the configurations fragments which will replace the layout of the main
-		// activity (I think this is better because the layouts will be automatically restored when the fragment closes)
-		// This needs research...
-
-        // TODO - remove this if not needed
-        // This is only for Drive configuration
-        // if we still want the fixed landscape orientation for Drive
-        MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-
-		// TODO: This is strange... the Drive button remains there...
-		transaction.replace(R.id.fragment_my_configurations, fragment);
-
-		transaction.addToBackStack(null);
-		transaction.commit();
 	}
 
 	//TEST METHODS
@@ -130,6 +61,21 @@ public class MyConfigurationsFragment extends DebugFragment {
 		ConfigurationInfo c = new ConfigurationInfo("Drive", "drive_config_file");
 
 		configurations.add(c);
+
+        ConfigurationInfo c1 = new ConfigurationInfo("Dummy", "drive_config_file");
+
+        configurations.add(c1);
+        configurations.add(c1);
+        configurations.add(c1);
+        configurations.add(c1);
+        configurations.add(c1);
+        configurations.add(c1);
+        configurations.add(c1);
+        configurations.add(c1);
+        configurations.add(c1);
+        configurations.add(c1);
+        configurations.add(c1);
+        configurations.add(c1);
 
 		return configurations;
 	}

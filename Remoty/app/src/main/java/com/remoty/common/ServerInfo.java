@@ -14,6 +14,7 @@ public class ServerInfo implements Comparable<ServerInfo> {
 	public String ip;
 	public int port;
 	public String name;
+    public int iconResource;
 
 	public ServerInfo(String ip, int port, String name) {
 
