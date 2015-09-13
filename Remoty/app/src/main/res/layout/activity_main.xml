@@ -47,7 +47,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="left"
         android:background="#FFFFFF"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:clickable="true">
 
         <RelativeLayout
             android:id="@+id/user_profile"
@@ -123,7 +124,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:paddingTop="8dp"
+                android:paddingBottom="9dp">
 
                 <ImageView
                     android:layout_width="0dp"
@@ -137,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:text="Devices"
-                    android:textSize="25dip"
+                    android:textSize="21dip"
                     android:textStyle="bold"
                     android:textColor="#212121"/>
 
@@ -169,8 +172,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:text="Add device"
-                    android:textSize="25dip"
+                    android:textSize="21dip"
                     android:textStyle="bold"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="7dp"
                     android:textColor="#212121"
                     android:onClick="buttonManualConnection"
                     />

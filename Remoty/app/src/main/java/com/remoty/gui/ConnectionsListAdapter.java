@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.remoty.R;
 import com.remoty.common.ServerInfo;
@@ -32,13 +33,13 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 	// Provide a reference to the views for each data item
 	// providing access to all the views for a data item in a view holder
 	public static class ViewHolder extends RecyclerView.ViewHolder {
-		public Button mServerName;
+		public TextView mServerName;
 		public ImageView mServerIcon;
 		public LinearLayout mContainer;
 
 		public ViewHolder(View v) {
 			super(v);
-			mServerName = (Button) v.findViewById(R.id.server_name);
+			mServerName = (TextView) v.findViewById(R.id.server_name);
 			mServerIcon = (ImageView) v.findViewById(R.id.server_icon);
 			mContainer = (LinearLayout) v.findViewById(R.id.container);
 		}
@@ -84,7 +85,7 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 
 		holder.mServerName.setText(servers.get(position).name);
 
-		holder.mServerName.setOnClickListener(new View.OnClickListener() {
+		holder.mContainer.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
