@@ -284,6 +284,8 @@ public class MainActivity extends DebugActivity {
 		// home button as back flag
 		homeAsBack = true;
 
+        Log.d("MAIN", "disable toolbar");
+
 		// disable unwanted views
 		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 		tabLayout.setVisibility(View.GONE);
@@ -317,9 +319,14 @@ public class MainActivity extends DebugActivity {
 		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
 
 		drawer.setDrawerListener(mDrawerToggle);
+
+        CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.view_pager);
+        viewPager.setPagingEnabled(false);
 	}
 
 	public void enableToolbar() {
+
+        Log.d("MAIN", "enable toolbar");
 		// enable previously disabled views
 		MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
@@ -338,7 +345,10 @@ public class MainActivity extends DebugActivity {
 
 		RecyclerView configurationsLayout = (RecyclerView) findViewById(R.id.configurations_layout);
 		configurationsLayout.setVisibility(View.VISIBLE);
-        // Unlocking screen orientation
+
+        // Unlocking page sliding
+        CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.view_pager);
+        viewPager.setPagingEnabled(true);
 	}
 
 // =================================================================================================
@@ -359,8 +369,8 @@ public class MainActivity extends DebugActivity {
 		final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
 		final PagerAdapter adapter = new FragmentTabListener(getSupportFragmentManager(), tabLayout.getTabCount());
 		viewPager.setAdapter(adapter);
-		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
@@ -672,7 +682,9 @@ public class MainActivity extends DebugActivity {
 				stopServerDetection();
 
 				// Disabling toolbar
-				disableToolbar();
+                Log.d("MAIN", "disable toolbar remotecontroleventlistener");
+                    disableToolbar();
+
 			}
 			else if (action == RemoteControlEvent.Action.STOP) {
 
