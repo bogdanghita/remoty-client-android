@@ -1,11 +1,15 @@
 package com.remoty.remotecontrol;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.remoty.R;
 import com.remoty.common.servicemanager.EventManager;
 import com.remoty.gui.MainActivity;
 import com.remoty.services.threading.TaskScheduler;
@@ -50,12 +54,12 @@ public class KeysService {
 
 	private Button getButton(KeysButtonInfo buttonInfo, int layoutWidth, int layoutHeight) {
 
-		final int padding = 10;
+		final int padding = 5;
 
-		int startX = (int) (buttonInfo.startXPercent * layoutWidth) - padding;
-		int startY = (int) (buttonInfo.startYPercent * layoutHeight) - padding;
-		int width = (int) (buttonInfo.widthPercent * layoutWidth) - padding;
-		int height = (int) (buttonInfo.heightPercent * layoutHeight) - padding;
+		int startX = (int) (buttonInfo.startXPercent * layoutWidth) + padding;
+		int startY = (int) (buttonInfo.startYPercent * layoutHeight) + padding;
+		int width = (int) (buttonInfo.widthPercent * layoutWidth) - 2 * padding;
+		int height = (int) (buttonInfo.heightPercent * layoutHeight) - 2 * padding;
 
 		// Creating view
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
@@ -68,9 +72,12 @@ public class KeysService {
 		// This removes the default toUpper a button makes to it's text.
 		button.setTransformationMethod(null);
 		button.setText(buttonInfo.name);
+		button.setTextColor(Color.parseColor("#727272"));
+//		button.setTextColor(Color.parseColor("#000000"));
+		button.setTextColor(Color.parseColor("#ffffff"));
 		button.setLayoutParams(params);
-		button.setBackgroundColor(Color.parseColor("#727272"));
-//		button.setBackgroundColor(Color.parseColor("#b6b6b6"));
+		button.setBackgroundResource(R.drawable.button_border);
+		button.setTextSize(18);
 
 		return button;
 	}
