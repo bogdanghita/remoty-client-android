@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -134,7 +135,10 @@ public class RemoteControlFragment extends DebugFragment {
 		SensorManager mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
 		Sensor mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-		accService = serviceManager.getActionManager().getAccelerometerService(mSensorManager, mAccelerometerSensor);
+		// TODO: See if it is needed to call cancel() on the vibrator and when/where
+		Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+
+		accService = serviceManager.getActionManager().getAccelerometerService(mSensorManager, mAccelerometerSensor, vibrator);
 	}
 
 	@Override
