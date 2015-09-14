@@ -61,7 +61,7 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 	// update dataset
 	public void setServerList(List<ServerInfo> s) {
 		servers.clear();
-		generateServers();
+//		generateServers();
 		servers.addAll(s);
 	}
 
