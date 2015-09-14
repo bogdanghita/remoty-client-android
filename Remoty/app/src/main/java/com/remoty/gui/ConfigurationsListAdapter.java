@@ -84,6 +84,21 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 			@Override
 			public void onClick(View v) {
 
+				if (!ServiceManager.getInstance().getConnectionManager().hasSelection()) {
+
+					Toast.makeText(MainActivity.Instance, "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
+
+					// TODO: Review this from  the point of view of UX
+		//			openConnectPage();
+
+					return;
+				}
+
+				// TODO - remove this if not needed
+				// This is only for Drive configuration
+				// if we still want the fixed landscape orientation for Drive
+				MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
 				Fragment fragment = RemoteControlFragment.newInstance(configurationInfos.get(position));
 
 				switchToFragment(fragment);
@@ -98,16 +113,6 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 	}
 
 	private void switchToFragment(Fragment fragment) {
-
-		if (!ServiceManager.getInstance().getConnectionManager().hasSelection()) {
-
-//			Toast.makeText(MainActivity.Instance, "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
-
-			// TODO: Review this from  the point of view of UX
-//			openConnectPage();
-
-			return;
-		}
 
 		// TODO: Open the new fragment.
 		// NOTE: A configuration page is going to be launched so the screen should not contain the action bar and the tabs
