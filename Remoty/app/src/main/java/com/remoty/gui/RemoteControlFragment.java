@@ -293,7 +293,7 @@ public class RemoteControlFragment extends DebugFragment {
 
 		KeysButtonInfo buttonInfo;
 
-		// Main buttons
+		// Driving buttons
 		buttonInfo = new KeysButtonInfo("NOS", "ButtonA_", (float) 0, (float) 0, (float) 0.3, (float) 0.5);
 		list.add(buttonInfo);
 		buttonInfo = new KeysButtonInfo("Handbrake", "ButtonX_", (float) 0, (float) 0.5, (float) 0.3, (float) 0.5);
@@ -303,7 +303,7 @@ public class RemoteControlFragment extends DebugFragment {
 		buttonInfo = new KeysButtonInfo("Brake/Reverse", "ButtonLT_", (float) 0.7, (float) 0.5, (float) 0.3, (float) 0.5);
 		list.add(buttonInfo);
 
-		// Medium buttons
+		// Menu buttons
 		buttonInfo = new KeysButtonInfo("swap", "ButtonY_", (float) 0.35, (float) 0, (float) 0.15, (float) 0.25);
 		list.add(buttonInfo);
 		buttonInfo = new KeysButtonInfo("back", "ButtonB_", (float) 0.35, (float) 0.25, (float) 0.15, (float) 0.25);
@@ -313,7 +313,7 @@ public class RemoteControlFragment extends DebugFragment {
 		buttonInfo = new KeysButtonInfo("enter", "ButtonA_", (float) 0.5, (float) 0.25, (float) 0.15, (float) 0.25);
 		list.add(buttonInfo);
 
-		// Small buttons
+		// Directional buttons
 		buttonInfo = new KeysButtonInfo("^", "ButtonUp_", (float) 0.45, (float) 0.5, (float) 0.10, (float) (1 / 6.));
 		list.add(buttonInfo);
 		buttonInfo = new KeysButtonInfo("v", "ButtonDown_", (float) 0.45, (float) (0.5 + 2 / 6.), (float) 0.10, (float) (1 / 6.));
