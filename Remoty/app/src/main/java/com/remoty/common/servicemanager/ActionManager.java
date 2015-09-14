@@ -2,6 +2,7 @@ package com.remoty.common.servicemanager;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Vibrator;
 
 import com.remoty.remotecontrol.AccelerometerService;
 import com.remoty.remotecontrol.KeysService;
@@ -41,9 +42,9 @@ public class ActionManager {
 		return remoteControl;
 	}
 
-	public AccelerometerService getAccelerometerService(SensorManager sensorManager, Sensor accelerometerSensor) {
+	public AccelerometerService getAccelerometerService(SensorManager sensorManager, Sensor accelerometerSensor, Vibrator vibrator) {
 
-		return new AccelerometerService(eventManager, sensorManager, accelerometerSensor);
+		return new AccelerometerService(eventManager, sensorManager, accelerometerSensor, vibrator);
 	}
 
 	public KeysService getKeysService() {

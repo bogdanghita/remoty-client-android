@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Vibrator;
 
 import com.remoty.common.servicemanager.EventManager;
 import com.remoty.gui.MainActivity;
@@ -19,16 +20,20 @@ public class AccelerometerService implements SensorEventListener {
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometerSensor;
 
+	Vibrator mVibrator;
+
 	TaskScheduler timer;
 
 	MessageDispatchRunnable accRunnable;
 
-	public AccelerometerService(EventManager eventManager, SensorManager sensorManager, Sensor accelerometerSensor) {
+	public AccelerometerService(EventManager eventManager, SensorManager sensorManager, Sensor accelerometerSensor, Vibrator vibrator) {
 
 		this.eventManager = eventManager;
 
 		mSensorManager = sensorManager;
 		mAccelerometerSensor = accelerometerSensor;
+
+		mVibrator = vibrator;
 
 		timer = new TaskScheduler();
 
@@ -95,10 +100,25 @@ public class AccelerometerService implements SensorEventListener {
 		message.z = event.values[2];
 
 		accRunnable.setMessage(message);
+
+		vibrate(event.values[1]);
 	}
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+	}
+
+	private void vibrate(float yValue) {
+
+		long dutyCycle = (long) yValue;
+
+		dutyCycle = Math.abs(dutyCycle);
+
+		if (dutyCycle > 8) dutyCycle = 8;
+
+		long[] pattern = {(10 - dutyCycle)*1, 1*dutyCycle*dutyCycle};
+
+		mVibrator.vibrate(pattern, 0);
 	}
 }
