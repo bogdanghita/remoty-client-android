@@ -126,7 +126,6 @@ public class MainActivity extends DebugActivity {
 		// and if the activity is recreated the fragment's onStart() is called before this onStart()
 		// Subscribing to remote control start/stop events
 		serviceManager.getEventManager().subscribe(remoteControlEventListener);
-
 	}
 
 	@Override
@@ -313,7 +312,7 @@ public class MainActivity extends DebugActivity {
 
 				onBackPressed();
 
-				enableToolbar();
+				MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
 		});
 
@@ -686,11 +685,6 @@ public class MainActivity extends DebugActivity {
 				// Disabling toolbar
 				Log.d("MAIN", "disable toolbar remotecontroleventlistener");
 				disableToolbar();
-
-//				// TODO - remove this if not needed
-//				// This is only for Drive configuration
-//				// if we still want the fixed landscape orientation for Drive
-//				MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			}
 			else if (action == RemoteControlEvent.Action.STOP) {
 
@@ -703,8 +697,6 @@ public class MainActivity extends DebugActivity {
 				// Enabling toolbar
 				Log.d("MAIN", "enable toolbar");
 				enableToolbar();
-
-//				MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
 		}
 	};
