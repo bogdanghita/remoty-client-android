@@ -54,6 +54,7 @@ public class KeysService {
 
 	private Button getButton(KeysButtonInfo buttonInfo, int layoutWidth, int layoutHeight) {
 
+		// Adding padding.
 		final int padding = 5;
 
 		int startX = (int) (buttonInfo.startXPercent * layoutWidth) + padding;
@@ -69,15 +70,18 @@ public class KeysService {
 		// TODO: change the MainActivity.Instance thing
 		// Creating linear layout to hold the two text views
 		final Button button = new Button(MainActivity.Instance);
+
 		// This removes the default toUpper a button makes to it's text.
 		button.setTransformationMethod(null);
+
+		// Prepare the text.
 		button.setText(buttonInfo.name);
-		button.setTextColor(Color.parseColor("#727272"));
-//		button.setTextColor(Color.parseColor("#000000"));
 		button.setTextColor(Color.parseColor("#ffffff"));
+		button.setTextSize(18);
+
+		// Button position, size and colours.
 		button.setLayoutParams(params);
 		button.setBackgroundResource(R.drawable.button_border);
-		button.setTextSize(18);
 
 		return button;
 	}
