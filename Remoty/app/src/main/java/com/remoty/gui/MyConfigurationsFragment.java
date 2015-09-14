@@ -62,20 +62,20 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 		configurations.add(c);
 
-        ConfigurationInfo c1 = new ConfigurationInfo("Dummy", "drive_config_file");
-
-        configurations.add(c1);
-        configurations.add(c1);
-        configurations.add(c1);
-        configurations.add(c1);
-        configurations.add(c1);
-        configurations.add(c1);
-        configurations.add(c1);
-        configurations.add(c1);
-        configurations.add(c1);
-        configurations.add(c1);
-        configurations.add(c1);
-        configurations.add(c1);
+//        ConfigurationInfo c1 = new ConfigurationInfo("Dummy", "drive_config_file");
+//
+//        configurations.add(c1);
+//        configurations.add(c1);
+//        configurations.add(c1);
+//        configurations.add(c1);
+//        configurations.add(c1);
+//        configurations.add(c1);
+//        configurations.add(c1);
+//        configurations.add(c1);
+//        configurations.add(c1);
+//        configurations.add(c1);
+//        configurations.add(c1);
+//        configurations.add(c1);
 
 		return configurations;
 	}
