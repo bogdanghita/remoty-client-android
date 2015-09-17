@@ -68,6 +68,10 @@ public class AccelerometerService implements SensorEventListener {
 			timer.stop();
 		}
 
+		// TODO: see if this can be called multiple times and what is the behavior after it is canceled (can it be restarted after?)
+		// Stopping vibrations
+		mVibrator.cancel();
+
 		// Unregistering sensor listener
 		mSensorManager.unregisterListener(this);
 	}

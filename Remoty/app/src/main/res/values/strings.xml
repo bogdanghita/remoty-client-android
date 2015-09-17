@@ -12,5 +12,6 @@
         <item>Item 2</item>
         <item>Item 3</item>
     </string-array>
+    <string name="title_activity_remote_control">RemoteControlActivity</string>
 
 </resources>
