@@ -5,7 +5,6 @@ import com.remoty.common.events.ConnectionStateEventListener;
 import com.remoty.common.events.DetectionEventListener;
 import com.remoty.common.events.IEventListener;
 import com.remoty.common.events.BaseEvent;
-import com.remoty.common.events.RemoteControlEventListener;
 
 /**
  * Created by Bogdan on 9/5/2015.
@@ -15,7 +14,7 @@ public class EventManager {
 	public enum EventType {
 		DETECTION,
 		CONNECTION_STATE,
-		REMOTE_CONTROL
+//		REMOTE_CONTROL
 	}
 
 	HashMultimap<EventType, IEventListener> listeners;
@@ -41,13 +40,13 @@ public class EventManager {
 		listeners.remove(EventType.DETECTION, l);
 	}
 
-	public void subscribe(RemoteControlEventListener l) {
-		listeners.put(EventType.REMOTE_CONTROL, l);
-	}
-
-	public void unsubscribe(RemoteControlEventListener l) {
-		listeners.remove(EventType.REMOTE_CONTROL, l);
-	}
+//	public void subscribe(RemoteControlEventListener l) {
+//		listeners.put(EventType.REMOTE_CONTROL, l);
+////	}
+//
+//	public void unsubscribe(RemoteControlEventListener l) {
+//		listeners.remove(EventType.REMOTE_CONTROL, l);
+//	}
 
 	public void triggerEvent(BaseEvent event) {
 

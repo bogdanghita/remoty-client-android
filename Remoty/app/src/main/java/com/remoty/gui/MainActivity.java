@@ -1,8 +1,6 @@
 package com.remoty.gui;
 
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -16,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.TabLayout;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,14 +23,10 @@ import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.events.ConnectionStateEventListener;
 import com.remoty.common.events.DetectionEvent;
 import com.remoty.common.events.DetectionEventListener;
-import com.remoty.common.events.RemoteControlEvent;
-import com.remoty.common.events.RemoteControlEventListener;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.ServiceManager;
 import com.remoty.common.ServerInfo;
-import com.remoty.common.ViewFactory;
 import com.remoty.services.detection.DetectionService;
-import com.remoty.services.threading.TaskScheduler;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -80,14 +73,16 @@ public class MainActivity extends DebugActivity {
 	public final static String KEYS = "KEYS-";
 
 	private ActionBarDrawerToggle mDrawerToggle;
+
+	// TODO: Talk with Alina about this. This is never assigned but it is used. Why it is needed?
 	private LinearLayout container;
+
 	private RecyclerView mRecyclerView;
 	private LinearLayoutManager mLayoutManager;
 	public ConnectionsListAdapter mAdapter;
 
-	// TODO: Talk with Alina about this.
+	// TODO: Talk with Alina about this, and see if we can get ridd of it
 	public static MainActivity Instance;
-	public static Boolean homeAsBack = false;
 
 	private ServiceManager serviceManager;
 	private ConnectionManager connectionManager;
@@ -116,16 +111,6 @@ public class MainActivity extends DebugActivity {
 		configureNavigationDrawer(drawerLayout, toolbar);
 
 		createUserProfile();
-
-		// keep the home icon as a back button
-		if (MainActivity.Instance.homeAsBack) {
-			getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-		}
-
-		// This is and not in onStart() because it needs to happen before the fragment's onStart()
-		// and if the activity is recreated the fragment's onStart() is called before this onStart()
-		// Subscribing to remote control start/stop events
-		serviceManager.getEventManager().subscribe(remoteControlEventListener);
 	}
 
 	@Override
@@ -196,13 +181,9 @@ public class MainActivity extends DebugActivity {
 	public void onDestroy() {
 		super.onDestroy();
 
-		// For explanations about why this is done here, see comment in onCreate()
-		// Unsubscribing from remote control start/stop events
-		serviceManager.getEventManager().unsubscribe(remoteControlEventListener);
-
-		// Clearing this so that it is not kept in memory as a static object until the OS
-		// decides to stop the process and clear the RAM
-		serviceManager.clear();
+//		// Clearing this so that it is not kept in memory as a static object until the OS
+//		// decides to stop the process and clear the RAM
+//		serviceManager.clear();
 	}
 
 	@Override
@@ -214,6 +195,7 @@ public class MainActivity extends DebugActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
@@ -256,96 +238,8 @@ public class MainActivity extends DebugActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
-		Log.d("MAIN", "onconfigurationchanged");
-
 		mDrawerToggle.onConfigurationChanged(newConfig);
 		mDrawerToggle.syncState();
-	}
-
-	@Override
-	public void onBackPressed() {
-		if (!MainActivity.Instance.homeAsBack)
-			super.onBackPressed();
-	}
-
-	@Override
-	public boolean onMenuOpened(final int featureId, final Menu menu) {
-
-		if (MainActivity.Instance.homeAsBack) {
-			super.onMenuOpened(featureId, menu);
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
-
-	public void disableToolbar() {
-		// home button as back flag
-		homeAsBack = true;
-
-		Log.d("MAIN", "disable toolbar");
-
-		// disable unwanted views
-		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-		tabLayout.setVisibility(View.GONE);
-
-		RecyclerView configurationsLayout = (RecyclerView) findViewById(R.id.configurations_layout);
-		configurationsLayout.setVisibility(View.GONE);
-
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-		// lock side menu
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
-		// set back functionality for home button
-		mDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-				R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-		mDrawerToggle.setDrawerIndicatorEnabled(false);
-
-		mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				homeAsBack = false;
-
-				onBackPressed();
-
-				MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-			}
-		});
-
-		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-
-		drawer.setDrawerListener(mDrawerToggle);
-
-		CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.view_pager);
-		viewPager.setPagingEnabled(false);
-	}
-
-	public void enableToolbar() {
-
-		// Enable previously disabled views
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-		// Unlocking side menu
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-
-		configureNavigationDrawer(drawer, toolbar);
-
-		mDrawerToggle.setDrawerIndicatorEnabled(true);
-
-		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-		tabLayout.setVisibility(View.VISIBLE);
-
-		RecyclerView configurationsLayout = (RecyclerView) findViewById(R.id.configurations_layout);
-		configurationsLayout.setVisibility(View.VISIBLE);
-
-		// Unlocking page sliding
-		CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.view_pager);
-		viewPager.setPagingEnabled(true);
 	}
 
 // =================================================================================================
@@ -490,6 +384,43 @@ public class MainActivity extends DebugActivity {
 		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
 	}
 
+	/**
+	 * Checking connection state changes and triggering appropriate events if needed
+	 *
+	 * @param servers
+	 */
+	private void handleConnectionStateChanges(List<ServerInfo> servers) {
+
+		ConnectionManager connectionManager = serviceManager.getConnectionManager();
+		if (connectionManager.hasSelection()) {
+			ServerInfo currentSelection = connectionManager.getSelection();
+			ConnectionManager.ConnectionState currentConnectionState = connectionManager.getConnectionState();
+
+			// Checking if connection with selected server was reestablished and triggering event if true
+			if (currentConnectionState == ConnectionManager.ConnectionState.LOST
+					&& servers.contains(currentSelection)) {
+
+				Log.d("ADAPTER", "handleConnectionStateChanges LOST & contains");
+				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.ACTIVE);
+				serviceManager.getEventManager().triggerEvent(event);
+
+				return;
+			}
+
+			// Checking if connection with selected server was lost and triggering event if true
+			if (currentConnectionState != ConnectionManager.ConnectionState.LOST
+					&& !servers.contains(currentSelection)) {
+
+
+				Log.d("ADAPTER", "handleConnectionStateChanges LOST & !contains");
+				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST);
+				serviceManager.getEventManager().triggerEvent(event);
+
+				return;
+			}
+		}
+	}
+
 // =================================================================================================
 //	EVENT-TRIGGERED GUI UPDATES
 
@@ -527,12 +458,7 @@ public class MainActivity extends DebugActivity {
 	 */
 	private void updateConnectionStatusIndicators(ConnectionManager.ConnectionState connectionState) {
 
-
 		Log.d("ADAPTER", "updateConnectionStatusIndicators " + connectionState.toString());
-
-		// TODO: update connection status
-		// - update toggle button icon color
-		// - update connectionState in the connect area of the side menu
 
 		// Simple text view showing this status. To be replaced with actual indicators
 		TextView currentConnectionTextView = (TextView) findViewById(R.id.connection_state_text_view);
@@ -542,7 +468,6 @@ public class MainActivity extends DebugActivity {
 		text += connectionState.toString();
 
 		currentConnectionTextView.setText(text);
-
 	}
 
 	// AICI
@@ -565,55 +490,6 @@ public class MainActivity extends DebugActivity {
 		mAdapter.notifyDataSetChanged();
 
 		servers.remove(serviceManager.getConnectionManager().getSelection());
-	}
-
-// =================================================================================================
-//	ADDITIONAL ITEMS
-
-	public void buttonManualConnection(View view) {
-
-	}
-
-
-	public void buttonDevices(View view) {
-
-	}
-
-	/**
-	 * Checking connection state changes and triggering appropriate events if needed
-	 *
-	 * @param servers
-	 */
-	private void handleConnectionStateChanges(List<ServerInfo> servers) {
-
-		ConnectionManager connectionManager = serviceManager.getConnectionManager();
-		if (connectionManager.hasSelection()) {
-			ServerInfo currentSelection = connectionManager.getSelection();
-			ConnectionManager.ConnectionState currentConnectionState = connectionManager.getConnectionState();
-
-			// Checking if connection with selected server was reestablished and triggering event if true
-			if (currentConnectionState == ConnectionManager.ConnectionState.LOST
-					&& servers.contains(currentSelection)) {
-
-				Log.d("ADAPTER", "handleConnectionStateChanges LOST & contains");
-				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.ACTIVE);
-				serviceManager.getEventManager().triggerEvent(event);
-
-				return;
-			}
-
-			// Checking if connection with selected server was lost and triggering event if true
-			if (currentConnectionState != ConnectionManager.ConnectionState.LOST
-					&& !servers.contains(currentSelection)) {
-
-
-				Log.d("ADAPTER", "handleConnectionStateChanges LOST & !contains");
-				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST);
-				serviceManager.getEventManager().triggerEvent(event);
-
-				return;
-			}
-		}
 	}
 
 // =================================================================================================
@@ -653,107 +529,15 @@ public class MainActivity extends DebugActivity {
 					connectionManager.setConnectionState(connectionState);
 
 					updateConnectionStatusIndicators(connectionState);
-
-					// NOTE: Remote control services are stopped by the remote control fragment
 				}
 			});
 		}
 	};
 
-	RemoteControlEventListener remoteControlEventListener = new RemoteControlEventListener() {
-		@Override
-		public void stateChanged(final RemoteControlEvent.Action action) {
-
-//			// Posting toast from the UI thread
-//			runOnUiThread(new Runnable() {
-//				@Override
-//				public void run() {
-//
-//					Toast.makeText(getApplicationContext(), "Remote control: " + action.toString(), Toast.LENGTH_LONG).show();
-//				}
-//			});
-
-			// NOTE: This is not necessary to be run on the UI thread because it does not interact with the GUI
-			if (action == RemoteControlEvent.Action.START) {
-
-				// Disabling screen timeout
-				getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-				// Stopping detection and connection check services
-				stopServerDetection();
-
-				// Disabling toolbar
-				Log.d("MAIN", "disable toolbar remotecontroleventlistener");
-				disableToolbar();
-			}
-			else if (action == RemoteControlEvent.Action.STOP) {
-
-				// Enabling screen timeout
-				getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-				// Starting detection and connection check services
-				startServerDetection();
-
-				// Enabling toolbar
-				Log.d("MAIN", "enable toolbar");
-				enableToolbar();
-			}
-		}
-	};
-
 // =================================================================================================
-// TEST METHODS
+//	ADDITIONAL ITEMS
 
-	public void testTaskScheduler() {
+	public void buttonManualConnection(View view) {
 
-		TaskScheduler timer = new TaskScheduler();
-
-		timer.start(new Runnable() {
-			@Override
-			public void run() {
-
-				Log.d(TaskScheduler.TAG_TIMER, "Message executed. Time: " + System.currentTimeMillis());
-			}
-		}, 10);
-
-		for (int i = 1; i <= 100; i += 10) {
-
-			timer.setInterval(i);
-			Log.d(TaskScheduler.TAG_TIMER, "Changed interval to: " + i);
-
-			if (i == 1) {
-				i = 0;
-			}
-
-			try {
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		timer.setInterval(200);
-		Log.d(TaskScheduler.TAG_TIMER, "Changed interval to: " + 200);
-		try {
-			Thread.sleep(1000);
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		timer.stop();
 	}
-
-	private List<ServerInfo> generateTestList() {
-
-		List<ServerInfo> servers = new LinkedList<>();
-
-		servers.add(new ServerInfo("192.168.1.1", 8000, "Server1"));
-		servers.add(new ServerInfo("192.168.1.132", 9000, "Server2"));
-
-		return servers;
-	}
-
-	// END TEST METHODS
 }

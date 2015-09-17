@@ -1,12 +1,10 @@
 package com.remoty.gui;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -24,10 +22,6 @@ import java.util.List;
  * Created by alina on 9/13/2015.
  */
 public class ConfigurationsListAdapter extends RecyclerView.Adapter<ConfigurationsListAdapter.ViewHolder> {
-	LayoutInflater inflater;
-	private LinkedList<ConfigurationInfo> configurationInfos;
-	private int position;
-
 
 	// Provide a reference to the views for each data item
 	// providing access to all the views for a data item in a view holder
@@ -44,8 +38,16 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 		}
 	}
 
+	LayoutInflater inflater;
+	private LinkedList<ConfigurationInfo> configurationInfos;
+	private int position;
+
+	Context context;
 
 	public ConfigurationsListAdapter(Context context) {
+
+		this.context = context;
+
 		inflater = LayoutInflater.from(context);
 
 		configurationInfos = new LinkedList<>();
@@ -74,7 +76,8 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 	// Replace the contents of a view (invoked by the layout manager)
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, final int position) {
-		// - get element from dataset at this position and update content
+
+		// Getting element from data set at this position and updating content
 		this.position = position;
 
 		holder.mConfigName.setText(configurationInfos.get(position).getName());
@@ -88,20 +91,13 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 
 					Toast.makeText(MainActivity.Instance, "No connection. Should open ConnectPage.", Toast.LENGTH_LONG).show();
 
-					// TODO: Review this from  the point of view of UX
-		//			openConnectPage();
+					// TODO: Think if we should open the connect page here
 
 					return;
 				}
 
-				// TODO - remove this if not needed
-				// This is only for Drive configuration
-				// if we still want the fixed landscape orientation for Drive
-				MainActivity.Instance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-				Fragment fragment = RemoteControlFragment.newInstance(configurationInfos.get(position));
-
-				switchToFragment(fragment);
+				// Starting the remote control activity activity
+				startRemoteControlActivity();
 			}
 		});
 	}
@@ -112,7 +108,7 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 		return (configurationInfos.isEmpty()) ? 0 : configurationInfos.size();
 	}
 
-	private void switchToFragment(Fragment fragment) {
+	private void startRemoteControlActivity() {
 
 		// TODO: Open the new fragment.
 		// NOTE: A configuration page is going to be launched so the screen should not contain the action bar and the tabs
@@ -121,12 +117,24 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 		// activity (I think this is better because the layouts will be automatically restored when the fragment closes)
 		// This needs research...
 
-		FragmentTransaction transaction = MainActivity.Instance.getSupportFragmentManager().beginTransaction();
 
-		transaction.replace(R.id.fragment_my_configurations, fragment);
+//		FragmentTransaction transaction = MainActivity.Instance.getSupportFragmentManager().beginTransaction();
+//
+//		transaction.replace(R.id.fragment_my_configurations, fragment);
+//
+//		transaction.addToBackStack(null);
+//		transaction.commit();
 
-		transaction.addToBackStack(null);
-		transaction.commit();
+		Bundle args = new Bundle();
+
+		ConfigurationInfo configuration = configurationInfos.get(position);
+
+		args.putString(RemoteControlActivity.KEY_NAME, configuration.getName());
+		args.putString(RemoteControlActivity.KEY_FILE, configuration.getFile());
+
+		Intent intent = new Intent(context, RemoteControlActivity.class);
+		intent.putExtras(args);
+		context.startActivity(intent);
 	}
 
 }

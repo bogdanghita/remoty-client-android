@@ -1,5 +1,6 @@
 package com.remoty.gui;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -81,5 +82,12 @@ public class DebugActivity extends AppCompatActivity {
 		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onMenuOpened");
 
 		return result;
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+
+		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onConfigurationChanged");
 	}
 }
