@@ -30,19 +30,16 @@ import com.remoty.remotecontrol.RemoteControlService;
 import java.util.LinkedList;
 import java.util.List;
 
-public class RemoteControlActivity extends DebugActivity {
+public class RemoteControlActivity extends BaseActivity {
 
 	public final static String KEY_FILE = "KEY_CONFIGURATION_FILE";
 	public final static String KEY_NAME = "KEY_CONFIGURATION_NAME";
 
-	private ServiceManager serviceManager;
-	private ConnectionManager connectionManager;
-	RemoteControlService remoteControlService;
+	private RemoteControlService remoteControlService;
 
-	AccelerometerService accService;
-	KeysService keysService;
+	private AccelerometerService accService;
+	private KeysService keysService;
 
-	// TODO: split the content of this method into smaller methods
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,50 +48,16 @@ public class RemoteControlActivity extends DebugActivity {
 		// Creating toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Initializing services
 		serviceManager = ServiceManager.getInstance();
 		connectionManager = serviceManager.getConnectionManager();
 		remoteControlService = serviceManager.getActionManager().getRemoteControlService();
+		initializeServices();
 
-		// Accelerometer initialization
-		// TODO: Think if we want this to be done by the accelerometer service
-		// TODO: Also think if this is ok to be done in onCreate() or it should be done in onStart()
-		// TODO: Do this things the right way (check if the sensor is there etc.)
-		// Obtaining accelerometer sensor
-		SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		Sensor mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		accService = serviceManager.getActionManager().getAccelerometerService(mSensorManager, mAccelerometerSensor, vibrator);
-
-		// Adding layout change listener
-		final View layoutHolder = findViewById(R.id.configuration_holder_layout);
-		layoutHolder.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-			@Override
-			public void onGlobalLayout() {
-				View keysL = findViewById(R.id.configuration_holder_layout);
-
-//				Toast.makeText(getActivity(), "onGlobalLayout()" /*+ cnt++*/, Toast.LENGTH_SHORT).show();
-
-				// Now we can retrieve the width and height
-				int keysLayoutWidth = keysL.getWidth();
-				int keysLayoutHeight = keysL.getHeight();
-
-				// Removing listener
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-					layoutHolder.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-				}
-				else {
-					layoutHolder.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-				}
-
-				// TODO: refine this, think of it and make it safe (check if key service is ok etc.)
-				RelativeLayout keysLayout = (RelativeLayout) findViewById(R.id.configuration_holder_layout);
-				keysService.populateLayout(generateNFSMW2012Buttons(), keysLayout, keysLayoutWidth, keysLayoutHeight);
-			}
-		});
+		// Adding layout listener
+		setOnGlobalLayoutListener();
 	}
 
 	@Override
@@ -163,6 +126,49 @@ public class RemoteControlActivity extends DebugActivity {
 
 		// Ignoring orientation|keyboard change
 		super.onConfigurationChanged(newConfig);
+	}
+
+	private void initializeServices() {
+
+		// Accelerometer initialization
+		// TODO: Think if we want this to be done by the accelerometer service
+		// TODO: Also think if this is ok to be done in onCreate() or it should be done in onStart()
+		// TODO: Do this things the right way (check if the sensor is there etc.)
+		// Obtaining accelerometer sensor
+		SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		Sensor mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		accService = serviceManager.getActionManager().getAccelerometerService(mSensorManager, mAccelerometerSensor, vibrator);
+	}
+
+	private void setOnGlobalLayoutListener() {
+
+		// Adding layout change listener
+		final View layoutHolder = findViewById(R.id.configuration_holder_layout);
+		layoutHolder.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				View keysL = findViewById(R.id.configuration_holder_layout);
+
+//				Toast.makeText(getActivity(), "onGlobalLayout()" /*+ cnt++*/, Toast.LENGTH_SHORT).show();
+
+				// Now we can retrieve the width and height
+				int keysLayoutWidth = keysL.getWidth();
+				int keysLayoutHeight = keysL.getHeight();
+
+				// Removing listener
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+					layoutHolder.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+				}
+				else {
+					layoutHolder.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				}
+
+				// TODO: refine this, think of it and make it safe (check if key service is ok etc.)
+				RelativeLayout keysLayout = (RelativeLayout) findViewById(R.id.configuration_holder_layout);
+				keysService.populateLayout(generateNFSMW2012Buttons(), keysLayout, keysLayoutWidth, keysLayoutHeight);
+			}
+		});
 	}
 
 	private void startServices() {
@@ -314,4 +320,3 @@ public class RemoteControlActivity extends DebugActivity {
 		return list;
 	}
 }
-
