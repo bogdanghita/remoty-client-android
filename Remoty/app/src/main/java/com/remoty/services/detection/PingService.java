@@ -2,9 +2,9 @@ package com.remoty.services.detection;
 
 import android.util.Log;
 
-import com.remoty.common.ServerInfo;
+import com.remoty.common.other.ServerInfo;
 import com.remoty.services.networking.TcpSocket;
-import com.remoty.gui.MainActivity;
+import com.remoty.gui.pages.MainActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;

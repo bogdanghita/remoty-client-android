@@ -1,11 +1,12 @@
-package com.remoty.remotecontrol;
+package com.remoty.services.remotecontrol;
 
 import android.util.Log;
 
 import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.EventManager;
-import com.remoty.gui.MainActivity;
+import com.remoty.gui.pages.MainActivity;
+import com.remoty.common.other.Message;
 import com.remoty.services.networking.TcpSocket;
 
 import java.io.IOException;

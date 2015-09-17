@@ -1,8 +1,12 @@
-package com.remoty.gui;
+package com.remoty.gui.items;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import com.remoty.gui.pages.MarketFragment;
+import com.remoty.gui.pages.MyConfigurationsFragment;
+import com.remoty.gui.pages.SocialFragment;
 
 /**
  * Created by alina on 9/2/2015.

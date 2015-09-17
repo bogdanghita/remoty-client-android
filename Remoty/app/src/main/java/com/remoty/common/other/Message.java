@@ -1,4 +1,4 @@
-package com.remoty.remotecontrol;
+package com.remoty.common.other;
 
 /**
  * Created by Bogdan on 8/8/2015.

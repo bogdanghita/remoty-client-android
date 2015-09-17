@@ -1,20 +1,19 @@
-package com.remoty.gui;
+package com.remoty.gui.items;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.remoty.R;
-import com.remoty.common.ServerInfo;
+import com.remoty.common.other.ServerInfo;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.ServiceManager;
+import com.remoty.gui.pages.MainActivity;
 
 import java.util.LinkedList;
 import java.util.List;

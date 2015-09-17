@@ -3,7 +3,7 @@ package com.remoty.services.threading;
 import android.os.Looper;
 import android.util.Log;
 
-import com.remoty.gui.MainActivity;
+import com.remoty.gui.pages.MainActivity;
 
 import java.util.concurrent.atomic.AtomicLong;
 

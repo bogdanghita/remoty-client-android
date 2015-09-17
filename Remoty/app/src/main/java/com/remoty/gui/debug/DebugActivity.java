@@ -1,11 +1,12 @@
-package com.remoty.gui;
+package com.remoty.gui.debug;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
+
+import com.remoty.gui.pages.MainActivity;
 
 /**
  * Created by Bogdan on 8/21/2015.

@@ -1,4 +1,4 @@
-package com.remoty.gui;
+package com.remoty.gui.items;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

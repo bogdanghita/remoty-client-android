@@ -1,23 +1,16 @@
-package com.remoty.gui;
+package com.remoty.gui.pages;
 
-import android.content.pm.ActivityInfo;
-import android.support.v4.app.FragmentTransaction;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.remoty.R;
-import com.remoty.common.servicemanager.ServiceManager;
-import com.remoty.remotecontrol.ConfigurationInfo;
+import com.remoty.common.other.ConfigurationInfo;
+import com.remoty.gui.debug.DebugFragment;
+import com.remoty.gui.items.ConfigurationsListAdapter;
 
 import java.util.LinkedList;
 import java.util.List;

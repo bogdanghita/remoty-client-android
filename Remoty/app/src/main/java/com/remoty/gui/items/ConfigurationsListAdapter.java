@@ -1,4 +1,4 @@
-package com.remoty.gui;
+package com.remoty.gui.items;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,9 @@ import android.widget.Toast;
 
 import com.remoty.R;
 import com.remoty.common.servicemanager.ServiceManager;
-import com.remoty.remotecontrol.ConfigurationInfo;
+import com.remoty.common.other.ConfigurationInfo;
+import com.remoty.gui.pages.MainActivity;
+import com.remoty.gui.pages.RemoteControlActivity;
 
 import java.util.LinkedList;
 import java.util.List;

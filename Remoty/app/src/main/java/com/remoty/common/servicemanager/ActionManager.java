@@ -4,12 +4,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Vibrator;
 
-import com.remoty.remotecontrol.AccelerometerService;
-import com.remoty.remotecontrol.KeysService;
-import com.remoty.remotecontrol.RemoteControlService;
+import com.remoty.services.remotecontrol.AccelerometerService;
+import com.remoty.services.remotecontrol.KeysService;
+import com.remoty.services.remotecontrol.RemoteControlService;
 import com.remoty.services.detection.DetectionService;
-
-import java.util.List;
 
 /**
  * Created by Bogdan on 9/5/2015.

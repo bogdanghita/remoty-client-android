@@ -1,4 +1,4 @@
-package com.remoty.gui;
+package com.remoty.gui.pages;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -24,8 +24,9 @@ import com.remoty.common.events.ConnectionStateEventListener;
 import com.remoty.common.events.DetectionEvent;
 import com.remoty.common.events.DetectionEventListener;
 import com.remoty.common.servicemanager.ConnectionManager;
-import com.remoty.common.servicemanager.ServiceManager;
-import com.remoty.common.ServerInfo;
+import com.remoty.common.other.ServerInfo;
+import com.remoty.gui.items.ConnectionsListAdapter;
+import com.remoty.gui.items.FragmentTabListener;
 import com.remoty.services.detection.DetectionService;
 
 import java.util.Collections;
@@ -74,7 +75,7 @@ public class MainActivity extends BaseActivity {
 
 	private ActionBarDrawerToggle mDrawerToggle;
 
-	// TODO: Talk with Alina about this. This is never assigned but it is used. Why it is needed?
+	// TODO: Talk with Alina about this. This is never assigned but it is used. Why is it needed?
 	private LinearLayout container;
 
 	private RecyclerView mRecyclerView;
