@@ -42,7 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 // TODO: When the app starts both MyConfigurationsFragment and MarketFragment start. Solve it!
 
-public class MainActivity extends DebugActivity {
+public class MainActivity extends BaseActivity {
 
 	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
 	public final static int DETECTION_RESPONSE_TIMEOUT = 500;
@@ -84,8 +84,6 @@ public class MainActivity extends DebugActivity {
 	// TODO: Talk with Alina about this, and see if we can get ridd of it
 	public static MainActivity Instance;
 
-	private ServiceManager serviceManager;
-	private ConnectionManager connectionManager;
 	private DetectionService serverDetection;
 
 // =================================================================================================
@@ -98,8 +96,6 @@ public class MainActivity extends DebugActivity {
 		// set current instance
 		Instance = this;
 
-		serviceManager = ServiceManager.getInstance();
-		connectionManager = serviceManager.getConnectionManager();
 		serverDetection = serviceManager.getActionManager().getServerDetectionService();
 
 		setContentView(R.layout.activity_main);
@@ -111,31 +107,6 @@ public class MainActivity extends DebugActivity {
 		configureNavigationDrawer(drawerLayout, toolbar);
 
 		createUserProfile();
-	}
-
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		// Always call the superclass so it can restore the view hierarchy
-		super.onRestoreInstanceState(savedInstanceState);
-
-		// Restoring the connection info from the saved instance. If there was no connection then
-		// the it is set to null (returned by retrieveFromBundle())
-		ServerInfo connectionInfo = ServerInfo.retrieveFromBundle(savedInstanceState);
-		connectionManager.setSelection(connectionInfo);
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-
-		// Saving the connection info to the bundle
-		if (connectionManager.hasSelection()) {
-
-			ServerInfo connectionInfo = connectionManager.getSelection();
-			ServerInfo.saveToBundle(connectionInfo, savedInstanceState);
-		}
-
-		// Always call the superclass so it can save the view hierarchy state
-		super.onSaveInstanceState(savedInstanceState);
 	}
 
 	@Override
@@ -180,10 +151,6 @@ public class MainActivity extends DebugActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
-//		// Clearing this so that it is not kept in memory as a static object until the OS
-//		// decides to stop the process and clear the RAM
-//		serviceManager.clear();
 	}
 
 	@Override
