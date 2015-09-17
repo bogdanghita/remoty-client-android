@@ -1,4 +1,4 @@
-package com.remoty.remotecontrol;
+package com.remoty.common.other;
 
 import android.support.v4.app.Fragment;
 

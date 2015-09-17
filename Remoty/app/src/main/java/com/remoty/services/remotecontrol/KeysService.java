@@ -1,9 +1,6 @@
-package com.remoty.remotecontrol;
+package com.remoty.services.remotecontrol;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +8,9 @@ import android.widget.RelativeLayout;
 
 import com.remoty.R;
 import com.remoty.common.servicemanager.EventManager;
-import com.remoty.gui.MainActivity;
+import com.remoty.gui.pages.MainActivity;
+import com.remoty.common.other.KeysButtonInfo;
+import com.remoty.common.other.Message;
 import com.remoty.services.threading.TaskScheduler;
 
 import java.util.List;

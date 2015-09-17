@@ -1,8 +1,7 @@
-package com.remoty.other;
+package com.remoty.common.other;
 
 import android.util.Log;
 
-import com.remoty.common.ServerInfo;
 import com.remoty.services.threading.TaskScheduler;
 
 import java.util.LinkedList;

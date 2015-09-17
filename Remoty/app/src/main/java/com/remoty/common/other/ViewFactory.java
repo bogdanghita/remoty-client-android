@@ -1,4 +1,4 @@
-package com.remoty.common;
+package com.remoty.common.other;
 
 import android.content.Context;
 import android.widget.Button;

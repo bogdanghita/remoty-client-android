@@ -3,8 +3,8 @@ package com.remoty.services.detection;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.remoty.remotecontrol.Message;
-import com.remoty.gui.MainActivity;
+import com.remoty.common.other.Message;
+import com.remoty.gui.pages.MainActivity;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

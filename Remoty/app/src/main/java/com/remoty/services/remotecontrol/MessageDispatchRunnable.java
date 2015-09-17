@@ -1,7 +1,8 @@
-package com.remoty.remotecontrol;
+package com.remoty.services.remotecontrol;
 
 import com.remoty.common.servicemanager.EventManager;
-import com.remoty.gui.MainActivity;
+import com.remoty.gui.pages.MainActivity;
+import com.remoty.common.other.Message;
 
 /**
  * Created by Bogdan on 8/30/2015.

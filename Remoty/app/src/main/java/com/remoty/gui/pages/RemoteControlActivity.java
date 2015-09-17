@@ -1,6 +1,5 @@
-package com.remoty.gui;
+package com.remoty.gui.pages;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -16,16 +15,16 @@ import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
 import com.remoty.R;
-import com.remoty.common.ServerInfo;
+import com.remoty.common.other.ServerInfo;
 import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.events.ConnectionStateEventListener;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.ServiceManager;
-import com.remoty.remotecontrol.AccelerometerService;
-import com.remoty.remotecontrol.KeysButtonInfo;
-import com.remoty.remotecontrol.KeysService;
-import com.remoty.remotecontrol.Message;
-import com.remoty.remotecontrol.RemoteControlService;
+import com.remoty.services.remotecontrol.AccelerometerService;
+import com.remoty.common.other.KeysButtonInfo;
+import com.remoty.services.remotecontrol.KeysService;
+import com.remoty.common.other.Message;
+import com.remoty.services.remotecontrol.RemoteControlService;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -135,9 +134,9 @@ public class RemoteControlActivity extends BaseActivity {
 		// TODO: Also think if this is ok to be done in onCreate() or it should be done in onStart()
 		// TODO: Do this things the right way (check if the sensor is there etc.)
 		// Obtaining accelerometer sensor
-		SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		SensorManager mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		Sensor mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		accService = serviceManager.getActionManager().getAccelerometerService(mSensorManager, mAccelerometerSensor, vibrator);
 	}
 

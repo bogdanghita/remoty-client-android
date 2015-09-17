@@ -1,4 +1,4 @@
-package com.remoty.remotecontrol;
+package com.remoty.services.remotecontrol;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -7,7 +7,8 @@ import android.hardware.SensorManager;
 import android.os.Vibrator;
 
 import com.remoty.common.servicemanager.EventManager;
-import com.remoty.gui.MainActivity;
+import com.remoty.gui.pages.MainActivity;
+import com.remoty.common.other.Message;
 import com.remoty.services.threading.TaskScheduler;
 
 /**

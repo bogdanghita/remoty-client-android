@@ -1,10 +1,11 @@
-package com.remoty.gui;
+package com.remoty.gui.pages;
 
 import android.os.Bundle;
 
-import com.remoty.common.ServerInfo;
+import com.remoty.common.other.ServerInfo;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.ServiceManager;
+import com.remoty.gui.debug.DebugActivity;
 
 /**
  * Created by Bogdan on 9/17/2015.

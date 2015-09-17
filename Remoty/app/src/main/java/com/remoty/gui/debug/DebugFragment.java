@@ -1,4 +1,4 @@
-package com.remoty.gui;
+package com.remoty.gui.debug;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.remoty.gui.pages.MainActivity;
 
 /**
  * Created by Bogdan on 8/21/2015.

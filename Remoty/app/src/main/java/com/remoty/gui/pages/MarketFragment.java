@@ -1,6 +1,6 @@
-package com.remoty.gui;
+package com.remoty.gui.pages;
 
-import android.support.v4.app.Fragment;
+import com.remoty.gui.debug.DebugFragment;
 
 /**
  * Created by alina on 9/4/2015.

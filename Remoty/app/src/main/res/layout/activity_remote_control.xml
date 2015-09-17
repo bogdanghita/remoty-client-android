@@ -3,7 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context="com.remoty.gui.RemoteControlActivity">
+              tools:context="com.remoty.gui.pages.RemoteControlActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,11 +25,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Remote Control"/>
 
         <RelativeLayout
             android:id="@+id/configuration_holder_layout"

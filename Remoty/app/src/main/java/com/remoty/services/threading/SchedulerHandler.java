@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.remoty.gui.MainActivity;
+import com.remoty.gui.pages.MainActivity;
 
 import java.util.concurrent.atomic.AtomicLong;
 

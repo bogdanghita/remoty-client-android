@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.remoty.common.events.DetectionEvent;
 import com.remoty.common.servicemanager.EventManager;
-import com.remoty.common.ServerInfo;
-import com.remoty.gui.MainActivity;
+import com.remoty.common.other.ServerInfo;
+import com.remoty.gui.pages.MainActivity;
 import com.remoty.services.networking.TcpSocket;
 
 import java.io.IOException;

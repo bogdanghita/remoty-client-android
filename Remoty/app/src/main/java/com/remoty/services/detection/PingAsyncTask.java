@@ -3,10 +3,10 @@ package com.remoty.services.detection;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.remoty.remotecontrol.Message;
-import com.remoty.common.ServerInfo;
+import com.remoty.common.other.Message;
+import com.remoty.common.other.ServerInfo;
 import com.remoty.services.networking.TcpSocket;
-import com.remoty.gui.MainActivity;
+import com.remoty.gui.pages.MainActivity;
 
 import java.io.IOException;
 

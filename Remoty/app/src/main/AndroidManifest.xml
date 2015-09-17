@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".gui.MainActivity"
+            android:name=".gui.pages.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -21,14 +21,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".gui.RemoteControlActivity"
+            android:name=".gui.pages.RemoteControlActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_remote_control"
-            android:parentActivityName=".gui.MainActivity"
+            android:parentActivityName=".gui.pages.MainActivity"
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.remoty.gui.MainActivity"/>
+                android:value=".gui.pages.MainActivity"/>
         </activity>
     </application>
 
