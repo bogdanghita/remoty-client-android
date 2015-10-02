@@ -72,6 +72,7 @@ public class DetectionResponseService {
 		}
 	}
 
+	// TODO: Refactor this (split in smaller functions)
 	public List<TcpSocket> receiveDetectionResponse() {
 
 		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Done looping over all network interfaces. Waiting for replies...");
@@ -129,6 +130,7 @@ public class DetectionResponseService {
 		return socketList;
 	}
 
+	// TODO: Refactor this (split in smaller functions)
 	private TcpSocket accept(ServerSocket serverSocket) {
 
 		Socket socket;

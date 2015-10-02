@@ -104,6 +104,13 @@ public class AccelerometerService implements SensorEventListener {
 		message.y = event.values[1];
 		message.z = event.values[2];
 
+		// TODO: This seems to solve the problem. Review it.
+		// Quick fix for the crash on Teo's phone and sometimes Galaxy Tab 2
+		if(accRunnable == null) {
+			return;
+		}
+
+		// TODO: Here it crashes on Teo's phone and sometimes on the Galaxy Tab 2
 		accRunnable.setMessage(message);
 
 		vibrate(event.values[1]);
