@@ -43,6 +43,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 // TODO: When the app starts both MyConfigurationsFragment and MarketFragment start. Solve it!
 
+// TODO: The accelerometer axis are different on the Galaxy Tab 2. Investigate this case and try to find a pattern for all devices.
+
 public class MainActivity extends BaseActivity {
 
 	public final static int ASYNC_TASK_GET_TIMEOUT = 600;

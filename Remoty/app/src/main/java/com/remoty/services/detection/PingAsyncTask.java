@@ -27,6 +27,7 @@ public class PingAsyncTask extends AsyncTask<Void, Void, ServerInfo> {
 		return server;
 	}
 
+	// TODO: split this
 	@Override
 	protected ServerInfo doInBackground(Void... params) {
 

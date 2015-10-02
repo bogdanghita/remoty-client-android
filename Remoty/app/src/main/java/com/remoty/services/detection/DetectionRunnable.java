@@ -48,6 +48,7 @@ public class DetectionRunnable implements Runnable {
 			responseService.init();
 		}
 
+		// TODO: Replace this with a bool return value on init()
 		// Checking if init() succeeded
 		if(!responseService.isOpen()) {
 
@@ -56,6 +57,7 @@ public class DetectionRunnable implements Runnable {
 			return;
 		}
 
+		// TODO: This is a bit hard to understand (the DetectionResponseService). See if you can make it better
 		// Receiving detection responses from new servers and adding them to the list of already detected servers
 		List<TcpSocket> newSockets = responseService.receiveDetectionResponse();
 		pingSockets.addAll(newSockets);

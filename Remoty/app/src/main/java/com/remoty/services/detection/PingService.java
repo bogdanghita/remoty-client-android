@@ -26,7 +26,7 @@ public class PingService {
 	HashMap<String, ServerInfo> serverInfoMap = new HashMap<>();
 
 	/**
-	 * Sends a ping messages to all the servers in the list and update it by removing the ones that did not respond.
+	 * Sends a ping message to all the servers in the list and update it by removing the ones that did not respond.
 	 *
 	 * @param sockets - the list of sockets to perform ping and wait for responses on.
 	 * @return - a list containing info about the servers that responded and null if the list did not suffer any changes (add/remove)

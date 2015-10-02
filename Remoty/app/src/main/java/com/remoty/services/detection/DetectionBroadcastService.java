@@ -28,6 +28,7 @@ public class DetectionBroadcastService {
 
 		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.BROADCAST, "New detection cycle.");
 
+		// TODO: wrap this into a function
 		// Opening a random port to send the packet (initializing socket)
 		try {
 			datagramSocket = new DatagramSocket();
@@ -40,6 +41,7 @@ public class DetectionBroadcastService {
 //        // Sending packet on the 255.255.255.255 address
 //        SendMessageOnDefaultAddress();
 
+		// TODO: wrap this into a function
 		// Broadcasting the message over all the network interfaces
 		Enumeration<NetworkInterface> interfaces = null;
 		try {
@@ -49,9 +51,11 @@ public class DetectionBroadcastService {
 			e1.printStackTrace();
 		}
 
+		// TODO: wrap this into a function
 		// Iterating through all interfaces of the device
 		while (interfaces.hasMoreElements()) {
 
+			// TODO: iterate with foreach
 			// Obtaining current interface
 			NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
 			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.BROADCAST, "Current interface: " + networkInterface.getName());
