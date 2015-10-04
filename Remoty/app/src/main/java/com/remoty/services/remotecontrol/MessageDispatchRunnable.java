@@ -15,24 +15,21 @@ public class MessageDispatchRunnable implements Runnable {
 	//			- selective sending of the message - only when needed (on demand)
 	//			- etc. I'm sure there are more...
 
-	private Message.AbstractMessage emptyMessage;
-	private Message.AbstractMessage message;
+	private Message.RemoteControlMessage message;
 
 	private MessageDispatchService messageDispatcher;
 
 	private String ip;
 	private int port;
 
-	public MessageDispatchRunnable(EventManager eventManager, String ip, int port, Message.AbstractMessage emptyMessage) {
+	public MessageDispatchRunnable(EventManager eventManager, String ip, int port, Message.RemoteControlMessage message) {
 
 		this.ip = ip;
 		this.port= port;
 
 		messageDispatcher = new MessageDispatchService(eventManager, MainActivity.ACCELEROMETER_TIMEOUT);
 
-		this.emptyMessage = emptyMessage;
-		this.emptyMessage.empty = true;
-		message = this.emptyMessage;
+		this.message = message;
 	}
 
 	@Override
@@ -56,14 +53,18 @@ public class MessageDispatchRunnable implements Runnable {
 		messageDispatcher.send(message);
 
 		// Resetting message
-		setMessage(emptyMessage);
+		message.clear();
 	}
 
-	public void setMessage(Message.AbstractMessage message) {
+	public void setMessage(Message.RemoteControlMessage message) {
 
 		// TODO: clone the message or something (think about it and think if it is necessary since we use the task scheduler... don't know)
 		// Possible alternative would be a lock. Not sure...
 		this.message = message;
+	}
+
+	public Message.AbstractMessage getMessage() {
+		return this.message;
 	}
 
 	public void clear() {

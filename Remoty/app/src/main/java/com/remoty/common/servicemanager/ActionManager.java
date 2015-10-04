@@ -5,7 +5,7 @@ import android.hardware.SensorManager;
 import android.os.Vibrator;
 
 import com.remoty.services.remotecontrol.AccelerometerService;
-import com.remoty.services.remotecontrol.KeysService;
+import com.remoty.services.remotecontrol.ButtonService;
 import com.remoty.services.remotecontrol.RemoteControlService;
 import com.remoty.services.detection.DetectionService;
 
@@ -45,8 +45,8 @@ public class ActionManager {
 		return new AccelerometerService(eventManager, sensorManager, accelerometerSensor, vibrator);
 	}
 
-	public KeysService getKeysService() {
+	public ButtonService getKeysService() {
 
-		return new KeysService(eventManager);
+		return new ButtonService(eventManager);
 	}
 }
