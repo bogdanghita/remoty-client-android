@@ -41,6 +41,11 @@ public class Message {
 	}
 
 	// TODO: you need to sync the setter and clear methods; calls are made when buttons are pressed and message is sent
+	// TODO: you should expose a clone() method which should also be synced with the above action
+	// TODO 	this method must be used when sending the message
+	// TODO		also, I think that sending the message and clearing it must be in the same sync block because otherwise,
+	// TODO		it may happen that a message will be set after clone but before clear and will be lost forever ...
+	// TODO: the last TODO implies that the sync should be done in the MessageDispatchRunnable class
 	public static class RemoteControlMessage extends AbstractMessage {
 
 		protected boolean empty = true;
@@ -85,6 +90,7 @@ public class Message {
 
 	public static class ButtonEvent {
 
-		public String buttonEvent;
+		public String eventType;
+		public String buttonAction;
 	}
 }

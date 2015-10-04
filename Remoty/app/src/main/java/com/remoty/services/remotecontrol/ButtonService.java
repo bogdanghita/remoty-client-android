@@ -96,11 +96,11 @@ public class ButtonService {
 				// TODO: URGENT !!!
 				// TODO: Refactor the format of the button action
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					prefix = "Press&";
+					prefix = "Press";
 					button.setPressed(true);
 				}
 				else if (event.getAction() == MotionEvent.ACTION_UP) {
-					prefix = "Release&";
+					prefix = "Release";
 					button.setPressed(false);
 				}
 				else {
@@ -108,7 +108,8 @@ public class ButtonService {
 				}
 
 				Message.ButtonEvent message = new Message.ButtonEvent();
-				message.buttonEvent = prefix + action;
+				message.eventType = prefix;
+				message.buttonAction = action;
 
 				addButtonEvent(message);
 

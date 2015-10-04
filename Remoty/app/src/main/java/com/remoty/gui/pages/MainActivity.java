@@ -45,6 +45,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 // TODO: The accelerometer axis are different on the Galaxy Tab 2. Investigate this case and try to find a pattern for all devices.
 
+// TODO: See TODOs in Message.java
+
 public class MainActivity extends BaseActivity {
 
 	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
