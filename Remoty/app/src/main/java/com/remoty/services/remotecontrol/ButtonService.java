@@ -18,21 +18,21 @@ import java.util.List;
 /**
  * Created by Bogdan on 9/10/2015.
  */
-public class KeysService {
+public class ButtonService {
 
 	EventManager eventManager;
 
 	TaskScheduler timer;
-	MessageDispatchRunnable keysRunnable;
+	MessageDispatchRunnable buttonRunnable;
 
 	// TODO: Decide what type the layout should be
-	public KeysService(EventManager eventManager) {
+	public ButtonService(EventManager eventManager) {
 
 		this.eventManager = eventManager;
 
 		timer = new TaskScheduler();
 
-		keysRunnable = null;
+		buttonRunnable = null;
 	}
 
 	public void populateLayout(List<KeysButtonInfo> buttonInfoList, RelativeLayout layout,
@@ -85,7 +85,7 @@ public class KeysService {
 		return button;
 	}
 
-	private void addClickListener(final Button button, final String buttonAction) {
+	private void addClickListener(final Button button, final String action) {
 
 		button.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -93,6 +93,8 @@ public class KeysService {
 
 				String prefix = "";
 
+				// TODO: URGENT !!!
+				// TODO: Refactor the format of the button action
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					prefix = "Press&";
 					button.setPressed(true);
@@ -105,12 +107,10 @@ public class KeysService {
 					return true;
 				}
 
-				Message.KeysMessage message = new Message.KeysMessage();
-				String action = prefix + buttonAction;
+				Message.ButtonEvent message = new Message.ButtonEvent();
+				message.buttonEvent = prefix + action;
 
-				message.buttonAction = action;
-
-				setMessage(message);
+				addButtonEvent(message);
 
 				return true;
 			}
@@ -120,12 +120,12 @@ public class KeysService {
 	// TODO: think the port and ip should be passed here or in other method (ex. constructor)
 	public void init(String ip, int port) {
 
-		if (keysRunnable != null) {
-			keysRunnable.clear();
+		if (buttonRunnable != null) {
+			buttonRunnable.clear();
 		}
 
-		Message.KeysMessage emptyMessage = new Message.KeysMessage();
-		keysRunnable = new MessageDispatchRunnable(eventManager, ip, port, emptyMessage);
+		Message.ButtonMessage emptyMessage = new Message.ButtonMessage();
+		buttonRunnable = new MessageDispatchRunnable(eventManager, ip, port, emptyMessage);
 	}
 
 	public void start() {
@@ -133,7 +133,7 @@ public class KeysService {
 		if (!timer.isRunning()) {
 
 			// TODO: Change this interval
-			timer.start(keysRunnable, MainActivity.ACCELEROMETER_INTERVAL);
+			timer.start(buttonRunnable, MainActivity.ACCELEROMETER_INTERVAL);
 		}
 	}
 
@@ -148,31 +148,31 @@ public class KeysService {
 
 		stop();
 
-		if (keysRunnable != null) {
-			keysRunnable.clear();
+		if (buttonRunnable != null) {
+			buttonRunnable.clear();
 		}
 
-		keysRunnable = null;
+		buttonRunnable = null;
 	}
 
 	public boolean isReady() {
-		return keysRunnable != null;
+		return buttonRunnable != null;
 	}
 
 	public boolean isRunning() {
 		return timer.isRunning();
 	}
 
-	// This is not needed to be synchronised because the calls are made on the same thread
-	private void setMessage(Message.KeysMessage keys) {
+	private void addButtonEvent(Message.ButtonEvent buttonEvent) {
 
-		// NOTE: keys runnable is set to null if connection is lost
+		// NOTE: button runnable is set to null if connection is lost
 		// This is an option of making the app not crash if a button is pressed when connection is lost
 		// TODO: Think of a better solution for this problem
-		if (keysRunnable == null) {
+		if (buttonRunnable == null) {
 			return;
 		}
 
-		keysRunnable.setMessage(keys);
+		Message.ButtonMessage message = (Message.ButtonMessage) buttonRunnable.getMessage();
+		message.addButtonEvent(buttonEvent);
 	}
 }

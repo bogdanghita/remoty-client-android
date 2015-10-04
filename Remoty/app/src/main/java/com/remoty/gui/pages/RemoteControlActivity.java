@@ -22,7 +22,7 @@ import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.ServiceManager;
 import com.remoty.services.remotecontrol.AccelerometerService;
 import com.remoty.common.other.KeysButtonInfo;
-import com.remoty.services.remotecontrol.KeysService;
+import com.remoty.services.remotecontrol.ButtonService;
 import com.remoty.common.other.Message;
 import com.remoty.services.remotecontrol.RemoteControlService;
 
@@ -37,7 +37,7 @@ public class RemoteControlActivity extends BaseActivity {
 	private RemoteControlService remoteControlService;
 
 	private AccelerometerService accService;
-	private KeysService keysService;
+	private ButtonService buttonService;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class RemoteControlActivity extends BaseActivity {
 
 		// Keys initialization
 		List<KeysButtonInfo> buttonInfoList = generateNFSMW2012Buttons();
-		keysService = serviceManager.getActionManager().getKeysService();
+		buttonService = serviceManager.getActionManager().getKeysService();
 
 		// Subscribing to connection state events
 		serviceManager.getEventManager().subscribe(connectionStateEventListener);
@@ -142,18 +142,19 @@ public class RemoteControlActivity extends BaseActivity {
 
 	private void setOnGlobalLayoutListener() {
 
+		// TODO: Refactor this (too many findViewById(R.id.configuration_holder_layout))
 		// Adding layout change listener
 		final View layoutHolder = findViewById(R.id.configuration_holder_layout);
 		layoutHolder.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 			@Override
 			public void onGlobalLayout() {
-				View keysL = findViewById(R.id.configuration_holder_layout);
+				View buttonLayout = findViewById(R.id.configuration_holder_layout);
 
 //				Toast.makeText(getActivity(), "onGlobalLayout()" /*+ cnt++*/, Toast.LENGTH_SHORT).show();
 
 				// Now we can retrieve the width and height
-				int keysLayoutWidth = keysL.getWidth();
-				int keysLayoutHeight = keysL.getHeight();
+				int buttonLayoutWidth = buttonLayout.getWidth();
+				int buttonLayoutHeight = buttonLayout.getHeight();
 
 				// Removing listener
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -165,7 +166,7 @@ public class RemoteControlActivity extends BaseActivity {
 
 				// TODO: refine this, think of it and make it safe (check if key service is ok etc.)
 				RelativeLayout keysLayout = (RelativeLayout) findViewById(R.id.configuration_holder_layout);
-				keysService.populateLayout(generateNFSMW2012Buttons(), keysLayout, keysLayoutWidth, keysLayoutHeight);
+				buttonService.populateLayout(generateNFSMW2012Buttons(), keysLayout, buttonLayoutWidth, buttonLayoutHeight);
 			}
 		});
 	}
@@ -188,13 +189,13 @@ public class RemoteControlActivity extends BaseActivity {
 		}
 
 		accService.init(server.ip, ports.accelerometerPort);
-		keysService.init(server.ip, ports.buttonPort);
+		buttonService.init(server.ip, ports.buttonPort);
 
 		if (accService.isReady()) {
 			accService.start();
 		}
-		if (keysService.isReady()) {
-			keysService.start();
+		if (buttonService.isReady()) {
+			buttonService.start();
 		}
 	}
 
@@ -205,12 +206,12 @@ public class RemoteControlActivity extends BaseActivity {
 		if (accService.isRunning()) {
 			accService.stop();
 		}
-		if (keysService.isRunning()) {
-			keysService.stop();
+		if (buttonService.isRunning()) {
+			buttonService.stop();
 		}
 
 		accService.clear();
-		keysService.clear();
+		buttonService.clear();
 	}
 
 // =================================================================================================

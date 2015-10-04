@@ -100,9 +100,7 @@ public class AccelerometerService implements SensorEventListener {
 	public void onSensorChanged(SensorEvent event) {
 
 		Message.AccelerometerMessage message = new Message.AccelerometerMessage();
-		message.x = event.values[0];
-		message.y = event.values[1];
-		message.z = event.values[2];
+		message.setCoordinates(event.values[0], event.values[1], event.values[2]);
 
 		// TODO: This seems to solve the problem. Review it.
 		// Quick fix for the crash on Teo's phone and sometimes Galaxy Tab 2
