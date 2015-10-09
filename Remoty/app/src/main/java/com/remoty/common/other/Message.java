@@ -46,6 +46,7 @@ public class Message {
 	// TODO		also, I think that sending the message and clearing it must be in the same sync block because otherwise,
 	// TODO		it may happen that a message will be set after clone but before clear and will be lost forever ...
 	// TODO: the last TODO implies that the sync should be done in the MessageDispatchRunnable class
+	// TODO: this is complicated; analyze very well all cases before doing anything
 	public static class RemoteControlMessage extends AbstractMessage {
 
 		protected boolean empty = true;
