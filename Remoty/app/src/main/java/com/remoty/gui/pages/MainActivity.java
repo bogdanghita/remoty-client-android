@@ -45,7 +45,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 // TODO: The accelerometer axis are different on the Galaxy Tab 2. Investigate this case and try to find a pattern for all devices.
 
-// TODO: See TODOs in Message.java
+// TODO: See TODOs in Message.java.
+
+// TODO: Connection and selection states are lost when user starts and closes the remote control activity. See onDestroy() for more details.
 
 public class MainActivity extends BaseActivity {
 
@@ -157,6 +159,7 @@ public class MainActivity extends BaseActivity {
 	public void onDestroy() {
 		super.onDestroy();
 
+		// TODO: this is clearing the state when the user starts the remote control activity
 		serviceManager.clear();
 	}
 
