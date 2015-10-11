@@ -156,6 +156,8 @@ public class MainActivity extends BaseActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+
+		serviceManager.clear();
 	}
 
 	@Override
@@ -342,16 +344,15 @@ public class MainActivity extends BaseActivity {
 		serviceManager.getEventManager().subscribe(connectionStateEventListener);
 	}
 
-	// TODO: call this method when the user chooses to disconnect from the current server
 	public void serverDeselected() {
 
-		Toast.makeText(getApplicationContext(), "Server deselected", Toast.LENGTH_LONG).show();
+//		Toast.makeText(getApplicationContext(), "Server deselected", Toast.LENGTH_LONG).show();
 
 		connectionManager.clearSelection();
 		connectionManager.setConnectionState(ConnectionManager.ConnectionState.NONE);
 
-		updateSelectionStatusIndicators();
 		updateConnectionStatusIndicators(ConnectionManager.ConnectionState.NONE);
+		updateSelectionStatusIndicators();
 
 		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
 	}
@@ -364,7 +365,9 @@ public class MainActivity extends BaseActivity {
 	private void handleConnectionStateChanges(List<ServerInfo> servers) {
 
 		ConnectionManager connectionManager = serviceManager.getConnectionManager();
+
 		if (connectionManager.hasSelection()) {
+
 			ServerInfo currentSelection = connectionManager.getSelection();
 			ConnectionManager.ConnectionState currentConnectionState = connectionManager.getConnectionState();
 
@@ -382,7 +385,6 @@ public class MainActivity extends BaseActivity {
 			// Checking if connection with selected server was lost and triggering event if true
 			if (currentConnectionState != ConnectionManager.ConnectionState.LOST
 					&& !servers.contains(currentSelection)) {
-
 
 				Log.d("ADAPTER", "handleConnectionStateChanges LOST & !contains");
 				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST);
@@ -421,7 +423,6 @@ public class MainActivity extends BaseActivity {
 	}
 
 	/**
-	 * CAUTION: This may be called when a remote control fragment is running.
 	 * TODO: This must be reviewed after the GUI behavior for remote control fragment is defined
 	 * <p/>
 	 * Updates the connection status indicators (color of the side menu toggle button and maybe something in the connect area).
@@ -442,19 +443,14 @@ public class MainActivity extends BaseActivity {
 		currentConnectionTextView.setText(text);
 	}
 
-	// AICI
 	private void updateAvailableServersList(List<ServerInfo> servers) {
 
 		Log.d("ADAPTER", "updateAvailableServersList " + servers.size());
 		if (serviceManager.getConnectionManager().hasSelection()) {
 			if (!servers.contains(serviceManager.getConnectionManager().getSelection())) {
+
 				servers.add(serviceManager.getConnectionManager().getSelection());
 				Collections.sort(servers);
-			}
-		}
-		else {
-			if (servers.size() == 0) {
-				servers.add(new ServerInfo("0", 0, "No available devices :("));
 			}
 		}
 
@@ -478,9 +474,9 @@ public class MainActivity extends BaseActivity {
 
 //					Toast.makeText(getApplicationContext(), "Detection Event", Toast.LENGTH_LONG).show();
 
-					updateAvailableServersList(servers);
-
 					handleConnectionStateChanges(servers);
+
+					updateAvailableServersList(servers);
 				}
 			});
 		}
