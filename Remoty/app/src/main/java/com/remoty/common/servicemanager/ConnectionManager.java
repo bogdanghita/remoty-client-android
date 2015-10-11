@@ -58,6 +58,10 @@ public class ConnectionManager {
 	public synchronized void setSelection(ServerInfo connection) {
 
 		selectedConnection = connection;
+
+		if(connection == null) {
+			connectionState = ConnectionState.NONE;
+		}
 	}
 
 	/**
@@ -66,7 +70,7 @@ public class ConnectionManager {
 	public synchronized void clearSelection() {
 
 		selectedConnection = null;
-		connectionState = ConnectionState.LOST;
+		connectionState = ConnectionState.NONE;
 	}
 
 	/**

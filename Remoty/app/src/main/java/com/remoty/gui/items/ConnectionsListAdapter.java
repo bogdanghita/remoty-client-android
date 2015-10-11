@@ -64,8 +64,7 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 
 	// Create new views (invoked by the layout manager)
 	@Override
-	public ConnectionsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-	                                                            int viewType) {
+	public ConnectionsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		// create a new view
 		View v = inflater
 				.inflate(R.layout.connection_item, parent, false);
@@ -74,6 +73,8 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 		return vh;
 	}
 
+	// NOTE: This is just a POC for the connection.
+	// TODO: All this operations should not be done here and like this. The GUI part of the connection needs major refactoring.
 	// Replace the contents of a view (invoked by the layout manager)
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, final int position) {
@@ -86,12 +87,18 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 
 			@Override
 			public void onClick(View v) {
+
 				// In case there is already a selected server
 				if (serviceManager.getConnectionManager().hasSelection()) {
 
 					// if the previous selected server is the current one --- deselect
 					if (serviceManager.getConnectionManager().getSelection().equals(servers.get(position))) {
-						servers.remove(serviceManager.getConnectionManager().getSelection());
+
+						// Remove from list if connection is lost
+						if (serviceManager.getConnectionManager().getConnectionState() == ConnectionManager.ConnectionState.LOST) {
+							servers.remove(serviceManager.getConnectionManager().getSelection());
+						}
+
 						MainActivity.Instance.serverDeselected();
 						holder.mServerIcon.setImageResource(android.R.color.transparent);
 
@@ -100,21 +107,19 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 						MainActivity.Instance.mAdapter.notifyDataSetChanged();
 					}
 					else {
+
 						// otherwise if selected a new server --- deselect and select the current one
 						MainActivity.Instance.serverDeselected();
-						MainActivity.Instance.serverSelected(
-								new ServerInfo(servers.get(position).ip,
-										servers.get(position).port,
-										servers.get(position).name));
+						MainActivity.Instance.serverSelected(new ServerInfo(servers.get(position).ip,
+								servers.get(position).port, servers.get(position).name));
 					}
 				}
 				else {
 
 					// If there's no previous connection --- select
-					MainActivity.Instance.serverSelected(new ServerInfo(
-							servers.get(position).ip,
-							servers.get(position).port,
-							servers.get(position).name));
+					MainActivity.Instance.serverSelected(new ServerInfo(servers.get(position).ip,
+							servers.get(position).port, servers.get(position).name));
+
 					holder.mServerIcon.setImageResource(R.drawable.ic_signal_cellular_4_bar_black_24dp);
 				}
 			}
