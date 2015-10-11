@@ -49,6 +49,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 // TODO: Connection and selection states are lost when user starts and closes the remote control activity. See onDestroy() for more details.
 
+// TODO: Connection LOST Snackbar not showing. Investigate...
+
 public class MainActivity extends BaseActivity {
 
 	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
