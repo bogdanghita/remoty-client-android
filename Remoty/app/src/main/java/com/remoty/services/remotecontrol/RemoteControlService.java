@@ -15,9 +15,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/**
- * Created by Bogdan on 9/1/2015.
- */
+
 public class RemoteControlService {
 
 	private class InitRemoteControlAsyncTask extends AsyncTask<ServerInfo, Void, Message.RemoteControlPortsMessage> {

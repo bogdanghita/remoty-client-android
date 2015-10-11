@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/**
- * Created by Bogdan on 8/30/2015.
- */
+
 public class MessageDispatchService {
 
 	EventManager eventManager;

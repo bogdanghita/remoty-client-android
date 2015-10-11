@@ -15,13 +15,11 @@ import com.remoty.gui.items.ConfigurationsListAdapter;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by alina on 9/4/2015.
- */
+
 public class MyConfigurationsFragment extends DebugFragment {
 
 	RecyclerView configurations_layout;
-    ConfigurationsListAdapter mAdapter;
+	ConfigurationsListAdapter mAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,15 +30,15 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 		configurations_layout = (RecyclerView) parentView.findViewById(R.id.configurations_layout);
 
-        mAdapter = new ConfigurationsListAdapter(MainActivity.Instance);
+		mAdapter = new ConfigurationsListAdapter(MainActivity.Instance);
 
 		// generateTestConfigurations() will be replaced by the actual user configurations
 
-        mAdapter.setConfigurationInfos(generateTestConfigurations());
+		mAdapter.setConfigurationInfos(generateTestConfigurations());
 
-        configurations_layout.setLayoutManager(new LinearLayoutManager(MainActivity.Instance));
+		configurations_layout.setLayoutManager(new LinearLayoutManager(MainActivity.Instance));
 
-        configurations_layout.setAdapter(mAdapter);
+		configurations_layout.setAdapter(mAdapter);
 
 		return parentView;
 	}

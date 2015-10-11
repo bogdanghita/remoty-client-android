@@ -3,9 +3,6 @@ package com.remoty.common.other;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Bogdan on 8/8/2015.
- */
 
 public class Message {
 

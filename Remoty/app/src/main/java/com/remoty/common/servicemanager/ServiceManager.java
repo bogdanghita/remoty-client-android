@@ -1,8 +1,6 @@
 package com.remoty.common.servicemanager;
 
-/**
- * Created by Bogdan on 9/5/2015.
- */
+
 public class ServiceManager {
 
 	private static ServiceManager instance = null;

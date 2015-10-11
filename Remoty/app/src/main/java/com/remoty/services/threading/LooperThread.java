@@ -4,31 +4,32 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+
 public class LooperThread extends Thread {
 
-    public Handler handler;
+	public Handler handler;
 
-    @Override
-    public void run() {
+	@Override
+	public void run() {
 
-        // TODO: think if this is desired and if it affects something; read about mThread priority in Java
-        android.os.Process.setThreadPriority(MAX_PRIORITY);
-        this.setPriority(MAX_PRIORITY);
+		// TODO: think if this is desired and if it affects something; read about mThread priority in Java
+		android.os.Process.setThreadPriority(MAX_PRIORITY);
+		this.setPriority(MAX_PRIORITY);
 
-        Looper.prepare();
+		Looper.prepare();
 
-        handler = new Handler();
+		handler = new Handler();
 
-        Looper.loop();
-    }
+		Looper.loop();
+	}
 
-    /**
-     * Removes all callbacks and messages of the handler and then stops the mThread from looping.
-     */
-    public void quit() {
+	/**
+	 * Removes all callbacks and messages of the handler and then stops the mThread from looping.
+	 */
+	public void quit() {
 
-        handler.removeCallbacksAndMessages(null);
+		handler.removeCallbacksAndMessages(null);
 
-        handler.getLooper().quit();
-    }
+		handler.getLooper().quit();
+	}
 }

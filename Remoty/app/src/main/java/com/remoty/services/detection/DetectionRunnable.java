@@ -12,28 +12,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Claudiu on 8/24/2015.
- */
+
 public class DetectionRunnable implements Runnable {
 
 	private EventManager eventManager;
 
-	List<TcpSocket> pingSockets;
+	List<TcpSocket> serverSockets;
 
 	DetectionBroadcastService broadcastService;
 	DetectionResponseService responseService;
-	PingService pingService;
+	DetectionMaintenanceService detectionMaintenanceService;
 
 	public DetectionRunnable(EventManager eventManager) {
 
 		this.eventManager = eventManager;
 
-		pingSockets = new ArrayList<>();
+		serverSockets = new ArrayList<>();
 
 		broadcastService = new DetectionBroadcastService();
 		responseService = new DetectionResponseService();
-		pingService = new PingService();
+		detectionMaintenanceService = new DetectionMaintenanceService();
 	}
 
 	@Override
@@ -45,25 +43,20 @@ public class DetectionRunnable implements Runnable {
 
 		// Initializing detection response service (opening accept socket)
 		if (!responseService.isOpen()) {
-			responseService.init();
+
+			if (!responseService.init()) {
+
+				// Bad luck... init() did not succeed.
+				return;
+			}
 		}
 
-		// TODO: Replace this with a bool return value on init()
-		// Checking if init() succeeded
-		if(!responseService.isOpen()) {
-
-			// Bad luck ... init() did not succeed.
-			// TODO: Do something intelligent here
-			return;
-		}
-
-		// TODO: This is a bit hard to understand (the DetectionResponseService). See if you can make it better
 		// Receiving detection responses from new servers and adding them to the list of already detected servers
 		List<TcpSocket> newSockets = responseService.receiveDetectionResponse();
-		pingSockets.addAll(newSockets);
+		serverSockets.addAll(newSockets);
 
-		// Sending ping messages to all the servers in the list and update it by removing the ones that did not respond
-		List<ServerInfo> results = pingService.pingServers(pingSockets);
+		// Sending server state update messages to all the servers in the list and update it by removing the ones that did not respond
+		List<ServerInfo> results = detectionMaintenanceService.updateServersState(serverSockets);
 
 		// Trigger event if the list was updated
 		if (results != null) {
@@ -75,12 +68,12 @@ public class DetectionRunnable implements Runnable {
 	}
 
 	/**
-	 * Clears the list of sockets connected to the discovered servers.
+	 * Clears the list of serverSockets connected to the discovered servers.
 	 */
 	public void clear() {
 
-		// Closing ping sockets
-		for (TcpSocket server : pingSockets) {
+		// Closing serverSockets
+		for (TcpSocket server : serverSockets) {
 
 			try {
 				server.close();
@@ -91,7 +84,7 @@ public class DetectionRunnable implements Runnable {
 		}
 
 		// Clearing list
-		pingSockets.clear();
+		serverSockets.clear();
 
 		// Closing response service
 		if (responseService.isOpen()) {

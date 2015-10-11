@@ -9,9 +9,7 @@ import com.remoty.services.remotecontrol.ButtonService;
 import com.remoty.services.remotecontrol.RemoteControlService;
 import com.remoty.services.detection.DetectionService;
 
-/**
- * Created by Bogdan on 9/5/2015.
- */
+
 public class ActionManager {
 
 	// TODO: This class is similar to a factory class. Think about this...

@@ -4,9 +4,7 @@ import com.remoty.common.servicemanager.EventManager;
 import com.remoty.gui.pages.MainActivity;
 import com.remoty.services.threading.TaskScheduler;
 
-/**
- * Created by Bogdan on 8/22/2015.
- */
+
 public class DetectionService {
 
 	EventManager eventManger;

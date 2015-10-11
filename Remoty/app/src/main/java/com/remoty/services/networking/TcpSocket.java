@@ -14,9 +14,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
-/**
- * Created by Bogdan on 8/6/2015.
- */
+
 public class TcpSocket {
 
 	public final static String JSON = "JSON";

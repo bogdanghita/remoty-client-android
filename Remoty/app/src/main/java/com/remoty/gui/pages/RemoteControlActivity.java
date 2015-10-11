@@ -29,6 +29,7 @@ import com.remoty.services.remotecontrol.RemoteControlService;
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class RemoteControlActivity extends BaseActivity {
 
 	public final static String KEY_FILE = "KEY_CONFIGURATION_FILE";

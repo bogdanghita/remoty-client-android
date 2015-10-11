@@ -1,0 +1,76 @@
+package com.remoty.services.detection;
+
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.remoty.common.other.Message;
+import com.remoty.common.other.ServerInfo;
+import com.remoty.services.networking.TcpSocket;
+import com.remoty.gui.pages.MainActivity;
+
+import java.io.IOException;
+
+
+public class ServerStateUpdateAsyncTask extends AsyncTask<Void, Void, ServerInfo> {
+
+	private TcpSocket server;
+
+	public ServerStateUpdateAsyncTask(TcpSocket server) {
+
+		this.server = server;
+	}
+
+	public TcpSocket getSocket() {
+
+		return server;
+	}
+
+	@Override
+	protected ServerInfo doInBackground(Void... params) {
+
+		// Send server state request.
+		try {
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE + MainActivity.SERVERS_STATE_UPDATE_TASK, "Sending state request message to " + server.getInetAddress());
+
+			Message.AbstractMessage message = new Message.AbstractMessage();
+			server.sendObject(message);
+
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE + MainActivity.SERVERS_STATE_UPDATE_TASK, "Sent state request message to " + server.getInetAddress());
+		}
+		catch (IOException e) {
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE + MainActivity.SERVERS_STATE_UPDATE_TASK, "Failed to send state request message to " + server.getInetAddress() + " Server will be deleted.");
+
+			return null;
+		}
+
+		// Receive state request message response.
+		Message.HostInfoMessage response;
+		try {
+
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE + MainActivity.SERVERS_STATE_UPDATE_TASK, "Waiting to receive state request message response from " + server.getInetAddress().getHostAddress());
+
+			response = server.receiveObject(Message.HostInfoMessage.class);
+
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE + MainActivity.SERVERS_STATE_UPDATE_TASK, "State request message response received successfully from " + server.getInetAddress().getHostAddress());
+		}
+		catch (IOException e) {
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE + MainActivity.SERVERS_STATE_UPDATE_TASK, "Failed to receive state request message response from " + server.getInetAddress().getHostAddress() + " Server will be deleted.");
+
+			e.printStackTrace();
+			return null;
+		}
+		catch (ClassNotFoundException e) {
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE + MainActivity.SERVERS_STATE_UPDATE_TASK, "Received INVALID state request message response from " + server.getInetAddress().getHostAddress() + " Server will be deleted.");
+
+			e.printStackTrace();
+			return null;
+		}
+
+		// Building ServerInfo using the state request message response.
+		String ip = server.getInetAddress().getHostAddress();
+		int tcpPort = response.port;
+		String hostName = response.hostname;
+
+		return new ServerInfo(ip, tcpPort, hostName);
+	}
+}

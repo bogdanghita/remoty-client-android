@@ -2,9 +2,7 @@ package com.remoty.common.servicemanager;
 
 import com.remoty.common.other.ServerInfo;
 
-/**
- * Created by Bogdan on 8/23/2015.
- */
+
 public class ConnectionManager {
 
 // =================================================================================================

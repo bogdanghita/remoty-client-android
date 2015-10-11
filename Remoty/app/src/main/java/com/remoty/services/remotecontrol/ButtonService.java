@@ -15,9 +15,7 @@ import com.remoty.services.threading.TaskScheduler;
 
 import java.util.List;
 
-/**
- * Created by Bogdan on 9/10/2015.
- */
+
 public class ButtonService {
 
 	EventManager eventManager;
@@ -36,7 +34,7 @@ public class ButtonService {
 	}
 
 	public void populateLayout(List<KeysButtonInfo> buttonInfoList, RelativeLayout layout,
-							   int layoutWidth, int layoutHeight) {
+	                           int layoutWidth, int layoutHeight) {
 
 		for (KeysButtonInfo buttonInfo : buttonInfoList) {
 

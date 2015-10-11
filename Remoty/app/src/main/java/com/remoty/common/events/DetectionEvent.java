@@ -5,9 +5,7 @@ import com.remoty.common.other.ServerInfo;
 
 import java.util.List;
 
-/**
- * Created by Bogdan on 9/5/2015.
- */
+
 public class DetectionEvent extends BaseEvent {
 
 	private List<ServerInfo> servers;

@@ -20,9 +20,7 @@ import com.remoty.gui.pages.RemoteControlActivity;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by alina on 9/13/2015.
- */
+
 public class ConfigurationsListAdapter extends RecyclerView.Adapter<ConfigurationsListAdapter.ViewHolder> {
 
 	// Provide a reference to the views for each data item
@@ -66,7 +64,7 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 	// Create new views (invoked by the layout manager)
 	@Override
 	public ConfigurationsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-																   int viewType) {
+	                                                               int viewType) {
 		// create a new view
 		View v = inflater
 				.inflate(R.layout.configurations_item, parent, false);

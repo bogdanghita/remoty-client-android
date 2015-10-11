@@ -7,9 +7,7 @@ import com.remoty.services.threading.TaskScheduler;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by Bogdan on 9/17/2015.
- */
+
 public class TestClass {
 
 	public void testTaskScheduler() {

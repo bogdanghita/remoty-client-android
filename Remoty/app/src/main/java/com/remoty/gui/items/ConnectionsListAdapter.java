@@ -18,9 +18,7 @@ import com.remoty.gui.pages.MainActivity;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by alina on 9/12/2015.
- */
+
 public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsListAdapter.ViewHolder> {
 	private LinkedList<ServerInfo> servers;
 	private LayoutInflater inflater;
@@ -67,7 +65,7 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 	// Create new views (invoked by the layout manager)
 	@Override
 	public ConnectionsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-																int viewType) {
+	                                                            int viewType) {
 		// create a new view
 		View v = inflater
 				.inflate(R.layout.connection_item, parent, false);

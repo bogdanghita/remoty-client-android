@@ -6,9 +6,7 @@ import com.remoty.common.events.DetectionEventListener;
 import com.remoty.common.events.IEventListener;
 import com.remoty.common.events.BaseEvent;
 
-/**
- * Created by Bogdan on 9/5/2015.
- */
+
 public class EventManager {
 
 	public enum EventType {

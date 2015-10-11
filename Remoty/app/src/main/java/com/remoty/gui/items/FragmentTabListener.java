@@ -8,9 +8,6 @@ import com.remoty.gui.pages.MarketFragment;
 import com.remoty.gui.pages.MyConfigurationsFragment;
 import com.remoty.gui.pages.SocialFragment;
 
-/**
- * Created by alina on 9/2/2015.
- */
 
 public class FragmentTabListener extends FragmentStatePagerAdapter {
 
