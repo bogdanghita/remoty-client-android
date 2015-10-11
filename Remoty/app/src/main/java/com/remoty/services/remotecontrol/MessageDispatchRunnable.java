@@ -4,9 +4,7 @@ import com.remoty.common.servicemanager.EventManager;
 import com.remoty.gui.pages.MainActivity;
 import com.remoty.common.other.Message;
 
-/**
- * Created by Bogdan on 8/30/2015.
- */
+
 public class MessageDispatchRunnable implements Runnable {
 
 	// TODO: Think of all the use cases before deciding for a final implementation:
@@ -25,7 +23,7 @@ public class MessageDispatchRunnable implements Runnable {
 	public MessageDispatchRunnable(EventManager eventManager, String ip, int port, Message.RemoteControlMessage message) {
 
 		this.ip = ip;
-		this.port= port;
+		this.port = port;
 
 		messageDispatcher = new MessageDispatchService(eventManager, MainActivity.ACCELEROMETER_TIMEOUT);
 
@@ -41,7 +39,7 @@ public class MessageDispatchRunnable implements Runnable {
 		}
 
 		// Checking if init() succeeded
-		if(!messageDispatcher.isOpen()) {
+		if (!messageDispatcher.isOpen()) {
 
 			// Bad luck ... init() did not succeed.
 			// TODO: Do something intelligent here

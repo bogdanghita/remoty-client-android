@@ -1,8 +1,6 @@
 package com.remoty.common.other;
 
-/**
- * Created by Bogdan on 9/10/2015.
- */
+
 public class KeysButtonInfo {
 
 	public String name;

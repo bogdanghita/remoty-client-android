@@ -73,8 +73,8 @@ public class MainActivity extends BaseActivity {
 	public static final String DETECTION = "DET-";
 	public static final String BROADCAST = "BROAD-";
 	public static final String RESPONSE = "RESP-";
-	public static final String PING_SERVICE = "PING-";
-	public static final String PING_TASK = "PING_TASK";
+	public static final String SERVERS_STATE_UPDATE_SERVICE = "SRVUP-";
+	public static final String SERVERS_STATE_UPDATE_TASK = "SRVUPTASK";
 	public final static String KEYS = "KEYS-";
 
 	private ActionBarDrawerToggle mDrawerToggle;

@@ -7,9 +7,7 @@ import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.ServiceManager;
 import com.remoty.gui.debug.DebugActivity;
 
-/**
- * Created by Bogdan on 9/17/2015.
- */
+
 public class BaseActivity extends DebugActivity {
 
 	protected ServiceManager serviceManager;

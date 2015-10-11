@@ -2,9 +2,7 @@ package com.remoty.common.other;
 
 import android.os.Bundle;
 
-/**
- * Created by Bogdan on 8/22/2015.
- */
+
 public class ServerInfo implements Comparable<ServerInfo> {
 
 	private final static String KEY_IP = "KEY_SERVERINFO_IP";
@@ -14,7 +12,7 @@ public class ServerInfo implements Comparable<ServerInfo> {
 	public String ip;
 	public int port;
 	public String name;
-    public int iconResource;
+	public int iconResource;
 
 	public ServerInfo(String ip, int port, String name) {
 
@@ -71,7 +69,7 @@ public class ServerInfo implements Comparable<ServerInfo> {
 	public static ServerInfo retrieveFromBundle(Bundle bundle) {
 
 		// Checking if the bundle has the required data
-		if(!bundle.containsKey(KEY_IP) || !bundle.containsKey(KEY_PORT) || !bundle.containsKey(KEY_NAME)) {
+		if (!bundle.containsKey(KEY_IP) || !bundle.containsKey(KEY_PORT) || !bundle.containsKey(KEY_NAME)) {
 			return null;
 		}
 

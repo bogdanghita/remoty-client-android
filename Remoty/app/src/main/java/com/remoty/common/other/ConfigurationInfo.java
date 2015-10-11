@@ -1,13 +1,6 @@
 package com.remoty.common.other;
 
-import android.support.v4.app.Fragment;
 
-import java.util.LinkedList;
-import java.util.List;
-
-/**
- * Created by alina on 9/4/2015.
- */
 public class ConfigurationInfo {
 
 	private String name;

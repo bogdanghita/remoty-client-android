@@ -11,9 +11,7 @@ import com.remoty.gui.pages.MainActivity;
 import com.remoty.common.other.Message;
 import com.remoty.services.threading.TaskScheduler;
 
-/**
- * Created by Bogdan on 8/30/2015.
- */
+
 public class AccelerometerService implements SensorEventListener {
 
 	EventManager eventManager;
@@ -104,7 +102,7 @@ public class AccelerometerService implements SensorEventListener {
 
 		// TODO: This seems to solve the problem. Review it.
 		// Quick fix for the crash on Teo's phone and sometimes Galaxy Tab 2
-		if(accRunnable == null) {
+		if (accRunnable == null) {
 			return;
 		}
 
@@ -127,7 +125,7 @@ public class AccelerometerService implements SensorEventListener {
 
 		if (dutyCycle > 8) dutyCycle = 8;
 
-		long[] pattern = {(10 - dutyCycle)*1, 1*dutyCycle*dutyCycle};
+		long[] pattern = {(10 - dutyCycle) * 1, 1 * dutyCycle * dutyCycle};
 
 		mVibrator.vibrate(pattern, 0);
 	}

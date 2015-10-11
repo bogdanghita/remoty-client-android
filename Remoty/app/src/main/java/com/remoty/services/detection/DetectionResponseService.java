@@ -12,17 +12,14 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Bogdan on 8/29/2015.
- */
+
 public class DetectionResponseService {
 
 	private boolean acceptTimeoutExceeded;
 
 	private ServerSocket acceptSocket = null;
 
-	// TODO: if this is called multiple times it is not good. Handle this inside or put a NOTE
-	public void init() {
+	public boolean init() {
 
 		acceptTimeoutExceeded = false;
 
@@ -41,15 +38,16 @@ public class DetectionResponseService {
 			e.printStackTrace();
 
 			acceptSocket = null;
-			// TODO: do something... This is very important!
+			return false;
 		}
+
+		return true;
 	}
 
 	public boolean isOpen() {
 		return acceptSocket != null;
 	}
 
-	// TODO: if this is called multiple times or before init() it is not good. Handle this inside or put a NOTE
 	public void close() {
 
 		// Close the ServerSocket.
@@ -72,7 +70,6 @@ public class DetectionResponseService {
 		}
 	}
 
-	// TODO: Refactor this (split in smaller functions)
 	public List<TcpSocket> receiveDetectionResponse() {
 
 		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Done looping over all network interfaces. Waiting for replies...");
@@ -86,42 +83,12 @@ public class DetectionResponseService {
 		while (acceptTimeoutExceeded == false) {
 
 			// Processing one response
-			TcpSocket server = accept(acceptSocket);
+			TcpSocket serverSocket = accept(acceptSocket);
 
 			// Appending server to list
-			if (server != null) {
-				// Setting timeout. TODO: Think if this should be done in other part of the code
-				try {
-					server.setTimeout(MainActivity.PING_RESPONSE_TIMEOUT);
-				}
-				catch (SocketException e) {
-					Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to set a timeout to the ServerSocket.");
+			if (serverSocket != null) {
 
-					e.printStackTrace();
-
-					// TODO: Make this prettier.
-					// Closing socket
-					try {
-						Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Closing the ServerSocket...");
-
-						server.close();
-
-						Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Closed the ServerSocket.");
-					}
-					catch (IOException e1) {
-						Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to close the ServerSocket after a failed timeout set!");
-
-						e1.printStackTrace();
-
-						// Nothing to be done here...
-					}
-
-					// This server is broken. Continue accepting other servers.
-					continue;
-				}
-
-				// Adding server to the list.
-				socketList.add(server);
+				processServerResponse(serverSocket, socketList);
 			}
 		}
 
@@ -130,12 +97,11 @@ public class DetectionResponseService {
 		return socketList;
 	}
 
-	// TODO: Refactor this (split in smaller functions)
 	private TcpSocket accept(ServerSocket serverSocket) {
 
-		Socket socket;
 		// Accept a new client. If there are no more pending connections, this ServerSocket.Accept()
 		// will timeout thus finishing the "accepting" cycle.
+		Socket socket;
 		try {
 			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Accepting new client...");
 
@@ -152,8 +118,13 @@ public class DetectionResponseService {
 			return null;
 		}
 
+		// Create a TcpSocket for the new client.
+		return createCommunicationSocket(socket);
+	}
+
+	private TcpSocket createCommunicationSocket(Socket socket) {
+
 		TcpSocket tcpSocket;
-		// Create a TcpSocket for the new client. This will be given as the return value.
 		try {
 			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Creating TcpSocket for new client...");
 
@@ -180,5 +151,40 @@ public class DetectionResponseService {
 		}
 
 		return tcpSocket;
+	}
+
+	private void processServerResponse(TcpSocket serverSocket, List<TcpSocket> socketList) {
+
+		// Setting timeout.
+		try {
+			serverSocket.setTimeout(MainActivity.PING_RESPONSE_TIMEOUT);
+		}
+		catch (SocketException e) {
+			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to set a timeout to the ServerSocket.");
+
+			e.printStackTrace();
+
+			// Closing socket
+			try {
+				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Closing the ServerSocket...");
+
+				serverSocket.close();
+
+				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Closed the ServerSocket.");
+			}
+			catch (IOException e1) {
+				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to close the ServerSocket after a failed timeout set!");
+
+				e1.printStackTrace();
+
+				// Nothing to be done here...
+			}
+
+			// This server is broken. Continue accepting other servers.
+			return;
+		}
+
+		// Adding server to the list.
+		socketList.add(serverSocket);
 	}
 }

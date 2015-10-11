@@ -8,9 +8,7 @@ import android.view.Menu;
 
 import com.remoty.gui.pages.MainActivity;
 
-/**
- * Created by Bogdan on 8/21/2015.
- */
+
 public class DebugActivity extends AppCompatActivity {
 
 	@Override

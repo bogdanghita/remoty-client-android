@@ -4,9 +4,8 @@ import android.content.Context;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+
 /**
- * Created by Bogdan on 8/29/2015.
- * <p/>
  * The purpose of this class is to create an abstraction between the design and the functionality.
  * This way the backend is not dependent on the design of the views. The backend will provide the
  * functionality of the views while this class will take care of the design.

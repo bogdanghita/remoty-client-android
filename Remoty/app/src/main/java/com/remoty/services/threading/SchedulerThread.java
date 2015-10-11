@@ -7,65 +7,64 @@ import com.remoty.gui.pages.MainActivity;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Created by Bogdan on 8/23/2015.
- */
+
 public class SchedulerThread extends LooperThread {
 
-    private LooperThread mThread;
+	private LooperThread mThread;
 
-    private Runnable mRunnable;
-    private AtomicLong mInterval = new AtomicLong();
+	private Runnable mRunnable;
+	private AtomicLong mInterval = new AtomicLong();
 
-    public SchedulerThread(Runnable runnable, long interval) {
+	public SchedulerThread(Runnable runnable, long interval) {
 
-        this.mRunnable = runnable;
-        this.mInterval.set(interval);
-    }
+		this.mRunnable = runnable;
+		this.mInterval.set(interval);
+	}
 
-    public void setInterval(long interval) {
+	public void setInterval(long interval) {
 
-        mInterval.set(interval);
+		mInterval.set(interval);
 
-        if (handler != null) {
-            ((SchedulerHandler) handler).setInterval(interval);
-        }
-    }
+		if (handler != null) {
+			((SchedulerHandler) handler).setInterval(interval);
+		}
+	}
 
-    @Override
-    public void run() {
+	@Override
+	public void run() {
 
-        Looper.prepare();
+		Looper.prepare();
 
-        mThread = new LooperThread();
-        mThread.start();
+		mThread = new LooperThread();
+		mThread.start();
 
-        handler = new SchedulerHandler(mThread, mRunnable, mInterval.longValue());
+		handler = new SchedulerHandler(mThread, mRunnable, mInterval.longValue());
 
-        // Sleeping until the handler of mThread is created
-        while (mThread.handler == null) {
-        }
+		// Sleeping until the handler of mThread is created
+		while (mThread.handler == null) {
+		}
 
-        handler.sendMessage(handler.obtainMessage(MainActivity.MSG_SCHEDULE));
+		handler.sendMessage(handler.obtainMessage(MainActivity.MSG_SCHEDULE));
 
-        Looper.loop();
-    }
+		Looper.loop();
+	}
 
-    @Override
-    public void quit() {
-        super.quit();
+	@Override
+	public void quit() {
+		super.quit();
 
-        mThread.quit();
+		mThread.quit();
 
-        Log.d(TaskScheduler.TAG_TIMER, "mThread quit. Waiting for mThread to join.");
+		Log.d(TaskScheduler.TAG_TIMER, "mThread quit. Waiting for mThread to join.");
 
-        try {
-            mThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Log.d(TaskScheduler.TAG_TIMER, e.getClass().getName() + " | " + "exception on join()");
-        }
+		try {
+			mThread.join();
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+			Log.d(TaskScheduler.TAG_TIMER, e.getClass().getName() + " | " + "exception on join()");
+		}
 
-        Log.d(TaskScheduler.TAG_TIMER, "mThread finished.");
-    }
+		Log.d(TaskScheduler.TAG_TIMER, "mThread finished.");
+	}
 }
