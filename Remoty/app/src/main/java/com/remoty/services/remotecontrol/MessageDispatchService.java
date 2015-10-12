@@ -37,7 +37,7 @@ public class MessageDispatchService {
 
 	// TODO: think if the ip and port should be passed here or in the constructor and/or in a setServer() method
 	// TODO: if this is called multiple times it is not good. Handle this inside or put a NOTE
-	public void init(String ip, int port) {
+	public boolean init(String ip, int port) {
 
 		try {
 
@@ -60,7 +60,10 @@ public class MessageDispatchService {
 			triggerEvent(ConnectionManager.ConnectionState.LOST);
 
 			tcpSocket = null;
+			return false;
 		}
+
+		return true;
 	}
 
 	public boolean isOpen() {

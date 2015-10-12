@@ -36,21 +36,6 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-// TODO: get more details on the thing with "in some cases the fragment is called with the empty constructor"
-// See this: http://stackoverflow.com/questions/10798489/proper-way-to-give-initial-data-to-fragments
-
-// TODO: Don't forget about the join that blocks the UI when detection closes (see if it is still doing it and make a decision)
-
-// TODO: When the app starts both MyConfigurationsFragment and MarketFragment start. Solve it!
-
-// TODO: The accelerometer axis are different on the Galaxy Tab 2. Investigate this case and try to find a pattern for all devices.
-
-// TODO: See TODOs in Message.java.
-
-// TODO: Connection and selection states are lost when user starts and closes the remote control activity. See onDestroy() for more details.
-
-// TODO: Connection LOST Snackbar not showing. Investigate...
-
 public class MainActivity extends BaseActivity {
 
 	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
@@ -90,7 +75,7 @@ public class MainActivity extends BaseActivity {
 	private LinearLayoutManager mLayoutManager;
 	public ConnectionsListAdapter mAdapter;
 
-	// TODO: Talk with Alina about this, and see if we can get ridd of it
+	// TODO: Talk with Alina about this, and see if we can get rid of it
 	public static MainActivity Instance;
 
 	private DetectionService serverDetection;
@@ -160,9 +145,6 @@ public class MainActivity extends BaseActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
-		// TODO: this is clearing the state when the user starts the remote control activity
-		serviceManager.clear();
 	}
 
 	@Override

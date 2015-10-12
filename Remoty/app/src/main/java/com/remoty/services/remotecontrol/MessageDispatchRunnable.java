@@ -35,18 +35,14 @@ public class MessageDispatchRunnable implements Runnable {
 
 		// Initializing message response service service (opening socket for sending messages)
 		if (!messageDispatcher.isOpen()) {
-			messageDispatcher.init(ip, port);
+
+			if(!messageDispatcher.init(ip, port)) {
+
+				// Bad luck ... init() did not succeed.
+				return;
+			}
 		}
 
-		// Checking if init() succeeded
-		if (!messageDispatcher.isOpen()) {
-
-			// Bad luck ... init() did not succeed.
-			// TODO: Do something intelligent here
-			return;
-		}
-
-		// TODO: In the future maybe we will want to send the object only if it is necessary
 		//Sending the message
 		messageDispatcher.send(message);
 
