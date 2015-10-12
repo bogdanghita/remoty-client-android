@@ -1,0 +1,30 @@
+// TODO-1: get more details on the thing with "in some cases the fragment is called with the empty constructor"
+// See this: http://stackoverflow.com/questions/10798489/proper-way-to-give-initial-data-to-fragments
+
+// TODO-2: Don't forget about the join that blocks the UI when detection closes (see if it is still doing it and make a decision)
+
+// TODO-3: When the app starts both MyConfigurationsFragment and MarketFragment start. Solve it!
+
+// TODO-4: The accelerometer axis are different on the Galaxy Tab 2. Investigate this case and try to find a pattern for all devices.
+
+// TODO-5: See TODOs in Message.java.
+
+// TODO-6: Seems that TcpSocket does not throw any exceptions when PC is connected through cable and it loses connection (or server is closed).
+// This is causing problems because when server comes back up the connection is not reestablished and the user needs to exit the remote control
+// activity and enter again
+// I should have tested this case, but at that time I was not aware of the fact that TCP is different on WiFi (many thanks go to master Cristea for
+// not telling us this insignificant detail)
+
+// NOTE-7: A very special case is when the user switches between the WiFi and cable connection (to see the behaviour just look at the connection screen
+// when this happens)
+
+// TODO-8: Refactor ServiceManager usage. Think if it should remain singleton or it should be instantiated by all activities and closed in onDestroy
+// and the data will be passed between them with intents or other stuff like this (launch activity with result maybe).
+
+// TODO-9: When user leaves the app, the ServiceManager (being static) is not destroyed immediately because this is how the OS decides to do. In this case,
+// the info in the ConnectionManager is preserved and strange things happen with the connection and selection state when the app is opened again (before
+// the OS decides to completely destroy it along with the static objects. This problem can be solved by looking at TODO-8 or by clearing the static objects
+// when the app closes (this does not mean in onDestroy() because it is also called when remote control starts; a solution would be the back button but that
+// is not the only way an app closes - it may be closed when the home button is pressed and I'm sure this is not the only possibility)
+
+// TODO: move the constants to a different location (@string or static class)
