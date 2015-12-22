@@ -10,8 +10,6 @@ public class ConnectionManager {
 
 	public enum ConnectionState {
 		ACTIVE,
-		SLOW,
-		LOST,
 		NONE
 	}
 

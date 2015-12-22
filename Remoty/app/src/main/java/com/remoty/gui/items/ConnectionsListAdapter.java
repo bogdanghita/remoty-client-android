@@ -40,22 +40,11 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 		}
 	}
 
-	public ConnectionsListAdapter(Context context, ServiceManager sm) {
+	public ConnectionsListAdapter(Context context) {
+
 		inflater = LayoutInflater.from(context);
-
+		serviceManager = ServiceManager.getInstance();
 		servers = new LinkedList<>();
-
-        /*// Initial message
-		servers.add(new ServerInfo("0",0,"Searching devices ..."));*/
-
-		serviceManager = sm;
-	}
-
-	// update dataset
-	public void setServerList(List<ServerInfo> s) {
-		servers.clear();
-//		generateServers();
-		servers.addAll(s);
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -68,43 +57,46 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 		return vh;
 	}
 
-	// NOTE: This is just a POC for the connection.
-	// TODO: All this operations should not be done here and like this. The GUI part of the connection needs major refactoring.
-	// NODE: This is the only part where MainActivity.Instance is used. Solve this TODO and you'll get rid of that one too
-	// Replace the contents of a view (invoked by the layout manager)
+	// Set the contents of a view (invoked by the layout manager)
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-		// - get element from dataset at this position and update content
-
+		// Setting text
 		holder.mServerName.setText(servers.get(position).name);
 
+		// Setting icon
+		ServerInfo currentSelection = serviceManager.getConnectionManager().getSelection();
+		boolean hasSelection = serviceManager.getConnectionManager().hasSelection();
+		if (!servers.isEmpty() && hasSelection && currentSelection.equals(servers.get(position))) {
+			holder.mServerIcon.setImageResource(R.drawable.ic_signal_cellular_4_bar_black_24dp);
+		}
+		else {
+			holder.mServerIcon.setImageResource(android.R.color.transparent);
+		}
+
+		// Setting click listener
 		holder.mContainer.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
+				ServerInfo selection = serviceManager.getConnectionManager().getSelection();
+				boolean hasSelection = serviceManager.getConnectionManager().hasSelection();
+
 				// In case there is already a selected server
-				if (serviceManager.getConnectionManager().hasSelection()) {
+				if (hasSelection) {
 
-					// if the previous selected server is the current one --- deselect
-					if (serviceManager.getConnectionManager().getSelection().equals(servers.get(position))) {
-
-						// Remove from list if connection is lost
-						if (serviceManager.getConnectionManager().getConnectionState() == ConnectionManager.ConnectionState.LOST) {
-							servers.remove(serviceManager.getConnectionManager().getSelection());
-						}
+					// If the previous selected server is the current one -> deselect
+					if (selection.equals(servers.get(position))) {
 
 						MainActivity.Instance.serverDeselected();
 						holder.mServerIcon.setImageResource(android.R.color.transparent);
 
-						// refresh listview (in case the current connexion was lost and the server
-						// isn't available anymore)
+						// Refresh listview (in case the current connection was lost and the server isn't available anymore)
 						notifyDataSetChanged();
 					}
 					else {
-
-						// otherwise if selected a new server --- deselect and select the current one
+						// Otherwise if selected a new server -> deselect and select the new one
 						MainActivity.Instance.serverDeselected();
 						MainActivity.Instance.serverSelected(new ServerInfo(servers.get(position).ip,
 								servers.get(position).port, servers.get(position).name));
@@ -112,61 +104,29 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 				}
 				else {
 
-					// If there's no previous connection --- select
-					MainActivity.Instance.serverSelected(new ServerInfo(servers.get(position).ip,
-							servers.get(position).port, servers.get(position).name));
+					// If there's no previous connection -> select
+					MainActivity.Instance.serverSelected(new ServerInfo(servers.get(position).ip, servers.get(position).port,
+							servers.get(position).name));
 
 					holder.mServerIcon.setImageResource(R.drawable.ic_signal_cellular_4_bar_black_24dp);
 				}
 			}
 		});
-
-		//mark the actual connection if it exists
-		if (!servers.isEmpty() && serviceManager.getConnectionManager().hasSelection()
-				&& serviceManager.getConnectionManager().getSelection().equals(servers.get(position))) {
-			connectionStateIcon(holder);
-		}
-		else {
-			holder.mServerIcon.setImageResource(android.R.color.transparent);
-		}
 	}
 
 	// Return the size of your dataset (invoked by the layout manager)
 	@Override
 	public int getItemCount() {
+
 		return (servers.isEmpty()) ? 0 : servers.size();
 	}
 
+	// Update dataset
+	public void updateServerList(List<ServerInfo> s) {
 
-	public void connectionStateIcon(final ViewHolder holder) {
-		switch (serviceManager.getConnectionManager().getConnectionState()) {
-			case ACTIVE: {
-				holder.mServerIcon.setImageResource(R.drawable.ic_signal_cellular_4_bar_black_24dp);
-				break;
-			}
-			case SLOW: {
-				holder.mServerIcon.setImageResource(R.drawable.ic_network_cell_black_24dp);
-				break;
-			}
-			case LOST: {
-				holder.mServerIcon.setImageResource(R.drawable.ic_signal_cellular_null_black_24dp);
-				break;
-			}
-			case NONE: {
-				holder.mServerIcon.setImageResource(android.R.color.transparent);
-				break;
-			}
-		}
-	}
+		servers.clear();
+		servers.addAll(s);
 
-	public void generateServers() {
-		// As you've guessed :D this is just for testing
-		// !!! if you use them be careful cuz there'll be duplicates when deselecting servers
-		servers.add(new ServerInfo("192.168.1.1", 8000, "Server1"));
-		servers.add(new ServerInfo("192.168.1.132", 9000, "Server2"));
-		servers.add(new ServerInfo("192.168.1.1", 8000, "Server3"));
-		servers.add(new ServerInfo("192.168.1.132", 9000, "Server4"));
-		servers.add(new ServerInfo("192.168.1.1", 8000, "Server5"));
-		servers.add(new ServerInfo("192.168.1.132", 9000, "Server6"));
+		notifyDataSetChanged();
 	}
 }

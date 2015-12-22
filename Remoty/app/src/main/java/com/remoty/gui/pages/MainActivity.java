@@ -255,7 +255,7 @@ public class MainActivity extends BaseActivity {
 		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
 
-		mAdapter = new ConnectionsListAdapter(this, serviceManager);
+		mAdapter = new ConnectionsListAdapter(this);
 		recyclerView.setAdapter(mAdapter);
 	}
 
@@ -287,7 +287,7 @@ public class MainActivity extends BaseActivity {
 
 		// Triggering event to clear available servers list
 		DetectionEvent clearEvent = new DetectionEvent(new LinkedList<ServerInfo>());
-		serviceManager.getEventManager().triggerEvent(clearEvent);
+//		serviceManager.getEventManager().triggerEvent(clearEvent);  // HERE
 
 		serviceManager.getEventManager().unsubscribe(detectionEventListener);
 	}
@@ -318,44 +318,6 @@ public class MainActivity extends BaseActivity {
 		updateSelectionStatusIndicators();
 
 		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
-	}
-
-	/**
-	 * Checking connection state changes and triggering appropriate events if needed
-	 *
-	 * @param servers
-	 */
-	private void handleConnectionStateChanges(List<ServerInfo> servers) {
-
-		ConnectionManager connectionManager = serviceManager.getConnectionManager();
-
-		if (connectionManager.hasSelection()) {
-
-			ServerInfo currentSelection = connectionManager.getSelection();
-			ConnectionManager.ConnectionState currentConnectionState = connectionManager.getConnectionState();
-
-			// Checking if connection with selected server was reestablished and triggering event if true
-			if (currentConnectionState == ConnectionManager.ConnectionState.LOST
-					&& servers.contains(currentSelection)) {
-
-				Log.d("ADAPTER", "handleConnectionStateChanges LOST & contains");
-				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.ACTIVE);
-				serviceManager.getEventManager().triggerEvent(event);
-
-				return;
-			}
-
-			// Checking if connection with selected server was lost and triggering event if true
-			if (currentConnectionState != ConnectionManager.ConnectionState.LOST
-					&& !servers.contains(currentSelection)) {
-
-				Log.d("ADAPTER", "handleConnectionStateChanges LOST & !contains");
-				ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST);
-				serviceManager.getEventManager().triggerEvent(event);
-
-				return;
-			}
-		}
 	}
 
 // =================================================================================================
@@ -410,18 +372,8 @@ public class MainActivity extends BaseActivity {
 	private void updateAvailableServersList(List<ServerInfo> servers) {
 
 		Log.d("ADAPTER", "updateAvailableServersList " + servers.size());
-		if (serviceManager.getConnectionManager().hasSelection()) {
-			if (!servers.contains(serviceManager.getConnectionManager().getSelection())) {
 
-				servers.add(serviceManager.getConnectionManager().getSelection());
-				Collections.sort(servers);
-			}
-		}
-
-		mAdapter.setServerList(servers);
-		mAdapter.notifyDataSetChanged();
-
-		servers.remove(serviceManager.getConnectionManager().getSelection());
+		mAdapter.updateServerList(servers);
 	}
 
 // =================================================================================================
@@ -439,9 +391,25 @@ public class MainActivity extends BaseActivity {
 
 //					Toast.makeText(getApplicationContext(), "Detection Event", Toast.LENGTH_LONG).show();
 
-					handleConnectionStateChanges(servers);
-
+					// Update servers list
 					updateAvailableServersList(servers);
+
+					// Handling special case when the connection to the selected server is lost
+					ConnectionManager connectionManager = serviceManager.getConnectionManager();
+					ServerInfo currentSelection = connectionManager.getSelection();
+					if (connectionManager.hasSelection() && !servers.contains(currentSelection)) {
+
+						// Trigger connection lost event
+						ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.NONE);
+						serviceManager.getEventManager().triggerEvent(event); // HERE
+
+						// Updating selection
+						connectionManager.clearSelection(); // HERE
+						updateSelectionStatusIndicators();
+
+						// Unsubscribing from connection state events
+						serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
+					}
 				}
 			});
 		}
@@ -471,7 +439,4 @@ public class MainActivity extends BaseActivity {
 //	ADDITIONAL ITEMS
 // =================================================================================================
 
-	public void buttonManualConnection(View view) {
-
-	}
 }

@@ -57,7 +57,7 @@ public class MessageDispatchService {
 
 			// TODO: do something... This is very important! (think if you should do something else here)
 			// NOTE: the runnable (caller) does not perform send if socket is not active
-			triggerEvent(ConnectionManager.ConnectionState.LOST);
+			triggerEvent(ConnectionManager.ConnectionState.NONE);
 
 			tcpSocket = null;
 			return false;
@@ -106,7 +106,7 @@ public class MessageDispatchService {
 
 			// TODO: Decide what type of events you want to trigger here: LOST or SLOW.
 			// Currently triggering connection LOST event.
-			triggerEvent(ConnectionManager.ConnectionState.LOST);
+			triggerEvent(ConnectionManager.ConnectionState.NONE);
 		}
 
 		Log.d("MESSAGE", "Message sent...");

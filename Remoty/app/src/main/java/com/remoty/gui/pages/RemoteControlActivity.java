@@ -185,7 +185,7 @@ public class RemoteControlActivity extends BaseActivity {
 		// Checking if the data was successfully retrieved. If not, then the connection is lost
 		if (ports == null) {
 			// Triggering connection LOST event
-			serviceManager.getEventManager().triggerEvent(new ConnectionStateEvent(ConnectionManager.ConnectionState.LOST));
+			serviceManager.getEventManager().triggerEvent(new ConnectionStateEvent(ConnectionManager.ConnectionState.NONE));
 			return;
 		}
 
@@ -253,8 +253,9 @@ public class RemoteControlActivity extends BaseActivity {
 					// Updating connection state
 					connectionManager.setConnectionState(connectionState);
 
-					if (connectionState == ConnectionManager.ConnectionState.LOST ||
-							connectionState == ConnectionManager.ConnectionState.SLOW) {
+					if (connectionState == ConnectionManager.ConnectionState.NONE) {
+
+						connectionManager.clearSelection();
 
 						stopServices();
 
@@ -267,19 +268,6 @@ public class RemoteControlActivity extends BaseActivity {
 
 // =================================================================================================
 //	TESTING
-
-	private List<KeysButtonInfo> generateTestKeys() {
-
-		List<KeysButtonInfo> list = new LinkedList<>();
-
-		KeysButtonInfo buttonInfo = new KeysButtonInfo();
-		buttonInfo.action = "ButtonRT_";
-		buttonInfo.name = "NiceName";
-
-		list.add(buttonInfo);
-
-		return list;
-	}
 
 	// Generates the buttons configuration for NFS Most Wanted 2012
 	private List<KeysButtonInfo> generateNFSMW2012Buttons() {
