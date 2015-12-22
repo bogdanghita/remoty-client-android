@@ -63,9 +63,9 @@ public class MainActivity extends BaseActivity {
 	public final static String KEYS = "KEYS-";
 
 	private ActionBarDrawerToggle mDrawerToggle;
-	public ConnectionsListAdapter mAdapter;
+	private ConnectionsListAdapter mAdapter;
 
-	// TODO: Talk with Alina about this, and see if we can get rid of it
+	// TODO: Get rid of this...
 	public static MainActivity Instance;
 
 	private DetectionService serverDetection;
@@ -255,7 +255,7 @@ public class MainActivity extends BaseActivity {
 		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
 
-		mAdapter = new ConnectionsListAdapter(this, serviceManager, connectionManager);
+		mAdapter = new ConnectionsListAdapter(this, serviceManager);
 		recyclerView.setAdapter(mAdapter);
 	}
 
@@ -433,7 +433,7 @@ public class MainActivity extends BaseActivity {
 		public void update(final List<ServerInfo> servers) {
 
 			// This is called from another thread so we need to ensure it is executed on the UI thread
-			MainActivity.Instance.runOnUiThread(new Runnable() {
+			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 

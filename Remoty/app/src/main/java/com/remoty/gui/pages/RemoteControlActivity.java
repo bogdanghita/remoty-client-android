@@ -167,7 +167,7 @@ public class RemoteControlActivity extends BaseActivity {
 
 				// TODO: refine this, think of it and make it safe (check if key service is ok etc.)
 				RelativeLayout keysLayout = (RelativeLayout) findViewById(R.id.configuration_holder_layout);
-				buttonService.populateLayout(generateNFSMW2012Buttons(), keysLayout, buttonLayoutWidth, buttonLayoutHeight);
+				buttonService.populateLayout(getApplicationContext(), generateNFSMW2012Buttons(), keysLayout, buttonLayoutWidth, buttonLayoutHeight);
 			}
 		});
 	}

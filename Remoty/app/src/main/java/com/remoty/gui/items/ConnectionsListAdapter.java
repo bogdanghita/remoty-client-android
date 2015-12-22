@@ -20,12 +20,10 @@ import java.util.List;
 
 
 public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsListAdapter.ViewHolder> {
+
 	private LinkedList<ServerInfo> servers;
 	private LayoutInflater inflater;
 	private ServiceManager serviceManager;
-	private ConnectionManager connectionManager;
-	private int position;
-
 
 	// Provide a reference to the views for each data item
 	// providing access to all the views for a data item in a view holder
@@ -42,15 +40,13 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 		}
 	}
 
-	public ConnectionsListAdapter(Context context, ServiceManager sm, ConnectionManager cm) {
+	public ConnectionsListAdapter(Context context, ServiceManager sm) {
 		inflater = LayoutInflater.from(context);
 
 		servers = new LinkedList<>();
 
         /*// Initial message
 		servers.add(new ServerInfo("0",0,"Searching devices ..."));*/
-
-		connectionManager = cm;
 
 		serviceManager = sm;
 	}
@@ -66,8 +62,7 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 	@Override
 	public ConnectionsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		// create a new view
-		View v = inflater
-				.inflate(R.layout.connection_item, parent, false);
+		View v = inflater.inflate(R.layout.connection_item, parent, false);
 
 		ViewHolder vh = new ViewHolder(v);
 		return vh;
@@ -75,11 +70,12 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 
 	// NOTE: This is just a POC for the connection.
 	// TODO: All this operations should not be done here and like this. The GUI part of the connection needs major refactoring.
+	// NODE: This is the only part where MainActivity.Instance is used. Solve this TODO and you'll get rid of that one too
 	// Replace the contents of a view (invoked by the layout manager)
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, final int position) {
+
 		// - get element from dataset at this position and update content
-		this.position = position;
 
 		holder.mServerName.setText(servers.get(position).name);
 
@@ -104,7 +100,7 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 
 						// refresh listview (in case the current connexion was lost and the server
 						// isn't available anymore)
-						MainActivity.Instance.mAdapter.notifyDataSetChanged();
+						notifyDataSetChanged();
 					}
 					else {
 

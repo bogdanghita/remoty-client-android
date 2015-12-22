@@ -1,5 +1,6 @@
 package com.remoty.services.remotecontrol;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,13 +34,13 @@ public class ButtonService {
 		buttonRunnable = null;
 	}
 
-	public void populateLayout(List<KeysButtonInfo> buttonInfoList, RelativeLayout layout,
+	public void populateLayout(Context context, List<KeysButtonInfo> buttonInfoList, RelativeLayout layout,
 	                           int layoutWidth, int layoutHeight) {
 
 		for (KeysButtonInfo buttonInfo : buttonInfoList) {
 
 			// Creating button
-			Button button = getButton(buttonInfo, layoutWidth, layoutHeight);
+			Button button = getButton(context, buttonInfo, layoutWidth, layoutHeight);
 
 			// Adding click listener
 			addClickListener(button, buttonInfo.action);
@@ -49,7 +50,7 @@ public class ButtonService {
 		}
 	}
 
-	private Button getButton(KeysButtonInfo buttonInfo, int layoutWidth, int layoutHeight) {
+	private Button getButton(Context context, KeysButtonInfo buttonInfo, int layoutWidth, int layoutHeight) {
 
 		// Adding padding.
 		final int padding = 5;
@@ -66,7 +67,7 @@ public class ButtonService {
 
 		// TODO: change the MainActivity.Instance thing
 		// Creating linear layout to hold the two text views
-		final Button button = new Button(MainActivity.Instance);
+		final Button button = new Button(context);
 
 		// This removes the default toUpper a button makes to it's text.
 		button.setTransformationMethod(null);
