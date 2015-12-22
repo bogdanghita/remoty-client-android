@@ -18,9 +18,6 @@ import java.util.List;
 
 public class MyConfigurationsFragment extends DebugFragment {
 
-	RecyclerView configurations_layout;
-	ConfigurationsListAdapter mAdapter;
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -28,17 +25,15 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 		View parentView = inflater.inflate(R.layout.fragment_my_configurations, container, false);
 
-		configurations_layout = (RecyclerView) parentView.findViewById(R.id.configurations_layout);
+		RecyclerView recyclerView = (RecyclerView) parentView.findViewById(R.id.configurations_layout);
 
-		mAdapter = new ConfigurationsListAdapter(MainActivity.Instance);
+		LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.Instance);
+		recyclerView.setLayoutManager(layoutManager);
 
-		// generateTestConfigurations() will be replaced by the actual user configurations
+		ConfigurationsListAdapter adapter = new ConfigurationsListAdapter(MainActivity.Instance);
+		adapter.setConfigurationInfos(generateTestConfigurations());
 
-		mAdapter.setConfigurationInfos(generateTestConfigurations());
-
-		configurations_layout.setLayoutManager(new LinearLayoutManager(MainActivity.Instance));
-
-		configurations_layout.setAdapter(mAdapter);
+		recyclerView.setAdapter(adapter);
 
 		return parentView;
 	}
