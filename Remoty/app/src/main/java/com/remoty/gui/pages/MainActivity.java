@@ -52,14 +52,14 @@ public class MainActivity extends BaseActivity {
 	public final static int MSG_SCHEDULE = 1000;
 
 	// Logging tags
-	public static final String TAG_SERVICES = "SERV-";
+	public static final String SERVICES = "SERV-";
 	public final static String APP = "APP-";
 	public final static String LIFECYCLE = "LIFEC-";
 	public static final String DETECTION = "DET-";
 	public static final String BROADCAST = "BROAD-";
 	public static final String RESPONSE = "RESP-";
 	public static final String SERVERS_STATE_UPDATE_SERVICE = "SRVUP-";
-	public static final String SERVERS_STATE_UPDATE_TASK = "SRVUPTASK";
+	public static final String SERVERS_STATE_UPDATE_TASK = "SRVUPTASK-";
 	public final static String KEYS = "KEYS-";
 
 	private ActionBarDrawerToggle mDrawerToggle;

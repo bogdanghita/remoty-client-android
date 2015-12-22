@@ -41,7 +41,7 @@ public class DetectionMaintenanceService {
 		this.serverSockets = serverSockets;
 		serverStateUpdateTaskList = new ArrayList<>();
 
-		Log.d(MainActivity.TAG_SERVICES, "Started updateServersState().");
+		Log.d(MainActivity.SERVICES, "Started updateServersState().");
 
 		// Executing server state request on each socket in the list
 		executeServersStateUpdateTasks();

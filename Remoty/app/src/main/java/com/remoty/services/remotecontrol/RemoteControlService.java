@@ -41,7 +41,7 @@ public class RemoteControlService {
 			catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 
-				Log.d(MainActivity.TAG_SERVICES, "Unable to get acc port.");
+				Log.d(MainActivity.SERVICES, "Unable to get acc port.");
 
 				// TODO: do something here
 				return null;
