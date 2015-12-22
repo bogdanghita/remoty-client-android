@@ -110,7 +110,8 @@ public class MainActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 
-		// Updating connection status
+		// Updating connection and selection status
+		updateConnectionStatusIndicators();
 		updateSelectionStatusIndicators();
 
 		// Starting connection check if necessary
@@ -302,7 +303,7 @@ public class MainActivity extends BaseActivity {
 		connectionManager.setConnectionState(ConnectionManager.ConnectionState.ACTIVE);
 
 		updateSelectionStatusIndicators();
-		updateConnectionStatusIndicators(ConnectionManager.ConnectionState.ACTIVE);
+		updateConnectionStatusIndicators();
 
 		serviceManager.getEventManager().subscribe(connectionStateEventListener);
 	}
@@ -314,7 +315,7 @@ public class MainActivity extends BaseActivity {
 		connectionManager.clearSelection();
 		connectionManager.setConnectionState(ConnectionManager.ConnectionState.NONE);
 
-		updateConnectionStatusIndicators(ConnectionManager.ConnectionState.NONE);
+		updateConnectionStatusIndicators();
 		updateSelectionStatusIndicators();
 
 		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
@@ -355,7 +356,9 @@ public class MainActivity extends BaseActivity {
 	 * <p/>
 	 * For future uses: adapt the content of this method to the indicators type.
 	 */
-	private void updateConnectionStatusIndicators(ConnectionManager.ConnectionState connectionState) {
+	private void updateConnectionStatusIndicators() {
+
+		ConnectionManager.ConnectionState connectionState = connectionManager.getConnectionState();
 
 		Log.d("ADAPTER", "updateConnectionStatusIndicators " + connectionState.toString());
 
@@ -429,7 +432,7 @@ public class MainActivity extends BaseActivity {
 
 					connectionManager.setConnectionState(connectionState);
 
-					updateConnectionStatusIndicators(connectionState);
+					updateConnectionStatusIndicators();
 				}
 			});
 		}
