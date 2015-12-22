@@ -2,21 +2,18 @@ package com.remoty.gui.pages;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.support.design.widget.TabLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.remoty.R;
 import com.remoty.common.events.ConnectionStateEvent;
@@ -26,7 +23,6 @@ import com.remoty.common.events.DetectionEventListener;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.other.ServerInfo;
 import com.remoty.gui.items.ConnectionsListAdapter;
-import com.remoty.gui.items.FragmentTabListener;
 import com.remoty.services.detection.DetectionService;
 
 import java.util.Collections;
@@ -67,12 +63,6 @@ public class MainActivity extends BaseActivity {
 	public final static String KEYS = "KEYS-";
 
 	private ActionBarDrawerToggle mDrawerToggle;
-
-	// TODO: Talk with Alina about this. This is never assigned but it is used. Why is it needed?
-	private LinearLayout container;
-
-	private RecyclerView mRecyclerView;
-	private LinearLayoutManager mLayoutManager;
 	public ConnectionsListAdapter mAdapter;
 
 	// TODO: Talk with Alina about this, and see if we can get rid of it
@@ -82,25 +72,33 @@ public class MainActivity extends BaseActivity {
 
 // =================================================================================================
 // 	APP STATES
+// =================================================================================================
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// set current instance
-		Instance = this;
-
-		serverDetection = serviceManager.getActionManager().getServerDetectionService();
-
 		setContentView(R.layout.activity_main);
 
+		// Configure toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		configureToolbar(toolbar);
+		setSupportActionBar(toolbar);
 
+		// Configure sidebar
 		DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		configureNavigationDrawer(drawerLayout, toolbar);
 
+		// Checking if we are restored from a previous state to avoid the overlapping fragments problem
+		if(savedInstanceState == null) {
+			// Adding initial fragment
+			addInitialFragment();
+		}
+
+		// User profile
 		createUserProfile();
+
+		// Services & backend
+		Instance = this;
+		serverDetection = serviceManager.getActionManager().getServerDetectionService();
 	}
 
 	@Override
@@ -166,11 +164,11 @@ public class MainActivity extends BaseActivity {
 
 		switch (id) {
 			case R.id.home: {
-				if (mDrawerLayout.isDrawerOpen(container)) {
-					mDrawerLayout.closeDrawer(container);
+				if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
+					mDrawerLayout.closeDrawer(Gravity.LEFT);
 				}
 				else {
-					mDrawerLayout.openDrawer(container);
+					mDrawerLayout.openDrawer(Gravity.LEFT);
 				}
 				break;
 			}
@@ -204,40 +202,20 @@ public class MainActivity extends BaseActivity {
 	}
 
 // =================================================================================================
-//	TOOLBAR AND SIDE MENU
+//	GUI
+// =================================================================================================
 
-	private void configureToolbar(Toolbar toolbar) {
+	private void addInitialFragment() {
 
-		// Setting up ActionBar and FragmentTabs in Toolbar
-		setSupportActionBar(toolbar);
+		// Create a new Fragment to be placed in the activity layout
+		MyConfigurationsFragment fragment = new MyConfigurationsFragment();
 
-		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-		tabLayout.addTab(tabLayout.newTab().setText("Remoties"));
-		tabLayout.addTab(tabLayout.newTab().setText("Market"));
-		tabLayout.addTab(tabLayout.newTab().setText("Social"));
-		tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+		// In case this activity was started with special instructions from an
+		// Intent, pass the Intent's extras to the fragment as arguments
+		fragment.setArguments(getIntent().getExtras());
 
-		// Setting Tab logic and fragment container
-		final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-		final PagerAdapter adapter = new FragmentTabListener(getSupportFragmentManager(), tabLayout.getTabCount());
-		viewPager.setAdapter(adapter);
-		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-			@Override
-			public void onTabSelected(TabLayout.Tab tab) {
-				viewPager.setCurrentItem(tab.getPosition());
-			}
-
-			@Override
-			public void onTabUnselected(TabLayout.Tab tab) {
-
-			}
-
-			@Override
-			public void onTabReselected(TabLayout.Tab tab) {
-
-			}
-		});
+		// Add the fragment to the 'fragment_container' FrameLayout
+		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
 	}
 
 	private void configureNavigationDrawer(DrawerLayout mDrawerLayout, Toolbar toolbar) {
@@ -272,16 +250,13 @@ public class MainActivity extends BaseActivity {
 
 	private void configureConnectionsLayout() {
 
-		// Setting up recycleView (Listview)
-		mRecyclerView = (RecyclerView) findViewById(R.id.connections_layout);
+		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.connections_layout);
 
-		// use a linear layout manager
-		mLayoutManager = new LinearLayoutManager(this);
-		mRecyclerView.setLayoutManager(mLayoutManager);
+		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+		recyclerView.setLayoutManager(layoutManager);
 
-		// set an adapter
 		mAdapter = new ConnectionsListAdapter(this, serviceManager, connectionManager);
-		mRecyclerView.setAdapter(mAdapter);
+		recyclerView.setAdapter(mAdapter);
 	}
 
 	private void createUserProfile() {
@@ -295,6 +270,7 @@ public class MainActivity extends BaseActivity {
 
 // =================================================================================================
 //	SERVICES AND EVENTS
+// =================================================================================================
 
 	private void startServerDetection() {
 
@@ -384,6 +360,7 @@ public class MainActivity extends BaseActivity {
 
 // =================================================================================================
 //	EVENT-TRIGGERED GUI UPDATES
+// =================================================================================================
 
 	/**
 	 * TODO: Be sure that this works when the side bar is closed
@@ -449,6 +426,7 @@ public class MainActivity extends BaseActivity {
 
 // =================================================================================================
 //	LISTENERS
+// =================================================================================================
 
 	DetectionEventListener detectionEventListener = new DetectionEventListener() {
 		@Override
@@ -491,6 +469,7 @@ public class MainActivity extends BaseActivity {
 
 // =================================================================================================
 //	ADDITIONAL ITEMS
+// =================================================================================================
 
 	public void buttonManualConnection(View view) {
 

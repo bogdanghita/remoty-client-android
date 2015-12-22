@@ -13,24 +13,12 @@
 			android:id="@+id/toolbar"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
 			android:background="?attr/colorPrimary"
-			android:elevation="6dp"
 			android:minHeight="?attr/actionBarSize"
 			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-		<android.support.design.widget.TabLayout
-			android:id="@+id/tab_layout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/toolbar"
-			android:background="?attr/colorPrimary"
-			android:elevation="6dp"
-			android:minHeight="?attr/actionBarSize"
-			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-		<com.remoty.gui.items.CustomViewPager
-			android:id="@+id/view_pager"
+		<FrameLayout
+			android:id="@+id/fragment_container"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"/>
 
@@ -111,14 +99,14 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Selection: NONE"/>
-				<!--android:visibility="gone"/>-->
+			<!--android:visibility="gone"/>-->
 
 			<TextView
 				android:id="@+id/connection_state_text_view"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="Connection: NONE"/>
-				<!--android:visibility="gone"/>-->
+			<!--android:visibility="gone"/>-->
 
 			<LinearLayout
 				android:layout_width="match_parent"
