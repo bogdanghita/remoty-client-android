@@ -27,10 +27,10 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 		RecyclerView recyclerView = (RecyclerView) parentView.findViewById(R.id.configurations_layout);
 
-		LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.Instance);
+		LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 		recyclerView.setLayoutManager(layoutManager);
 
-		ConfigurationsListAdapter adapter = new ConfigurationsListAdapter(MainActivity.Instance);
+		ConfigurationsListAdapter adapter = new ConfigurationsListAdapter(getContext());
 		adapter.setConfigurationInfos(generateTestConfigurations());
 
 		recyclerView.setAdapter(adapter);
