@@ -255,8 +255,6 @@ public class RemoteControlActivity extends BaseActivity {
 
 					if (connectionState == ConnectionManager.ConnectionState.NONE) {
 
-						connectionManager.clearSelection();
-
 						stopServices();
 
 						displaySnackbar();

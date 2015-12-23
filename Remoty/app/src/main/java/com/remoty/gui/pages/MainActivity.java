@@ -286,10 +286,6 @@ public class MainActivity extends BaseActivity {
 		serverDetection.stop();
 		serverDetection.clear();
 
-		// Triggering event to clear available servers list
-		DetectionEvent clearEvent = new DetectionEvent(new LinkedList<ServerInfo>());
-//		serviceManager.getEventManager().triggerEvent(clearEvent);  // HERE
-
 		serviceManager.getEventManager().unsubscribe(detectionEventListener);
 	}
 
@@ -326,7 +322,6 @@ public class MainActivity extends BaseActivity {
 // =================================================================================================
 
 	/**
-	 * TODO: Be sure that this works when the side bar is closed
 	 * Retrieves and updates the current selected server indicator (currently the indicator is a text view)
 	 * For future uses: adapt the content of this method to the indicator type
 	 */
@@ -350,17 +345,11 @@ public class MainActivity extends BaseActivity {
 	}
 
 	/**
-	 * TODO: This must be reviewed after the GUI behavior for remote control fragment is defined
-	 * <p/>
-	 * Updates the connection status indicators (color of the side menu toggle button and maybe something in the connect area).
-	 * <p/>
-	 * For future uses: adapt the content of this method to the indicators type.
+	 * Updates the connection status indicators
 	 */
 	private void updateConnectionStatusIndicators() {
 
 		ConnectionManager.ConnectionState connectionState = connectionManager.getConnectionState();
-
-		Log.d("ADAPTER", "updateConnectionStatusIndicators " + connectionState.toString());
 
 		// Simple text view showing this status. To be replaced with actual indicators
 		TextView currentConnectionTextView = (TextView) findViewById(R.id.connection_state_text_view);
@@ -372,9 +361,8 @@ public class MainActivity extends BaseActivity {
 		currentConnectionTextView.setText(text);
 	}
 
+	// Updates the available servers list
 	private void updateAvailableServersList(List<ServerInfo> servers) {
-
-		Log.d("ADAPTER", "updateAvailableServersList " + servers.size());
 
 		mAdapter.updateServerList(servers);
 	}
@@ -398,25 +386,30 @@ public class MainActivity extends BaseActivity {
 					updateAvailableServersList(servers);
 
 					// Handling special case when the connection to the selected server is lost
-					ConnectionManager connectionManager = serviceManager.getConnectionManager();
-					ServerInfo currentSelection = connectionManager.getSelection();
-					if (connectionManager.hasSelection() && !servers.contains(currentSelection)) {
-
-						// Trigger connection lost event
-						ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.NONE);
-						serviceManager.getEventManager().triggerEvent(event); // HERE
-
-						// Updating selection
-						connectionManager.clearSelection(); // HERE
-						updateSelectionStatusIndicators();
-
-						// Unsubscribing from connection state events
-						serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
-					}
+					checkConnectionLostWithSelectedServer(servers);
 				}
 			});
 		}
 	};
+
+	private void checkConnectionLostWithSelectedServer(List<ServerInfo> servers) {
+
+		ConnectionManager connectionManager = serviceManager.getConnectionManager();
+		ServerInfo currentSelection = connectionManager.getSelection();
+		if (connectionManager.hasSelection() && !servers.contains(currentSelection)) {
+
+			// Trigger connection lost event
+			ConnectionStateEvent event = new ConnectionStateEvent(ConnectionManager.ConnectionState.NONE);
+			serviceManager.getEventManager().triggerEvent(event);
+
+			// Updating selection
+			connectionManager.clearSelection();
+			updateSelectionStatusIndicators();
+
+			// Unsubscribing from connection state events
+			serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
+		}
+	}
 
 	ConnectionStateEventListener connectionStateEventListener = new ConnectionStateEventListener() {
 
