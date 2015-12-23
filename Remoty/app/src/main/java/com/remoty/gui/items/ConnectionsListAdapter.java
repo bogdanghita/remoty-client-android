@@ -89,30 +89,24 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 				// In case there is already a selected server
 				if (hasSelection) {
 
-					// If the previous selected server is the current one -> deselect
-					if (selection.equals(servers.get(position))) {
+					// Deselect current server
+					serverSelectionListener.serverDeselected();
 
-						serverSelectionListener.serverDeselected();
-						holder.mServerIcon.setImageResource(android.R.color.transparent);
+					// If a new server is selected
+					if (!selection.equals(servers.get(position))) {
 
-						// Refresh listview (in case the current connection was lost and the server isn't available anymore)
-						notifyDataSetChanged();
-					}
-					else {
-						// Otherwise if selected a new server -> deselect and select the new one
-						serverSelectionListener.serverDeselected();
-						serverSelectionListener.serverSelected(new ServerInfo(servers.get(position).ip,
-								servers.get(position).port, servers.get(position).name));
+						// Select the new server
+						serverSelectionListener.serverSelected(servers.get(position));
 					}
 				}
 				else {
 
-					// If there's no previous connection -> select
-					serverSelectionListener.serverSelected(new ServerInfo(servers.get(position).ip, servers.get(position).port,
-							servers.get(position).name));
-
-					holder.mServerIcon.setImageResource(R.drawable.ic_done_black_24dp);
+					// If there's no previous selection -> select
+					serverSelectionListener.serverSelected(servers.get(position));
 				}
+
+				// Refresh listview
+				notifyDataSetChanged();
 			}
 		});
 	}
