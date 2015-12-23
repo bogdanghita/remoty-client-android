@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import com.remoty.R;
 import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.events.ConnectionStateEventListener;
 import com.remoty.common.events.DetectionEventListener;
+import com.remoty.common.other.Constant;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.other.ServerInfo;
 import com.remoty.gui.items.ConnectionsListAdapter;
@@ -53,7 +55,7 @@ public class MainActivity extends BaseActivity {
 		configureNavigationDrawer(drawerLayout, toolbar);
 
 		// Checking if we are restored from a previous state to avoid the overlapping fragments problem
-		if(savedInstanceState == null) {
+		if (savedInstanceState == null) {
 			// Adding initial fragment
 			addInitialFragment();
 		}
@@ -301,7 +303,7 @@ public class MainActivity extends BaseActivity {
 
 		// Update devices label
 		TextView devices_label = (TextView) findViewById(R.id.devices_label);
-		if(servers.isEmpty()) {
+		if (servers.isEmpty()) {
 			devices_label.setText("No devices found");
 		}
 		else {
@@ -409,4 +411,18 @@ public class MainActivity extends BaseActivity {
 //	ADDITIONAL ITEMS
 // =================================================================================================
 
+	public void buttonFeedback(View view) {
+
+		Log.d(Constant.APP + Constant.MENU, "Button Feedback");
+	}
+
+	public void buttonHelp(View view) {
+
+		Log.d(Constant.APP + Constant.MENU, "Button Help");
+	}
+
+	public void buttonSignOut(View view) {
+
+		Log.d(Constant.APP + Constant.MENU, "Button Sign out");
+	}
 }
