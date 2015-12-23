@@ -7,18 +7,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.remoty.R;
 import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.events.ConnectionStateEventListener;
-import com.remoty.common.events.DetectionEvent;
 import com.remoty.common.events.DetectionEventListener;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.other.ServerInfo;
@@ -26,8 +23,6 @@ import com.remoty.gui.items.ConnectionsListAdapter;
 import com.remoty.gui.items.ServerSelectionListener;
 import com.remoty.services.detection.DetectionService;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -36,9 +31,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends BaseActivity {
 
 	private ActionBarDrawerToggle mDrawerToggle;
-	private ConnectionsListAdapter mAdapter;
+	private ConnectionsListAdapter mConnectionsListAdapter;
 
-	private DetectionService serverDetection;
+	private DetectionService mDetectionService;
 
 // =================================================================================================
 // 	APP STATES
@@ -67,7 +62,7 @@ public class MainActivity extends BaseActivity {
 		createUserProfile();
 
 		// Services & backend
-		serverDetection = serviceManager.getActionManager().getServerDetectionService();
+		mDetectionService = serviceManager.getActionManager().getServerDetectionService();
 	}
 
 	@Override
@@ -157,10 +152,6 @@ public class MainActivity extends BaseActivity {
 				}
 				break;
 			}
-			case R.id.action_help:
-				break;
-			case R.id.action_settings:
-				break;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -225,8 +216,8 @@ public class MainActivity extends BaseActivity {
 		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
 
-		mAdapter = new ConnectionsListAdapter(this, serverSelectionListener);
-		recyclerView.setAdapter(mAdapter);
+		mConnectionsListAdapter = new ConnectionsListAdapter(this, serverSelectionListener);
+		recyclerView.setAdapter(mConnectionsListAdapter);
 	}
 
 	private void createUserProfile() {
@@ -246,14 +237,14 @@ public class MainActivity extends BaseActivity {
 
 		serviceManager.getEventManager().subscribe(detectionEventListener);
 
-		serverDetection.init();
-		serverDetection.start();
+		mDetectionService.init();
+		mDetectionService.start();
 	}
 
 	private void stopServerDetection() {
 
-		serverDetection.stop();
-		serverDetection.clear();
+		mDetectionService.stop();
+		mDetectionService.clear();
 
 		serviceManager.getEventManager().unsubscribe(detectionEventListener);
 	}
@@ -305,7 +296,17 @@ public class MainActivity extends BaseActivity {
 	// Updates the available servers list
 	private void updateAvailableServersList(List<ServerInfo> servers) {
 
-		mAdapter.updateServerList(servers);
+		// Notify connections list adapter
+		mConnectionsListAdapter.updateServerList(servers);
+
+		// Update devices label
+		TextView devices_label = (TextView) findViewById(R.id.devices_label);
+		if(servers.isEmpty()) {
+			devices_label.setText("No devices found");
+		}
+		else {
+			devices_label.setText("Devices");
+		}
 	}
 
 // =================================================================================================
