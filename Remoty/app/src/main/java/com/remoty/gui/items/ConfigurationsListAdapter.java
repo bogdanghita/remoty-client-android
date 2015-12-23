@@ -3,15 +3,21 @@ package com.remoty.gui.items;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.remoty.R;
+import com.remoty.common.other.Constant;
 import com.remoty.common.servicemanager.ServiceManager;
 import com.remoty.common.other.ConfigurationInfo;
 import com.remoty.gui.pages.RemoteControlActivity;
@@ -26,21 +32,22 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 
 		public TextView mConfigName;
-		public LinearLayout mNameContainer;
+		public RelativeLayout mNameContainer;
 		public LinearLayout mItemContainer;
+		public View mOptionsButton;
 
 		public ViewHolder(View v) {
 			super(v);
 
 			mConfigName = (TextView) v.findViewById(R.id.configuration_name);
-			mNameContainer = (LinearLayout) v.findViewById(R.id.configuration_name_holder);
+			mNameContainer = (RelativeLayout) v.findViewById(R.id.configuration_name_holder);
 			mItemContainer = (LinearLayout) v.findViewById(R.id.configuration_item_holder);
+			mOptionsButton = v.findViewById(R.id.options);
 		}
 	}
 
-	LayoutInflater inflater;
+	private LayoutInflater inflater;
 	private LinkedList<ConfigurationInfo> configurationList;
-	private int position;
 
 	Context context;
 
@@ -57,7 +64,6 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 	public void setConfigurationList(List<ConfigurationInfo> s) {
 
 		configurationList.clear();
-
 		configurationList.addAll(s);
 	}
 
@@ -75,13 +81,11 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-		// Getting element from data set at this position and updating content
-		this.position = position;
-
+		// Setting configuration title
 		holder.mConfigName.setText(configurationList.get(position).getName());
 
+		// Setting layout click listener
 		holder.mItemContainer.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 
@@ -95,7 +99,17 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 				}
 
 				// Starting the remote control activity activity
-				startRemoteControlActivity();
+				startRemoteControlActivity(position);
+			}
+		});
+
+		// Setting options button click listener
+		holder.mOptionsButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				// Displaying options menu for current configuration
+				showPopup(v, position);
 			}
 		});
 	}
@@ -106,7 +120,7 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 		return (configurationList.isEmpty()) ? 0 : configurationList.size();
 	}
 
-	private void startRemoteControlActivity() {
+	private void startRemoteControlActivity(int position) {
 
 		Bundle args = new Bundle();
 
@@ -119,5 +133,23 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 		intent.putExtras(args);
 		context.startActivity(intent);
 	}
-}
 
+	public void showPopup(View v, final int position) {
+
+		PopupMenu popup = new PopupMenu(context, v);
+		MenuInflater inflater = popup.getMenuInflater();
+		inflater.inflate(R.menu.menu_configuration_item, popup.getMenu());
+
+		popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+
+				Log.d(Constant.MENU, "Config: " + position + ", Menu item: " + item);
+
+				return true;
+			}
+		});
+
+		popup.show();
+	}
+}
