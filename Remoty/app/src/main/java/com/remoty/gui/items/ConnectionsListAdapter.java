@@ -129,4 +129,8 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 
 		notifyDataSetChanged();
 	}
+
+	public List<ServerInfo> getServerList() {
+		return servers;
+	}
 }

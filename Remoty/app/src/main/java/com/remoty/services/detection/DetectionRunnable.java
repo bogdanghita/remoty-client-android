@@ -10,6 +10,7 @@ import com.remoty.services.networking.TcpSocket;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -17,11 +18,13 @@ public class DetectionRunnable implements Runnable {
 
 	private EventManager eventManager;
 
-	List<TcpSocket> serverSockets;
+	private List<TcpSocket> serverSockets;
 
-	DetectionBroadcastService broadcastService;
-	DetectionResponseService responseService;
-	DetectionMaintenanceService detectionMaintenanceService;
+	private DetectionBroadcastService broadcastService;
+	private DetectionResponseService responseService;
+	private DetectionMaintenanceService detectionMaintenanceService;
+
+	private boolean firstDetectionCycle;
 
 	public DetectionRunnable(EventManager eventManager) {
 
@@ -32,6 +35,8 @@ public class DetectionRunnable implements Runnable {
 		broadcastService = new DetectionBroadcastService();
 		responseService = new DetectionResponseService();
 		detectionMaintenanceService = new DetectionMaintenanceService();
+
+		firstDetectionCycle = true;
 	}
 
 	@Override
@@ -62,6 +67,15 @@ public class DetectionRunnable implements Runnable {
 		if (results != null) {
 
 			triggerEvent(results);
+		}
+		// Triggering first detection event
+		else if(firstDetectionCycle) {
+			triggerEvent(new LinkedList<ServerInfo>());
+		}
+
+		// Resetting first run flag
+		if(firstDetectionCycle) {
+			firstDetectionCycle = false;
 		}
 
 		Log.d(MainActivity.APP + MainActivity.DETECTION, "Detection cycle finished.");
