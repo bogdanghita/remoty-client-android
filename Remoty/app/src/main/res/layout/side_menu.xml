@@ -18,15 +18,15 @@ https://developer.android.com/design/patterns/navigation-drawer.html -->
 		android:id="@+id/selection_state_text_view"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="Selection: NONE"/>
-		<!--android:visibility="gone"/>-->
+		android:text="Selection: NONE"
+		android:visibility="gone"/>
 
 	<TextView
 		android:id="@+id/connection_state_text_view"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="Connection: NONE"/>
-		<!--android:visibility="gone"/>-->
+		android:text="Connection: NONE"
+		android:visibility="gone"/>
 	<!--END_DEBUG-->
 
 	<LinearLayout
@@ -44,7 +44,7 @@ https://developer.android.com/design/patterns/navigation-drawer.html -->
 			android:layout_weight="100"
 			android:orientation="vertical">
 
-			<include layout="@layout/devices_label_1"/>
+			<include layout="@layout/devices_label"/>
 
 			<android.support.v7.widget.RecyclerView
 				android:id="@+id/connections_layout"
@@ -61,7 +61,11 @@ https://developer.android.com/design/patterns/navigation-drawer.html -->
 			android:layout_weight="1"
 			android:orientation="vertical">
 
-			<include layout="@layout/devices_label"/>
+			<include layout="@layout/feedback"/>
+
+			<include layout="@layout/help"/>
+
+			<include layout="@layout/sign_out"/>
 
 		</LinearLayout>
 
