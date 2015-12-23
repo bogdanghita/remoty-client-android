@@ -7,13 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.remoty.R;
 import com.remoty.common.other.ServerInfo;
-import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.ServiceManager;
-import com.remoty.gui.pages.MainActivity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,13 +31,13 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 
 		public TextView mServerName;
 		public ImageView mServerIcon;
-		public LinearLayout mContainer;
+		public RelativeLayout mContainer;
 
 		public ViewHolder(View v) {
 			super(v);
 			mServerName = (TextView) v.findViewById(R.id.server_name);
-			mServerIcon = (ImageView) v.findViewById(R.id.server_icon);
-			mContainer = (LinearLayout) v.findViewById(R.id.container);
+			mServerIcon = (ImageView) v.findViewById(R.id.selection_state_icon);
+			mContainer = (RelativeLayout) v.findViewById(R.id.container);
 		}
 	}
 
@@ -72,7 +71,7 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 		ServerInfo currentSelection = serviceManager.getConnectionManager().getSelection();
 		boolean hasSelection = serviceManager.getConnectionManager().hasSelection();
 		if (!servers.isEmpty() && hasSelection && currentSelection.equals(servers.get(position))) {
-			holder.mServerIcon.setImageResource(R.drawable.ic_signal_cellular_4_bar_black_24dp);
+			holder.mServerIcon.setImageResource(R.drawable.ic_done_black_24dp);
 		}
 		else {
 			holder.mServerIcon.setImageResource(android.R.color.transparent);
@@ -112,7 +111,7 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 					serverSelectionListener.serverSelected(new ServerInfo(servers.get(position).ip, servers.get(position).port,
 							servers.get(position).name));
 
-					holder.mServerIcon.setImageResource(R.drawable.ic_signal_cellular_4_bar_black_24dp);
+					holder.mServerIcon.setImageResource(R.drawable.ic_done_black_24dp);
 				}
 			}
 		});
