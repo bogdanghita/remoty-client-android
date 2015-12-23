@@ -25,8 +25,9 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 	private LayoutInflater inflater;
 	private ServiceManager serviceManager;
 
-	// Provide a reference to the views for each data item
-	// providing access to all the views for a data item in a view holder
+	private ServerSelectionListener serverSelectionListener;
+
+	// Provide a reference to the views for each data item providing access to all the views for a data item in a view holder
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 
 		public TextView mServerName;
@@ -41,11 +42,13 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 		}
 	}
 
-	public ConnectionsListAdapter(Context context) {
+	public ConnectionsListAdapter(Context context, ServerSelectionListener serverSelectionListener) {
 
 		inflater = LayoutInflater.from(context);
 		serviceManager = ServiceManager.getInstance();
 		servers = new LinkedList<>();
+
+		this.serverSelectionListener = serverSelectionListener;
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -90,7 +93,7 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 					// If the previous selected server is the current one -> deselect
 					if (selection.equals(servers.get(position))) {
 
-						MainActivity.Instance.serverDeselected();
+						serverSelectionListener.serverDeselected();
 						holder.mServerIcon.setImageResource(android.R.color.transparent);
 
 						// Refresh listview (in case the current connection was lost and the server isn't available anymore)
@@ -98,15 +101,15 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 					}
 					else {
 						// Otherwise if selected a new server -> deselect and select the new one
-						MainActivity.Instance.serverDeselected();
-						MainActivity.Instance.serverSelected(new ServerInfo(servers.get(position).ip,
+						serverSelectionListener.serverDeselected();
+						serverSelectionListener.serverSelected(new ServerInfo(servers.get(position).ip,
 								servers.get(position).port, servers.get(position).name));
 					}
 				}
 				else {
 
 					// If there's no previous connection -> select
-					MainActivity.Instance.serverSelected(new ServerInfo(servers.get(position).ip, servers.get(position).port,
+					serverSelectionListener.serverSelected(new ServerInfo(servers.get(position).ip, servers.get(position).port,
 							servers.get(position).name));
 
 					holder.mServerIcon.setImageResource(R.drawable.ic_signal_cellular_4_bar_black_24dp);

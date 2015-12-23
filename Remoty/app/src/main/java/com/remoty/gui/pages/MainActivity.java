@@ -23,6 +23,7 @@ import com.remoty.common.events.DetectionEventListener;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.other.ServerInfo;
 import com.remoty.gui.items.ConnectionsListAdapter;
+import com.remoty.gui.items.ServerSelectionListener;
 import com.remoty.services.detection.DetectionService;
 
 import java.util.Collections;
@@ -65,9 +66,6 @@ public class MainActivity extends BaseActivity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ConnectionsListAdapter mAdapter;
 
-	// TODO: Get rid of this...
-	public static MainActivity Instance;
-
 	private DetectionService serverDetection;
 
 // =================================================================================================
@@ -97,7 +95,6 @@ public class MainActivity extends BaseActivity {
 		createUserProfile();
 
 		// Services & backend
-		Instance = this;
 		serverDetection = serviceManager.getActionManager().getServerDetectionService();
 	}
 
@@ -256,7 +253,7 @@ public class MainActivity extends BaseActivity {
 		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
 
-		mAdapter = new ConnectionsListAdapter(this);
+		mAdapter = new ConnectionsListAdapter(this, serverSelectionListener);
 		recyclerView.setAdapter(mAdapter);
 	}
 
@@ -287,34 +284,6 @@ public class MainActivity extends BaseActivity {
 		serverDetection.clear();
 
 		serviceManager.getEventManager().unsubscribe(detectionEventListener);
-	}
-
-	// This is called when a server is chosen as the current connection
-	public void serverSelected(ServerInfo server) {
-
-//		Toast.makeText(getApplicationContext(), "Server selected", Toast.LENGTH_LONG).show();
-
-		// Notifying the ConnectionManager
-		connectionManager.setSelection(server);
-		connectionManager.setConnectionState(ConnectionManager.ConnectionState.ACTIVE);
-
-		updateSelectionStatusIndicators();
-		updateConnectionStatusIndicators();
-
-		serviceManager.getEventManager().subscribe(connectionStateEventListener);
-	}
-
-	public void serverDeselected() {
-
-//		Toast.makeText(getApplicationContext(), "Server deselected", Toast.LENGTH_LONG).show();
-
-		connectionManager.clearSelection();
-		connectionManager.setConnectionState(ConnectionManager.ConnectionState.NONE);
-
-		updateConnectionStatusIndicators();
-		updateSelectionStatusIndicators();
-
-		serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
 	}
 
 // =================================================================================================
@@ -428,6 +397,38 @@ public class MainActivity extends BaseActivity {
 					updateConnectionStatusIndicators();
 				}
 			});
+		}
+	};
+
+	ServerSelectionListener serverSelectionListener = new ServerSelectionListener() {
+
+		@Override
+		public void serverSelected(ServerInfo server) {
+
+//		    Toast.makeText(getApplicationContext(), "Server selected", Toast.LENGTH_LONG).show();
+
+			// Notifying the ConnectionManager
+			connectionManager.setSelection(server);
+			connectionManager.setConnectionState(ConnectionManager.ConnectionState.ACTIVE);
+
+			updateSelectionStatusIndicators();
+			updateConnectionStatusIndicators();
+
+			serviceManager.getEventManager().subscribe(connectionStateEventListener);
+		}
+
+		@Override
+		public void serverDeselected() {
+
+//		    Toast.makeText(getApplicationContext(), "Server deselected", Toast.LENGTH_LONG).show();
+
+			connectionManager.clearSelection();
+			connectionManager.setConnectionState(ConnectionManager.ConnectionState.NONE);
+
+			updateConnectionStatusIndicators();
+			updateSelectionStatusIndicators();
+
+			serviceManager.getEventManager().unsubscribe(connectionStateEventListener);
 		}
 	};
 
