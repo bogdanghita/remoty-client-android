@@ -4,7 +4,7 @@ https://developer.android.com/design/patterns/navigation-drawer.html -->
 <LinearLayout
 	android:id="@+id/sidebar"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="300dp"
+	android:layout_width="240dp"
 	android:layout_height="match_parent"
 	android:layout_gravity="start"
 	android:background="#FFFFFF"
@@ -18,33 +18,52 @@ https://developer.android.com/design/patterns/navigation-drawer.html -->
 		android:id="@+id/selection_state_text_view"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="Selection: NONE"/>
-	<!--android:visibility="gone"/>-->
+		android:text="Selection: NONE"
+		android:visibility="gone"/>
 
 	<TextView
 		android:id="@+id/connection_state_text_view"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="Connection: NONE"/>
-	<!--android:visibility="gone"/>-->
+		android:text="Connection: NONE"
+		android:visibility="gone"/>
 	<!--END_DEBUG-->
 
 	<LinearLayout
-		android:id="@+id/connect_layout"
+		android:id="@+id/sidebar_body_layout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:divider="?android:dividerHorizontal"
 		android:orientation="vertical"
 		android:showDividers="middle">
 
-		<include layout="@layout/devices_label"/>
-
-		<android.support.v7.widget.RecyclerView
-			android:id="@+id/connections_layout"
+		<LinearLayout
+			android:id="@+id/sidebar_connect_layout"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_weight="1000"
-			android:scrollbars="vertical"/>
+			android:layout_height="wrap_content"
+			android:layout_weight="100"
+			android:orientation="vertical">
+
+			<!--<include layout="@layout/devices_label"/>-->
+
+			<android.support.v7.widget.RecyclerView
+				android:id="@+id/connections_layout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:scrollbars="vertical"/>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/sidebar_options_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:orientation="vertical">
+
+			<include layout="@layout/devices_label"/>
+
+		</LinearLayout>
 
 	</LinearLayout>
 
