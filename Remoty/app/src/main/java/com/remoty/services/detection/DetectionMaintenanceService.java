@@ -2,6 +2,7 @@ package com.remoty.services.detection;
 
 import android.util.Log;
 
+import com.remoty.common.other.Constant;
 import com.remoty.common.other.ServerInfo;
 import com.remoty.services.networking.TcpSocket;
 import com.remoty.gui.pages.MainActivity;
@@ -41,7 +42,7 @@ public class DetectionMaintenanceService {
 		this.serverSockets = serverSockets;
 		serverStateUpdateTaskList = new ArrayList<>();
 
-		Log.d(MainActivity.SERVICES, "Started updateServersState().");
+		Log.d(Constant.SERVICES, "Started updateServersState().");
 
 		// Executing server state request on each socket in the list
 		executeServersStateUpdateTasks();
@@ -51,7 +52,7 @@ public class DetectionMaintenanceService {
 	}
 
 	private void executeServersStateUpdateTasks() {
-		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE, "Setting up all the server state update tasks.");
+		Log.d(Constant.APP + Constant.DETECTION + Constant.SERVERS_STATE_UPDATE_SERVICE, "Setting up all the server state update tasks.");
 
 		for (TcpSocket socket : serverSockets) {
 
@@ -61,11 +62,11 @@ public class DetectionMaintenanceService {
 			serverStateUpdateTaskList.add(serverStateUpdateAsyncTask);
 		}
 
-		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE, "All the state update tasks have started.");
+		Log.d(Constant.APP + Constant.DETECTION + Constant.SERVERS_STATE_UPDATE_SERVICE, "All the state update tasks have started.");
 	}
 
 	private List<ServerInfo> retrieveServerStateUpdateTasksResults() {
-		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE, "Start receiving server state responses.");
+		Log.d(Constant.APP + Constant.DETECTION + Constant.SERVERS_STATE_UPDATE_SERVICE, "Start receiving server state responses.");
 
 		boolean listChangedFlag = false;
 
@@ -75,14 +76,14 @@ public class DetectionMaintenanceService {
 
 			// Retrieving the result of the task
 			try {
-				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE, "Receiving server state response from " + task.getSocket().getInetAddress().getHostAddress());
+				Log.d(Constant.APP + Constant.DETECTION + Constant.SERVERS_STATE_UPDATE_SERVICE, "Receiving server state response from " + task.getSocket().getInetAddress().getHostAddress());
 
-				serverInfo = task.get(MainActivity.ASYNC_TASK_GET_TIMEOUT, TimeUnit.MILLISECONDS);
+				serverInfo = task.get(Constant.ASYNC_TASK_GET_TIMEOUT, TimeUnit.MILLISECONDS);
 
-				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE, "Received server state response from " + task.getSocket().getInetAddress().getHostAddress());
+				Log.d(Constant.APP + Constant.DETECTION + Constant.SERVERS_STATE_UPDATE_SERVICE, "Received server state response from " + task.getSocket().getInetAddress().getHostAddress());
 			}
 			catch (InterruptedException | ExecutionException | TimeoutException e) {
-				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE, "Failed to receive server state response from " + task.getSocket().getInetAddress().getHostAddress());
+				Log.d(Constant.APP + Constant.DETECTION + Constant.SERVERS_STATE_UPDATE_SERVICE, "Failed to receive server state response from " + task.getSocket().getInetAddress().getHostAddress());
 
 				e.printStackTrace();
 
@@ -123,7 +124,7 @@ public class DetectionMaintenanceService {
 	 */
 	private void handleNoResponse(ServerStateUpdateAsyncTask task) {
 
-		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE, "Receiving server state response from " + task.getSocket().getInetAddress().getHostAddress());
+		Log.d(Constant.APP + Constant.DETECTION + Constant.SERVERS_STATE_UPDATE_SERVICE, "Receiving server state response from " + task.getSocket().getInetAddress().getHostAddress());
 
 		TcpSocket socket = task.getSocket();
 		String serverIp = socket.getInetAddress().getHostAddress();
@@ -134,14 +135,14 @@ public class DetectionMaintenanceService {
 
 		// Closing socket
 		try {
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE, "Closing the server that did not respond to server state request.");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.SERVERS_STATE_UPDATE_SERVICE, "Closing the server that did not respond to server state request.");
 
 			socket.close();
 
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE, "Closed the server that did not respond.");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.SERVERS_STATE_UPDATE_SERVICE, "Closed the server that did not respond.");
 		}
 		catch (IOException e) {
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.SERVERS_STATE_UPDATE_SERVICE, "Failed to close the server that did not respond!");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.SERVERS_STATE_UPDATE_SERVICE, "Failed to close the server that did not respond!");
 
 			e.printStackTrace();
 

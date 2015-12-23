@@ -3,6 +3,7 @@ package com.remoty.services.detection;
 import android.util.Log;
 
 import com.remoty.common.events.DetectionEvent;
+import com.remoty.common.other.Constant;
 import com.remoty.common.servicemanager.EventManager;
 import com.remoty.common.other.ServerInfo;
 import com.remoty.gui.pages.MainActivity;
@@ -41,7 +42,7 @@ public class DetectionRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		Log.d(MainActivity.APP + MainActivity.DETECTION, "New detection cycle.");
+		Log.d(Constant.APP + Constant.DETECTION, "New detection cycle.");
 
 		// Sending detection messages on the sendDetectionMessage address
 		broadcastService.sendDetectionMessage();
@@ -78,7 +79,7 @@ public class DetectionRunnable implements Runnable {
 			firstDetectionCycle = false;
 		}
 
-		Log.d(MainActivity.APP + MainActivity.DETECTION, "Detection cycle finished.");
+		Log.d(Constant.APP + Constant.DETECTION, "Detection cycle finished.");
 	}
 
 	/**
