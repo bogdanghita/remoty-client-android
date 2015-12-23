@@ -1,7 +1,5 @@
 package com.remoty.services.remotecontrol;
 
-import android.util.Log;
-
 import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.EventManager;
@@ -29,14 +27,12 @@ public class MessageDispatchService {
 		this.timeout = timeout;
 	}
 
-	// TODO: think if there are also needed some other timeouts (for connect for example)
 	public void setTimeout(int timeout) {
 
 		this.timeout = timeout;
 	}
 
-	// TODO: think if the ip and port should be passed here or in the constructor and/or in a setServer() method
-	// TODO: if this is called multiple times it is not good. Handle this inside or put a NOTE
+	// NOTE: This must not be called multiple times. init() and close() must be called alternatively
 	public boolean init(String ip, int port) {
 
 		try {
@@ -55,7 +51,6 @@ public class MessageDispatchService {
 		catch (IOException e) {
 			e.printStackTrace();
 
-			// TODO: do something... This is very important! (think if you should do something else here)
 			// NOTE: the runnable (caller) does not perform send if socket is not active
 			triggerEvent(ConnectionManager.ConnectionState.NONE);
 
@@ -71,7 +66,7 @@ public class MessageDispatchService {
 		return tcpSocket != null;
 	}
 
-	// TODO: if this is called multiple times or before init() it is not good. Handle this inside or put a NOTE
+	// NOTE: This must not be called multiple times or before init()
 	public void close() {
 
 		try {
@@ -89,27 +84,15 @@ public class MessageDispatchService {
 
 	public void send(Message.AbstractMessage message) {
 
-		Log.d("MESSAGE", "Sending message...");
-
 		try {
 			tcpSocket.sendObject(message);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 
-			// TODO: do something... This is also very important!
-			// Or maybe this should be handled by the caller... In any case, the thing that is responsible
-			// for adjusting the interval and the thing that is responsible with connection lost issues
-			// need to know that this exception occurred
-
-			Log.d("MESSAGE", "Error on send...");
-
-			// TODO: Decide what type of events you want to trigger here: LOST or SLOW.
-			// Currently triggering connection LOST event.
+			// Triggering event
 			triggerEvent(ConnectionManager.ConnectionState.NONE);
 		}
-
-		Log.d("MESSAGE", "Message sent...");
 	}
 
 	private void triggerEvent(ConnectionManager.ConnectionState connectionState) {

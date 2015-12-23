@@ -28,6 +28,7 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 	// Provide a reference to the views for each data item
 	// providing access to all the views for a data item in a view holder
 	public static class ViewHolder extends RecyclerView.ViewHolder {
+
 		public TextView mServerName;
 		public ImageView mServerIcon;
 		public LinearLayout mContainer;
@@ -128,9 +129,5 @@ public class ConnectionsListAdapter extends RecyclerView.Adapter<ConnectionsList
 		servers.addAll(s);
 
 		notifyDataSetChanged();
-	}
-
-	public List<ServerInfo> getServerList() {
-		return servers;
 	}
 }
