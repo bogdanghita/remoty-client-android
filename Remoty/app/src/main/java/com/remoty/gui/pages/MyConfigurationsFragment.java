@@ -44,13 +44,13 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 		List<ConfigurationInfo> configurations = new LinkedList<>();
 
-		ConfigurationInfo c = new ConfigurationInfo("Drive", "drive_config_file");
+		ConfigurationInfo c = new ConfigurationInfo("NFS Most Wanted 2012", "drive_config_file");
 
 		configurations.add(c);
 
-//        ConfigurationInfo c1 = new ConfigurationInfo("Dummy", "drive_config_file");
-//
-//        configurations.add(c1);
+        ConfigurationInfo c1 = new ConfigurationInfo("Dummy", "drive_config_file");
+
+        configurations.add(c1);
 //        configurations.add(c1);
 //        configurations.add(c1);
 //        configurations.add(c1);

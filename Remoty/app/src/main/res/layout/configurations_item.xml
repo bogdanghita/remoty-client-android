@@ -11,9 +11,18 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="?android:attr/selectableItemBackground"
-		android:orientation="horizontal">
+		android:orientation="horizontal"
+		android:padding="@dimen/activity_horizontal_margin">
 
-		<LinearLayout
+		<de.hdodenhof.circleimageview.CircleImageView
+			android:id="@+id/circleView"
+			android:layout_width="70dp"
+			android:layout_height="70dp"
+			android:layout_gravity="center_vertical"
+			android:background="@android:drawable/sym_def_app_icon"
+			android:paddingLeft="@dimen/activity_horizontal_margin"/>
+
+		<RelativeLayout
 			android:id="@+id/configuration_name_holder"
 			android:layout_width="0dp"
 			android:layout_height="70dip"
@@ -24,52 +33,74 @@
 			<TextView
 				android:id="@+id/configuration_name"
 				android:layout_width="match_parent"
-				android:layout_height="0dp"
-				android:layout_weight="1"
-				android:background="@android:color/transparent"
+				android:layout_height="wrap_content"
 				android:paddingLeft="15dp"
 				android:paddingTop="5dp"
-				android:textColor="#212121"
+				android:text="Title"
+				android:layout_centerInParent="true"
 				android:textSize="19dp"/>
 
-			<TextView
-				android:id="@+id/category"
-				android:layout_width="match_parent"
-				android:layout_height="0dp"
-				android:layout_weight="1"
-				android:paddingLeft="19dp"
-				android:text="Category"
-				android:textColor="#727272"
-				android:textSize="13dp"
-				/>
-		</LinearLayout>
+			<!--<TextView-->
+				<!--android:id="@+id/category"-->
+				<!--android:layout_width="match_parent"-->
+				<!--android:layout_height="0dp"-->
+				<!--android:layout_weight="1"-->
+				<!--android:paddingLeft="19dp"-->
+				<!--android:text="Description"-->
+				<!--android:textColor="#727272"-->
+				<!--android:textSize="13dp"/>-->
 
-		<LinearLayout
+		</RelativeLayout>
+
+		<RelativeLayout
 			android:layout_width="0dp"
-			android:layout_height="wrap_content"
+			android:layout_height="match_parent"
 			android:layout_gravity="center_vertical"
 			android:layout_weight="2"
-			android:clickable="true"
-			android:orientation="horizontal">
+			android:clickable="true">
 
-			<ImageButton
-				android:id="@+id/like"
-				android:layout_width="0dp"
-				android:layout_height="match_parent"
-				android:layout_gravity="center_vertical"
-				android:layout_weight="1"
-				android:background="@android:color/transparent"
-				android:src="@drawable/ic_favorite_border_black_24dp"/>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:clickable="true"
+				android:orientation="horizontal">
 
-			<ImageButton
-				android:layout_width="0dp"
-				android:layout_height="match_parent"
-				android:layout_gravity="center_vertical"
-				android:layout_weight="1"
-				android:background="@android:color/transparent"
-				android:src="@drawable/ic_more_vert_black_24dp"/>
+				<ImageButton
+					android:id="@+id/like"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_gravity="center_vertical"
+					android:layout_weight="1"
+					android:background="@android:color/transparent"
+					android:src="@drawable/ic_favorite_border_black_24dp"/>
 
-		</LinearLayout>
+				<ImageButton
+					android:id="@+id/options"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_gravity="center_vertical"
+					android:layout_weight="1"
+					android:background="@android:color/transparent"
+					android:src="@drawable/ic_more_vert_black_24dp"/>
+
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:clickable="true"
+				android:orientation="horizontal">
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Saved"/>
+
+			</LinearLayout>
+
+		</RelativeLayout>
 
 	</LinearLayout>
 
