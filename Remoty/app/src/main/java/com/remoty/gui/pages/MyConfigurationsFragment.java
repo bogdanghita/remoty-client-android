@@ -31,7 +31,7 @@ public class MyConfigurationsFragment extends DebugFragment {
 		recyclerView.setLayoutManager(layoutManager);
 
 		ConfigurationsListAdapter adapter = new ConfigurationsListAdapter(getContext());
-		adapter.setConfigurationInfos(generateTestConfigurations());
+		adapter.setConfigurationList(generateTestConfigurations());
 
 		recyclerView.setAdapter(adapter);
 

@@ -143,19 +143,19 @@ public class RemoteControlActivity extends BaseActivity {
 
 	private void setOnGlobalLayoutListener() {
 
-		// TODO: Refactor this (too many findViewById(R.id.configuration_holder_layout))
 		// Adding layout change listener
 		final View layoutHolder = findViewById(R.id.configuration_holder_layout);
 		layoutHolder.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 			@Override
 			public void onGlobalLayout() {
-				View buttonLayout = findViewById(R.id.configuration_holder_layout);
 
 //				Toast.makeText(getActivity(), "onGlobalLayout()" /*+ cnt++*/, Toast.LENGTH_SHORT).show();
 
+				RelativeLayout keysLayout = (RelativeLayout) findViewById(R.id.configuration_holder_layout);
+
 				// Now we can retrieve the width and height
-				int buttonLayoutWidth = buttonLayout.getWidth();
-				int buttonLayoutHeight = buttonLayout.getHeight();
+				int buttonLayoutWidth = keysLayout.getWidth();
+				int buttonLayoutHeight = keysLayout.getHeight();
 
 				// Removing listener
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -166,7 +166,6 @@ public class RemoteControlActivity extends BaseActivity {
 				}
 
 				// TODO: refine this, think of it and make it safe (check if key service is ok etc.)
-				RelativeLayout keysLayout = (RelativeLayout) findViewById(R.id.configuration_holder_layout);
 				buttonService.populateLayout(getApplicationContext(), generateNFSMW2012Buttons(), keysLayout, buttonLayoutWidth, buttonLayoutHeight);
 			}
 		});
@@ -216,7 +215,8 @@ public class RemoteControlActivity extends BaseActivity {
 	}
 
 // =================================================================================================
-//	GUI... see main activity for better description
+//	GUI
+// =================================================================================================
 
 	private void displaySnackbar() {
 
@@ -236,6 +236,7 @@ public class RemoteControlActivity extends BaseActivity {
 
 // =================================================================================================
 //	LISTENERS
+// =================================================================================================
 
 	ConnectionStateEventListener connectionStateEventListener = new ConnectionStateEventListener() {
 
@@ -247,8 +248,7 @@ public class RemoteControlActivity extends BaseActivity {
 				@Override
 				public void run() {
 
-//					Toast.makeText(getActivity(), "Connection connectionState changed: " +
-//							connectionState.toString(), Toast.LENGTH_LONG).show();
+//					Toast.makeText(getActivity(), "Connection connectionState changed: " + connectionState.toString(), Toast.LENGTH_LONG).show();
 
 					// Updating connection state
 					connectionManager.setConnectionState(connectionState);
@@ -266,6 +266,7 @@ public class RemoteControlActivity extends BaseActivity {
 
 // =================================================================================================
 //	TESTING
+// =================================================================================================
 
 	// Generates the buttons configuration for NFS Most Wanted 2012
 	private List<KeysButtonInfo> generateNFSMW2012Buttons() {
