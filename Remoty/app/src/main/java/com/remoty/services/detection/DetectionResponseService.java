@@ -2,6 +2,7 @@ package com.remoty.services.detection;
 
 import android.util.Log;
 
+import com.remoty.common.other.Constant;
 import com.remoty.services.networking.TcpSocket;
 import com.remoty.gui.pages.MainActivity;
 
@@ -25,15 +26,15 @@ public class DetectionResponseService {
 
 		// Start the ServerSocket. Remote servers will connect to this Android device via this ServerSocket.
 		try {
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Initializing the ServerSocket...");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Initializing the ServerSocket...");
 
-			acceptSocket = new ServerSocket(MainActivity.LOCAL_DETECTION_RESPONSE_PORT);
-			acceptSocket.setSoTimeout(MainActivity.DETECTION_RESPONSE_TIMEOUT);
+			acceptSocket = new ServerSocket(Constant.LOCAL_DETECTION_RESPONSE_PORT);
+			acceptSocket.setSoTimeout(Constant.DETECTION_RESPONSE_TIMEOUT);
 
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Initialized the ServerSocket.");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Initialized the ServerSocket.");
 		}
 		catch (IOException e) {
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to initialize the ServerSocket!");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Failed to initialize the ServerSocket!");
 
 			e.printStackTrace();
 
@@ -52,14 +53,14 @@ public class DetectionResponseService {
 
 		// Close the ServerSocket.
 		try {
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Closing the ServerSocket...");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Closing the ServerSocket...");
 
 			acceptSocket.close();
 
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Closed the ServerSocket.");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Closed the ServerSocket.");
 		}
 		catch (IOException e) {
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to close the ServerSocket!");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Failed to close the ServerSocket!");
 
 			e.printStackTrace();
 
@@ -72,7 +73,7 @@ public class DetectionResponseService {
 
 	public List<TcpSocket> receiveDetectionResponse() {
 
-		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Done looping over all network interfaces. Waiting for replies...");
+		Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Done looping over all network interfaces. Waiting for replies...");
 
 		ArrayList<TcpSocket> socketList = new ArrayList<>();
 
@@ -92,7 +93,7 @@ public class DetectionResponseService {
 			}
 		}
 
-		Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Stopped waiting for replies. Returning servers list.");
+		Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Stopped waiting for replies. Returning servers list.");
 
 		return socketList;
 	}
@@ -103,14 +104,14 @@ public class DetectionResponseService {
 		// will timeout thus finishing the "accepting" cycle.
 		Socket socket;
 		try {
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Accepting new client...");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Accepting new client...");
 
 			socket = serverSocket.accept();
 
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Accepted new client.");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Accepted new client.");
 		}
 		catch (IOException e) {
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to accept new client. Stopped accepting new clients.");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Failed to accept new client. Stopped accepting new clients.");
 
 			e.printStackTrace();
 
@@ -126,16 +127,16 @@ public class DetectionResponseService {
 
 		TcpSocket tcpSocket;
 		try {
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Creating TcpSocket for new client...");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Creating TcpSocket for new client...");
 
 			tcpSocket = new TcpSocket(socket);
 			tcpSocket.setKeepAlive(true);
 			tcpSocket.setTcpNoDelay(true);
 
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Created TcpSocket for new client.");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Created TcpSocket for new client.");
 		}
 		catch (IOException e) {
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to create a new TcpSocket.");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Failed to create a new TcpSocket.");
 
 			e.printStackTrace();
 
@@ -157,23 +158,23 @@ public class DetectionResponseService {
 
 		// Setting timeout.
 		try {
-			serverSocket.setTimeout(MainActivity.PING_RESPONSE_TIMEOUT);
+			serverSocket.setTimeout(Constant.PING_RESPONSE_TIMEOUT);
 		}
 		catch (SocketException e) {
-			Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to set a timeout to the ServerSocket.");
+			Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Failed to set a timeout to the ServerSocket.");
 
 			e.printStackTrace();
 
 			// Closing socket
 			try {
-				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Closing the ServerSocket...");
+				Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Closing the ServerSocket...");
 
 				serverSocket.close();
 
-				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Closed the ServerSocket.");
+				Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Closed the ServerSocket.");
 			}
 			catch (IOException e1) {
-				Log.d(MainActivity.APP + MainActivity.DETECTION + MainActivity.RESPONSE, "Failed to close the ServerSocket after a failed timeout set!");
+				Log.d(Constant.APP + Constant.DETECTION + Constant.RESPONSE, "Failed to close the ServerSocket after a failed timeout set!");
 
 				e1.printStackTrace();
 

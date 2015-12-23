@@ -1,6 +1,7 @@
 package com.remoty.services.remotecontrol;
 
 import com.remoty.common.events.ConnectionStateEvent;
+import com.remoty.common.other.Constant;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.EventManager;
 import com.remoty.gui.pages.MainActivity;
@@ -39,7 +40,7 @@ public class MessageDispatchService {
 
 			// Initializing connection to server and creating socket that will be used to send messages
 			Socket socket = new Socket();
-			socket.connect(new InetSocketAddress(ip, port), MainActivity.CONNECT_TIMEOUT);
+			socket.connect(new InetSocketAddress(ip, port), Constant.CONNECT_TIMEOUT);
 
 			tcpSocket = new TcpSocket(socket);
 			tcpSocket.setTimeout(timeout);

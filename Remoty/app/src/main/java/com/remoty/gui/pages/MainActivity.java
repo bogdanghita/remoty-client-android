@@ -35,34 +35,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseActivity {
 
-	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
-	public final static int DETECTION_RESPONSE_TIMEOUT = 500;
-	public final static int PING_RESPONSE_TIMEOUT = 500;
-	public final static int INIT_REMOTE_CONTROL_TIMEOUT = 2000;
-
-	// TODO: rename and see if it is relevant since at this moment only send operations are performed
-	public final static int ACCELEROMETER_TIMEOUT = 100;
-	public final static int CONNECT_TIMEOUT = 500;
-
-	public final static long DETECTION_INTERVAL = 2000;
-	public final static long ACCELEROMETER_INTERVAL = 20;
-
-	public final static int LOCAL_DETECTION_RESPONSE_PORT = 10000;
-	public final static int REMOTE_DETECTION_PORT = 9001;
-
-	public final static int MSG_SCHEDULE = 1000;
-
-	// Logging tags
-	public static final String SERVICES = "SERV-";
-	public final static String APP = "APP-";
-	public final static String LIFECYCLE = "LIFEC-";
-	public static final String DETECTION = "DET-";
-	public static final String BROADCAST = "BROAD-";
-	public static final String RESPONSE = "RESP-";
-	public static final String SERVERS_STATE_UPDATE_SERVICE = "SRVUP-";
-	public static final String SERVERS_STATE_UPDATE_TASK = "SRVUPTASK-";
-	public final static String KEYS = "KEYS-";
-
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ConnectionsListAdapter mAdapter;
 
@@ -96,6 +68,21 @@ public class MainActivity extends BaseActivity {
 
 		// Services & backend
 		serverDetection = serviceManager.getActionManager().getServerDetectionService();
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+
+		mDrawerToggle.onConfigurationChanged(newConfig);
+		mDrawerToggle.syncState();
 	}
 
 	@Override
@@ -182,21 +169,6 @@ public class MainActivity extends BaseActivity {
 		// also have this method and it is also called). If the action was not handled then the
 		// default case of the switch returned the result of the super implementation.
 		return true;
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-
-		mDrawerToggle.syncState();
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-
-		mDrawerToggle.onConfigurationChanged(newConfig);
-		mDrawerToggle.syncState();
 	}
 
 // =================================================================================================

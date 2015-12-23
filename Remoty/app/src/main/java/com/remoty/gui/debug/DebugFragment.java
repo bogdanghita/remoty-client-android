@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.remoty.common.other.Constant;
 import com.remoty.gui.pages.MainActivity;
 
 
@@ -17,21 +18,21 @@ public class DebugFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onAttach");
+		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onAttach");
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onCreate");
+		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onCreate");
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View ret = super.onCreateView(inflater, container, savedInstanceState);
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onCreateView");
+		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onCreateView");
 
 		return ret;
 	}
@@ -40,55 +41,55 @@ public class DebugFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onActivityCreated");
+		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onActivityCreated");
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onStart");
+		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onStart");
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onResume");
+		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onResume");
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onPause");
+		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onPause");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onStop");
+		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onStop");
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onDestroyView");
+		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onDestroyView");
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onDestroy");
+		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onDestroy");
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
 
-		Log.d(MainActivity.APP + MainActivity.LIFECYCLE, this.getClass().getName() + " - " + "onDetach");
+		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onDetach");
 	}
 }

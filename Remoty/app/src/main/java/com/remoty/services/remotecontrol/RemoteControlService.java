@@ -3,6 +3,7 @@ package com.remoty.services.remotecontrol;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.remoty.common.other.Constant;
 import com.remoty.common.other.ServerInfo;
 import com.remoty.gui.pages.MainActivity;
 import com.remoty.common.other.Message;
@@ -28,7 +29,7 @@ public class RemoteControlService {
 			try {
 				// TODO: put a timeout for connection
 				Socket socket = new Socket();
-				socket.connect(new InetSocketAddress(info.ip, info.port), MainActivity.CONNECT_TIMEOUT);
+				socket.connect(new InetSocketAddress(info.ip, info.port), Constant.CONNECT_TIMEOUT);
 				TcpSocket tcpSocket = new TcpSocket(socket);
 
 				Message.RemoteControlPortsMessage message;
@@ -41,7 +42,7 @@ public class RemoteControlService {
 			catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 
-				Log.d(MainActivity.SERVICES, "Unable to get acc port.");
+				Log.d(Constant.SERVICES, "Unable to get acc port.");
 
 				// TODO: do something here
 				return null;
@@ -56,7 +57,7 @@ public class RemoteControlService {
 		initTask.execute(server);
 
 		try {
-			return initTask.get(MainActivity.INIT_REMOTE_CONTROL_TIMEOUT, TimeUnit.MILLISECONDS);
+			return initTask.get(Constant.INIT_REMOTE_CONTROL_TIMEOUT, TimeUnit.MILLISECONDS);
 		}
 		catch (InterruptedException | ExecutionException | TimeoutException e) {
 			e.printStackTrace();

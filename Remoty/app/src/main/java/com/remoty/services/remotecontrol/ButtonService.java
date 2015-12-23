@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.remoty.R;
+import com.remoty.common.other.Constant;
 import com.remoty.common.servicemanager.EventManager;
 import com.remoty.gui.pages.MainActivity;
 import com.remoty.common.other.KeysButtonInfo;
@@ -133,7 +134,7 @@ public class ButtonService {
 		if (!timer.isRunning()) {
 
 			// TODO: Change this interval
-			timer.start(buttonRunnable, MainActivity.ACCELEROMETER_INTERVAL);
+			timer.start(buttonRunnable, Constant.ACCELEROMETER_INTERVAL);
 		}
 	}
 
