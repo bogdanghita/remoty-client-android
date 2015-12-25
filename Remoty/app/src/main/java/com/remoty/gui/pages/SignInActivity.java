@@ -1,6 +1,7 @@
 package com.remoty.gui.pages;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,7 @@ import com.remoty.R;
 public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
 	public final static String SIGN_IN = "SIGN_IN";
+	public final static int RC_SIGN_IN = 9001;
 
 	GoogleApiClient mGoogleApiClient;
 
@@ -68,5 +70,13 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 	public void buttonSignIn(View v) {
 
 		Log.d(SIGN_IN, "buttonSignIn()");
+
+		signIn();
+	}
+
+	private void signIn() {
+
+		Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+		startActivityForResult(signInIntent, RC_SIGN_IN);
 	}
 }
