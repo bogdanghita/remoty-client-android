@@ -1,40 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-	package="com.remoty"
-	xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.remoty" >
 
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
-	<application
-		android:allowBackup="true"
-		android:icon="@mipmap/ic_launcher"
-		android:label="@string/app_name"
-		android:theme="@style/AppTheme">
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
 
-		<activity
-			android:name=".gui.pages.MainActivity"
-			android:configChanges="orientation|keyboardHidden"
-			android:label="@string/app_name"
-			android:screenOrientation="portrait">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
+        <activity
+            android:name=".gui.pages.MainActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
-		</activity>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
 
-		<activity
-			android:name=".gui.pages.RemoteControlActivity"
-			android:configChanges="orientation|keyboardHidden"
-			android:label="@string/title_activity_remote_control"
-			android:parentActivityName=".gui.pages.MainActivity"
-			android:screenOrientation="landscape">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".gui.pages.MainActivity"/>
-		</activity>
+        <activity
+            android:name=".gui.pages.RemoteControlActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_activity_remote_control"
+            android:parentActivityName=".gui.pages.MainActivity"
+            android:screenOrientation="landscape" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.pages.MainActivity" />
+        </activity>
 
-	</application>
+        <activity
+            android:name=".gui.pages.SignInActivity"
+            android:label="@string/title_activity_sign_in"
+            android:theme="@style/AppTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
 
 </manifest>
