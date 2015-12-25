@@ -1,0 +1,51 @@
+{
+  "project_info": {
+    "project_id": "remoty-8edd",
+    "project_number": "448696303664",
+    "name": "Remoty"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448696303664:android:6f8cc76611862306",
+        "client_id": "android:com.remoty",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.remoty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "448696303664-rhdn2ubq61mcomj8t1eda8fmhv54can3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.remoty",
+            "certificate_hash": "24CDABC43D7BEB7DAD7E39709DB32E600A646F4E"
+          }
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
