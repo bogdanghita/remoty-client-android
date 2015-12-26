@@ -127,7 +127,8 @@ public class SignInActivity extends IdentityActivity {
 			String idToken = acct.getIdToken();
 			String serverAuthCode = acct.getServerAuthCode();
 
-			UserInfo userInfo = new UserInfo(name, email, photo.toString());
+			String stringPhoto = photo != null ? photo.toString() : "";
+			UserInfo userInfo = new UserInfo(name, email, stringPhoto);
 			ServiceManager.getInstance().getIdentityManager().setUserInfo(userInfo);
 
 			Log.d(Constants.APP + Constants.SIGN_IN, "handleSignInResult(): " + email + ", " + name + ", " + photo);
