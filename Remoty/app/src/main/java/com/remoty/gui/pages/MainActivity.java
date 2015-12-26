@@ -1,5 +1,6 @@
 package com.remoty.gui.pages;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -14,6 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.remoty.R;
 import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.events.ConnectionStateEventListener;
@@ -24,13 +28,15 @@ import com.remoty.common.other.ServerInfo;
 import com.remoty.gui.items.ConnectionsListAdapter;
 import com.remoty.gui.items.ServerSelectionListener;
 import com.remoty.services.detection.DetectionService;
+import com.remoty.services.identity.LoadProfileImage;
+import com.remoty.services.identity.UserInfo;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends IdentityActivity {
 
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ConnectionsListAdapter mConnectionsListAdapter;
@@ -224,11 +230,17 @@ public class MainActivity extends BaseActivity {
 
 	private void createUserProfile() {
 
+		UserInfo userInfo = serviceManager.getIdentityService().getUserInfo();
+
 		// Setting up user profile
 		TextView name = (TextView) findViewById(R.id.name);
 		TextView email = (TextView) findViewById(R.id.email);
 		CircleImageView image = (CircleImageView) findViewById(R.id.circleView);
-		image.setImageResource(R.drawable.ic_account_circle_white_48dp);
+//		image.setImageResource(R.drawable.ic_account_circle_white_48dp);
+
+		name.setText(userInfo.getName());
+		email.setText(userInfo.getEmail());
+		new LoadProfileImage(image).execute(userInfo.getPicture());
 	}
 
 // =================================================================================================
@@ -424,5 +436,15 @@ public class MainActivity extends BaseActivity {
 	public void buttonSignOut(View view) {
 
 		Log.d(Constant.APP + Constant.MENU, "Button Sign out");
+
+		Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+			@Override
+			public void onResult(Status status) {
+
+				Log.d("Identity logout status", status.toString());
+
+				signOut();
+			}
+		});
 	}
 }

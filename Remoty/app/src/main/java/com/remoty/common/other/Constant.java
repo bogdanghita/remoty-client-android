@@ -30,5 +30,6 @@ public class Constant {
 	public static final String SERVERS_STATE_UPDATE_SERVICE = "SRVUP-";
 	public final static String KEYS = "KEYS-";
 	public final static String MENU = "MENU-";
+	public final static String SIGN_IN = "SIGN_IN";
 
 }
