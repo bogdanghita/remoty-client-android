@@ -1,23 +1,33 @@
 <resources>
 
-<!--
-    &lt;!&ndash; Base application theme. &ndash;&gt;
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        &lt;!&ndash; Customize your theme here. &ndash;&gt;
-    </style>
--->
+	<!--
+		&lt;!&ndash; Base application theme. &ndash;&gt;
+		<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+			&lt;!&ndash; Customize your theme here. &ndash;&gt;
+		</style>
+	-->
 
-        <!-- Base application theme. -->
-        <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-            <!--   your app branding color for the app bar -->
-            <item name="colorPrimary">#3f51b5</item>
-            <!--   darker variant for the status bar and contextual app bars -->
-            <item name="colorPrimaryDark">#303f9f</item>
-            <!--   theme UI controls like checkboxes and text fields -->
-            <item name="colorAccent">#ff5722</item>
-        </style>
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<!--   your app branding color for the app bar -->
+		<item name="colorPrimary">#3f51b5</item>
+		<!--   darker variant for the status bar and contextual app bars -->
+		<item name="colorPrimaryDark">#303f9f</item>
+		<!--   theme UI controls like checkboxes and text fields -->
+		<item name="colorAccent">#ff5722</item>
+	</style>
+
 	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
 	<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+	<style name="BlueCyan" parent="Theme.AppCompat.Light.NoActionBar">
+		<!--   your app branding color for the app bar -->
+		<item name="colorPrimary">#2196F3</item>
+		<!--   darker variant for the status bar and contextual app bars -->
+		<item name="colorPrimaryDark">#1976D2</item>
+		<!--   theme UI controls like checkboxes and text fields -->
+		<item name="colorAccent">#00BCD4</item>
+	</style>
 
 </resources>
