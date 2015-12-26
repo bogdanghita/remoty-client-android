@@ -3,9 +3,8 @@ package com.remoty.services.detection;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.remoty.common.other.Constant;
-import com.remoty.common.other.Message;
-import com.remoty.gui.pages.MainActivity;
+import com.remoty.common.other.Constants;
+import com.remoty.common.datatypes.Message;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -16,7 +15,6 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 
 
@@ -27,7 +25,7 @@ public class DetectionBroadcastService {
 
 	public void sendDetectionMessage() {
 
-		Log.d(Constant.APP + Constant.DETECTION + Constant.BROADCAST, "New detection cycle.");
+		Log.d(Constants.APP + Constants.DETECTION + Constants.BROADCAST, "New detection cycle.");
 
 		// Opening a random port to send the packet (initializing socket)
 		try {
@@ -60,7 +58,7 @@ public class DetectionBroadcastService {
 
 		for (NetworkInterface networkInterface : interfaces) {
 
-			Log.d(Constant.APP + Constant.DETECTION + Constant.BROADCAST, "Current interface: " +
+			Log.d(Constants.APP + Constants.DETECTION + Constants.BROADCAST, "Current interface: " +
 					networkInterface.getName());
 
 			// Checking if current interface is a loopback interface and if it is up
@@ -78,7 +76,7 @@ public class DetectionBroadcastService {
 		// If the sendDetectionMessage address is valid, sending request
 		for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
 
-			Log.d(Constant.APP + Constant.DETECTION + Constant.BROADCAST, "Interface: " +
+			Log.d(Constants.APP + Constants.DETECTION + Constants.BROADCAST, "Interface: " +
 					networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString());
 
 			// Obtaining the sendDetectionMessage address of the current interface
@@ -86,7 +84,7 @@ public class DetectionBroadcastService {
 
 			// Checking if the sendDetectionMessage address is valid
 			if (broadcast == null) {
-				Log.d(Constant.APP + Constant.DETECTION + Constant.BROADCAST, "Interface: " +
+				Log.d(Constants.APP + Constants.DETECTION + Constants.BROADCAST, "Interface: " +
 						networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString() +
 						" - Broadcast address is null");
 				continue;
@@ -110,7 +108,7 @@ public class DetectionBroadcastService {
 
 		// If current interface is down or if it is loopback: continue
 		if (interfaceIsLoopback || !interfaceIsUp) {
-			Log.d(Constant.APP + Constant.DETECTION + Constant.BROADCAST, "Interface: " +
+			Log.d(Constants.APP + Constants.DETECTION + Constants.BROADCAST, "Interface: " +
 					networkInterface.getName() + " - is loopback or down");
 
 			return false;
@@ -125,7 +123,7 @@ public class DetectionBroadcastService {
 		// Sending the sendDetectionMessage packet
 		// Creating packet that will be sent through the DatagramSocket on the current sendDetectionMessage address
 		Message.PortMessage portMessage = new Message.PortMessage();
-		portMessage.port = Constant.LOCAL_DETECTION_RESPONSE_PORT;
+		portMessage.port = Constants.LOCAL_DETECTION_RESPONSE_PORT;
 
 		Gson gson = new Gson();
 		String jsonContent = gson.toJson(portMessage);
@@ -135,24 +133,24 @@ public class DetectionBroadcastService {
 		}
 		catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			Log.d(Constant.APP + Constant.DETECTION + Constant.BROADCAST, "Abort. Serialization exception.");
+			Log.d(Constants.APP + Constants.DETECTION + Constants.BROADCAST, "Abort. Serialization exception.");
 			return;
 		}
 
-		datagramPacket = new DatagramPacket(content, content.length, broadcastAddress, Constant.REMOTE_DETECTION_PORT);
+		datagramPacket = new DatagramPacket(content, content.length, broadcastAddress, Constants.REMOTE_DETECTION_PORT);
 		try {
 			datagramSocket.send(datagramPacket);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
-			Log.d(Constant.APP + Constant.DETECTION + Constant.BROADCAST, "Interface: " +
+			Log.d(Constants.APP + Constants.DETECTION + Constants.BROADCAST, "Interface: " +
 					networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString() +
 					" - Unable to send packet to" + broadcastAddress.getHostAddress() + " - Interface: " +
 					networkInterface.getDisplayName());
 		}
 
 		// Displaying success message
-		Log.d(Constant.APP + Constant.DETECTION + Constant.BROADCAST, "Interface: " +
+		Log.d(Constants.APP + Constants.DETECTION + Constants.BROADCAST, "Interface: " +
 				networkInterface.getName() + " - current address: " + interfaceAddress.getAddress().toString() +
 				" - Request packet sent to: " + broadcastAddress.getHostAddress() + " - Interface: " +
 				networkInterface.getDisplayName());

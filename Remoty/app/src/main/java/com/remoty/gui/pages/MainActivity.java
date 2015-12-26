@@ -22,14 +22,16 @@ import com.remoty.R;
 import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.events.ConnectionStateEventListener;
 import com.remoty.common.events.DetectionEventListener;
-import com.remoty.common.other.Constant;
+import com.remoty.common.other.Constants;
 import com.remoty.common.servicemanager.ConnectionManager;
-import com.remoty.common.other.ServerInfo;
+import com.remoty.common.datatypes.ServerInfo;
+import com.remoty.common.servicemanager.ServiceManager;
 import com.remoty.gui.items.ConnectionsListAdapter;
 import com.remoty.gui.items.ServerSelectionListener;
 import com.remoty.services.detection.DetectionService;
-import com.remoty.services.identity.LoadProfileImage;
-import com.remoty.services.identity.UserInfo;
+import com.remoty.common.servicemanager.IdentityManager;
+import com.remoty.gui.items.ImageLoaderAsyncTask;
+import com.remoty.common.datatypes.UserInfo;
 
 import java.util.List;
 
@@ -230,17 +232,21 @@ public class MainActivity extends IdentityActivity {
 
 	private void createUserProfile() {
 
-		UserInfo userInfo = serviceManager.getIdentityService().getUserInfo();
+		IdentityManager identityManager = serviceManager.getIdentityManager();
 
-		// Setting up user profile
-		TextView name = (TextView) findViewById(R.id.name);
-		TextView email = (TextView) findViewById(R.id.email);
-		CircleImageView image = (CircleImageView) findViewById(R.id.circleView);
-//		image.setImageResource(R.drawable.ic_account_circle_white_48dp);
+		if (identityManager.hasUserInfo()) {
 
-		name.setText(userInfo.getName());
-		email.setText(userInfo.getEmail());
-		new LoadProfileImage(image).execute(userInfo.getPicture());
+			// Setting up user profile
+			UserInfo userInfo = identityManager.getUserInfo();
+
+			TextView name = (TextView) findViewById(R.id.name);
+			TextView email = (TextView) findViewById(R.id.email);
+			CircleImageView image = (CircleImageView) findViewById(R.id.circleView);
+
+			name.setText(userInfo.getName());
+			email.setText(userInfo.getEmail());
+			new ImageLoaderAsyncTask(image).execute(userInfo.getPicture());
+		}
 	}
 
 // =================================================================================================
@@ -425,26 +431,38 @@ public class MainActivity extends IdentityActivity {
 
 	public void buttonFeedback(View view) {
 
-		Log.d(Constant.APP + Constant.MENU, "Button Feedback");
+		Log.d(Constants.APP + Constants.MENU, "Button Feedback");
 	}
 
 	public void buttonHelp(View view) {
 
-		Log.d(Constant.APP + Constant.MENU, "Button Help");
+		Log.d(Constants.APP + Constants.MENU, "Button Help");
 	}
 
 	public void buttonSignOut(View view) {
 
-		Log.d(Constant.APP + Constant.MENU, "Button Sign out");
+		Log.d(Constants.APP + Constants.MENU, "Button Sign out");
 
+		// Signing out from Google
 		Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
 			@Override
 			public void onResult(Status status) {
 
 				Log.d("Identity logout status", status.toString());
 
-				signOut();
+				// Clearing state of service manager
+				ServiceManager.getInstance().clear();
+
+				// Starting sign in activity
+				startSignInActivity();
 			}
 		});
+	}
+
+	public void startSignInActivity() {
+
+		Intent intent = new Intent(this, SignInActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
 	}
 }

@@ -1,4 +1,4 @@
-package com.remoty.services.identity;
+package com.remoty.common.datatypes;
 
 import com.google.gson.annotations.Expose;
 

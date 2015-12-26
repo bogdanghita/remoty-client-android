@@ -1,7 +1,18 @@
 package com.remoty.common.other;
 
 
-public class Constant {
+public class Constants {
+
+	public static final String SERVICES = "SRV-";
+	public final static String APP = "APP-";
+	public final static String LIFECYCLE = "LIFEC-";
+	public static final String DETECTION = "DET-";
+	public static final String BROADCAST = "BROAD-";
+	public static final String RESPONSE = "RESP-";
+	public static final String SERVERS_STATE_UPDATE_SERVICE = "SRVUP-";
+	public final static String KEYS = "KEYS-";
+	public final static String MENU = "MENU-";
+	public final static String SIGN_IN = "SIGN_IN";
 
 	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
 	public final static int DETECTION_RESPONSE_TIMEOUT = 500;
@@ -20,16 +31,6 @@ public class Constant {
 
 	public final static int MSG_SCHEDULE = 1000;
 
-	// Logging tags
-	public static final String SERVICES = "SRV-";
-	public final static String APP = "APP-";
-	public final static String LIFECYCLE = "LIFEC-";
-	public static final String DETECTION = "DET-";
-	public static final String BROADCAST = "BROAD-";
-	public static final String RESPONSE = "RESP-";
-	public static final String SERVERS_STATE_UPDATE_SERVICE = "SRVUP-";
-	public final static String KEYS = "KEYS-";
-	public final static String MENU = "MENU-";
-	public final static String SIGN_IN = "SIGN_IN";
+	public final static int RC_SIGN_IN = 9001;
 
 }

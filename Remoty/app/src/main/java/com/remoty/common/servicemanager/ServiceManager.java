@@ -1,8 +1,6 @@
 package com.remoty.common.servicemanager;
 
 
-import com.remoty.services.identity.IdentityService;
-
 public class ServiceManager {
 
 	private static ServiceManager instance = null;
@@ -13,14 +11,14 @@ public class ServiceManager {
 
 	private ConnectionManager connectionManager;
 
-	private IdentityService identityService;
+	private IdentityManager identityManager;
 
 	private ServiceManager() {
 
 		eventManager = new EventManager();
 		actionManager = new ActionManager(eventManager);
 		connectionManager = new ConnectionManager();
-		identityService = new IdentityService();
+		identityManager = new IdentityManager();
 	}
 
 	public synchronized static ServiceManager getInstance() {
@@ -43,8 +41,8 @@ public class ServiceManager {
 		return connectionManager;
 	}
 
-	public IdentityService getIdentityService() {
-		return identityService;
+	public IdentityManager getIdentityManager() {
+		return identityManager;
 	}
 
 	// TODO: Recheck this implementation. It should be ok, but this is important...
@@ -52,6 +50,7 @@ public class ServiceManager {
 
 		eventManager.clear();
 		connectionManager.clearSelection();
+		identityManager.clear();
 
 		// NOTE: This is not needed. Still, you can check again and maybe do a clear for safety...
 //		actionManager.clear();

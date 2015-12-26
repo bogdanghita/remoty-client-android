@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.remoty.R;
-import com.remoty.common.other.ConfigurationInfo;
+import com.remoty.common.datatypes.ConfigurationInfo;
 import com.remoty.gui.debug.DebugFragment;
 import com.remoty.gui.items.ConfigurationsListAdapter;
 

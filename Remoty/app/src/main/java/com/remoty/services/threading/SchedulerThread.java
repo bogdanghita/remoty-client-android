@@ -3,8 +3,7 @@ package com.remoty.services.threading;
 import android.os.Looper;
 import android.util.Log;
 
-import com.remoty.common.other.Constant;
-import com.remoty.gui.pages.MainActivity;
+import com.remoty.common.other.Constants;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -45,7 +44,7 @@ public class SchedulerThread extends LooperThread {
 		while (mThread.handler == null) {
 		}
 
-		handler.sendMessage(handler.obtainMessage(Constant.MSG_SCHEDULE));
+		handler.sendMessage(handler.obtainMessage(Constants.MSG_SCHEDULE));
 
 		Looper.loop();
 	}

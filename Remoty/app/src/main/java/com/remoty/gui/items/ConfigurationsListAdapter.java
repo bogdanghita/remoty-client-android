@@ -17,9 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.remoty.R;
-import com.remoty.common.other.Constant;
+import com.remoty.common.other.Constants;
 import com.remoty.common.servicemanager.ServiceManager;
-import com.remoty.common.other.ConfigurationInfo;
+import com.remoty.common.datatypes.ConfigurationInfo;
 import com.remoty.gui.pages.RemoteControlActivity;
 
 import java.util.LinkedList;
@@ -144,7 +144,7 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 
-				Log.d(Constant.MENU, "Config: " + position + ", Menu item: " + item);
+				Log.d(Constants.MENU, "Config: " + position + ", Menu item: " + item);
 
 				return true;
 			}
