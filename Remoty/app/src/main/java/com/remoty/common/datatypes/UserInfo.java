@@ -46,4 +46,8 @@ public class UserInfo {
 	public String toString() {
 		return name;
 	}
+
+	public UserInfo clone() {
+		return new UserInfo(name, email, picture);
+	}
 }

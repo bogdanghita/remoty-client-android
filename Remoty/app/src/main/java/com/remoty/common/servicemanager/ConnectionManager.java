@@ -57,7 +57,7 @@ public class ConnectionManager {
 
 		selectedConnection = connection;
 
-		if(connection == null) {
+		if (connection == null) {
 			connectionState = ConnectionState.NONE;
 		}
 	}
@@ -75,6 +75,12 @@ public class ConnectionManager {
 	 * @return - the connection info or null if there is no connection.
 	 */
 	public synchronized ServerInfo getSelection() {
-		return selectedConnection;
+
+		if(selectedConnection != null) {
+			return selectedConnection.clone();
+		}
+		else {
+			return null;
+		}
 	}
 }

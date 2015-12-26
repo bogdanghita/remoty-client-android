@@ -12,7 +12,13 @@ public class IdentityManager {
 	}
 
 	public synchronized UserInfo getUserInfo() {
-		return userInfo;
+
+		if (userInfo != null) {
+			return userInfo.clone();
+		}
+		else {
+			return null;
+		}
 	}
 
 	public synchronized boolean hasUserInfo() {
