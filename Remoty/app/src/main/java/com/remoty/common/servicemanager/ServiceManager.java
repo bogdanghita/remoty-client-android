@@ -1,6 +1,8 @@
 package com.remoty.common.servicemanager;
 
 
+import com.remoty.services.identity.IdentityService;
+
 public class ServiceManager {
 
 	private static ServiceManager instance = null;
@@ -11,11 +13,14 @@ public class ServiceManager {
 
 	private ConnectionManager connectionManager;
 
+	private IdentityService identityService;
+
 	private ServiceManager() {
 
 		eventManager = new EventManager();
 		actionManager = new ActionManager(eventManager);
 		connectionManager = new ConnectionManager();
+		identityService = new IdentityService();
 	}
 
 	public synchronized static ServiceManager getInstance() {
@@ -36,6 +41,10 @@ public class ServiceManager {
 
 	public ConnectionManager getConnectionManager() {
 		return connectionManager;
+	}
+
+	public IdentityService getIdentityService() {
+		return identityService;
 	}
 
 	// TODO: Recheck this implementation. It should be ok, but this is important...
