@@ -1,5 +1,6 @@
 package com.remoty.gui.pages;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +18,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.remoty.R;
 
 public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -25,6 +28,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 	public final static int RC_SIGN_IN = 9001;
 
 	GoogleApiClient mGoogleApiClient;
+
+	ProgressDialog mProgressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +67,33 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 				buttonSignIn(v);
 			}
 		});
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// Silent sign in
+		OptionalPendingResult<GoogleSignInResult> pendingResult = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+
+		if (pendingResult.isDone()) {
+			// There's immediate result available.
+			handleSignInResult(pendingResult.get());
+		}
+		else {
+			// There's no immediate result ready, displays some progress indicator and waits for the
+			// async callback.
+			showProgressIndicator();
+
+			pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+				@Override
+				public void onResult(GoogleSignInResult result) {
+
+					handleSignInResult(result);
+					hideProgressIndicator();
+				}
+			});
+		}
 	}
 
 	@Override
@@ -114,6 +146,22 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 			Log.d(SIGN_IN, "handleSignInResult(): " + "id: " + id);
 			Log.d(SIGN_IN, "handleSignInResult(): " + "idToken: " + idToken);
 			Log.d(SIGN_IN, "handleSignInResult(): " + "serverAuthCode: " + serverAuthCode);
+		}
+	}
+
+	private void showProgressIndicator() {
+		if (mProgressDialog == null) {
+			mProgressDialog = new ProgressDialog(this);
+			mProgressDialog.setMessage("Loading...");
+			mProgressDialog.setIndeterminate(true);
+		}
+
+		mProgressDialog.show();
+	}
+
+	private void hideProgressIndicator() {
+		if (mProgressDialog != null && mProgressDialog.isShowing()) {
+			mProgressDialog.hide();
 		}
 	}
 }
