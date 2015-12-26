@@ -136,6 +136,14 @@ public class MainActivity extends IdentityActivity {
 	}
 
 	@Override
+	public boolean onMenuOpened(final int featureId, final Menu menu) {
+
+		toggleNavigationDrawer();
+
+		return true;
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -150,16 +158,9 @@ public class MainActivity extends IdentityActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-		DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
 		switch (id) {
 			case R.id.home: {
-				if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
-					mDrawerLayout.closeDrawer(Gravity.LEFT);
-				}
-				else {
-					mDrawerLayout.openDrawer(Gravity.LEFT);
-				}
+				toggleNavigationDrawer();
 				break;
 			}
 			default:
@@ -175,6 +176,18 @@ public class MainActivity extends IdentityActivity {
 // =================================================================================================
 //	GUI
 // =================================================================================================
+
+	private void toggleNavigationDrawer() {
+
+		DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+		if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
+			mDrawerLayout.closeDrawer(Gravity.LEFT);
+		}
+		else {
+			mDrawerLayout.openDrawer(Gravity.LEFT);
+		}
+	}
 
 	private void addInitialFragment() {
 
