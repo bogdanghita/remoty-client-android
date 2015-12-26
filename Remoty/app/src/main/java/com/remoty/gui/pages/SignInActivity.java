@@ -2,6 +2,7 @@ package com.remoty.gui.pages;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,7 +12,9 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.remoty.R;
@@ -78,5 +81,39 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
 		Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
 		startActivityForResult(signInIntent, RC_SIGN_IN);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		// Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+		if (requestCode == RC_SIGN_IN) {
+
+			GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+			handleSignInResult(result);
+		}
+	}
+
+	private void handleSignInResult(GoogleSignInResult result) {
+
+		Log.d(SIGN_IN, "handleSignInResult(): " + result.isSuccess());
+
+		if (result.isSuccess()) {
+
+			GoogleSignInAccount acct = result.getSignInAccount();
+
+			String email = acct.getEmail();
+			String name = acct.getDisplayName();
+			Uri photo = acct.getPhotoUrl();
+			String id = acct.getId();
+			String idToken = acct.getIdToken();
+			String serverAuthCode = acct.getServerAuthCode();
+
+			Log.d(SIGN_IN, "handleSignInResult(): " + email + ", " + name + ", " + photo);
+			Log.d(SIGN_IN, "handleSignInResult(): " + "id: " + id);
+			Log.d(SIGN_IN, "handleSignInResult(): " + "idToken: " + idToken);
+			Log.d(SIGN_IN, "handleSignInResult(): " + "serverAuthCode: " + serverAuthCode);
+		}
 	}
 }
