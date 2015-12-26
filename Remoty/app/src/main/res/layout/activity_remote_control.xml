@@ -5,22 +5,7 @@
               android:orientation="vertical"
               tools:context="com.remoty.gui.pages.RemoteControlActivity">
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical">
-
-		<android.support.v7.widget.Toolbar
-			android:id="@+id/toolbar"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
-			android:background="?attr/colorPrimary"
-			android:elevation="6dp"
-			android:minHeight="?attr/actionBarSize"
-			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-	</LinearLayout>
+	<include layout="@layout/toolbar"/>
 
 	<RelativeLayout
 		android:layout_width="match_parent"
