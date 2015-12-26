@@ -13,6 +13,7 @@ import com.remoty.common.other.Constants;
 public class IdentityActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
 
 	protected GoogleApiClient mGoogleApiClient;
+	protected GoogleSignInOptions gso;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +21,7 @@ public class IdentityActivity extends BaseActivity implements GoogleApiClient.On
 
 		// Configure sign-in to request the user's ID, email address, and basic profile.
 		// ID and basic profile are included in DEFAULT_SIGN_IN
-		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+		gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 				.requestEmail()
 				.build();
 

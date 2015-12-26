@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.remoty.R;
@@ -31,13 +33,7 @@ public class SignInActivity extends IdentityActivity {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				buttonSignIn(v);
-			}
-		});
+		configureSignInButton();
 	}
 
 	@Override
@@ -65,6 +61,37 @@ public class SignInActivity extends IdentityActivity {
 					hideProgressIndicator();
 				}
 			});
+		}
+	}
+
+	public void configureSignInButton() {
+
+		SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+		signInButton.setSize(SignInButton.SIZE_STANDARD);
+		signInButton.setScopes(gso.getScopeArray());
+
+		configureSignInButtonText(signInButton, "Sign in with Google");
+
+		signInButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				buttonSignIn(v);
+			}
+		});
+	}
+
+	private void configureSignInButtonText(SignInButton signInButton, String buttonText) {
+
+		for (int i = 0; i < signInButton.getChildCount(); i++) {
+			View v = signInButton.getChildAt(i);
+
+			if (v instanceof TextView) {
+				TextView tv = (TextView) v;
+//				tv.setTextSize(15);
+//				tv.setTypeface(null, Typeface.NORMAL);
+				tv.setText(buttonText);
+				return;
+			}
 		}
 	}
 
