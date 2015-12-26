@@ -1,8 +1,7 @@
 package com.remoty.services.detection;
 
-import com.remoty.common.other.Constant;
+import com.remoty.common.other.Constants;
 import com.remoty.common.servicemanager.EventManager;
-import com.remoty.gui.pages.MainActivity;
 import com.remoty.services.threading.TaskScheduler;
 
 
@@ -35,7 +34,7 @@ public class DetectionService {
 	public void start() {
 
 		if (!timer.isRunning()) {
-			timer.start(detectionRunnable, Constant.DETECTION_INTERVAL);
+			timer.start(detectionRunnable, Constants.DETECTION_INTERVAL);
 		}
 	}
 

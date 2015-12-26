@@ -1,6 +1,6 @@
 package com.remoty.common.servicemanager;
 
-import com.remoty.common.other.ServerInfo;
+import com.remoty.common.datatypes.ServerInfo;
 
 
 public class ConnectionManager {

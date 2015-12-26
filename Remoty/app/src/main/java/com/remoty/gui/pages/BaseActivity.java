@@ -2,7 +2,7 @@ package com.remoty.gui.pages;
 
 import android.os.Bundle;
 
-import com.remoty.common.other.ServerInfo;
+import com.remoty.common.datatypes.ServerInfo;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.ServiceManager;
 import com.remoty.gui.debug.DebugActivity;

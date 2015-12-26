@@ -1,9 +1,8 @@
 package com.remoty.services.remotecontrol;
 
-import com.remoty.common.other.Constant;
+import com.remoty.common.other.Constants;
 import com.remoty.common.servicemanager.EventManager;
-import com.remoty.gui.pages.MainActivity;
-import com.remoty.common.other.Message;
+import com.remoty.common.datatypes.Message;
 
 
 public class MessageDispatchRunnable implements Runnable {
@@ -26,7 +25,7 @@ public class MessageDispatchRunnable implements Runnable {
 		this.ip = ip;
 		this.port = port;
 
-		messageDispatcher = new MessageDispatchService(eventManager, Constant.ACCELEROMETER_TIMEOUT);
+		messageDispatcher = new MessageDispatchService(eventManager, Constants.ACCELEROMETER_TIMEOUT);
 
 		this.message = message;
 	}

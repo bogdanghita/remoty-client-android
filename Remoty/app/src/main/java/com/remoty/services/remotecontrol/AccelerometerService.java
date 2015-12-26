@@ -6,10 +6,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Vibrator;
 
-import com.remoty.common.other.Constant;
+import com.remoty.common.other.Constants;
 import com.remoty.common.servicemanager.EventManager;
-import com.remoty.gui.pages.MainActivity;
-import com.remoty.common.other.Message;
+import com.remoty.common.datatypes.Message;
 import com.remoty.services.threading.TaskScheduler;
 
 
@@ -58,7 +57,7 @@ public class AccelerometerService implements SensorEventListener {
 			// Registering sensor listener
 			mSensorManager.registerListener(this, mAccelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
 
-			timer.start(accRunnable, Constant.ACCELEROMETER_INTERVAL);
+			timer.start(accRunnable, Constants.ACCELEROMETER_INTERVAL);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.remoty.common.other;
+package com.remoty.common.datatypes;
 
 
 public class KeysButtonInfo {

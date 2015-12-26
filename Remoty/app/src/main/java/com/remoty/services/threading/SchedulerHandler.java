@@ -4,8 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.remoty.common.other.Constant;
-import com.remoty.gui.pages.MainActivity;
+import com.remoty.common.other.Constants;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -31,9 +30,9 @@ public class SchedulerHandler extends Handler {
 	@Override
 	public void handleMessage(Message msg) {
 
-		if (msg.what == Constant.MSG_SCHEDULE) {
+		if (msg.what == Constants.MSG_SCHEDULE) {
 
-			this.sendMessageDelayed(this.obtainMessage(Constant.MSG_SCHEDULE), mInterval.longValue());
+			this.sendMessageDelayed(this.obtainMessage(Constants.MSG_SCHEDULE), mInterval.longValue());
 			Log.d(TaskScheduler.TAG_TIMER, "Sent with delay: " + mInterval);
 
 			mThread.handler.post(mRunnable);

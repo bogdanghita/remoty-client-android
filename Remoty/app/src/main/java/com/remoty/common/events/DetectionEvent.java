@@ -1,7 +1,7 @@
 package com.remoty.common.events;
 
 import com.remoty.common.servicemanager.EventManager;
-import com.remoty.common.other.ServerInfo;
+import com.remoty.common.datatypes.ServerInfo;
 
 import java.util.List;
 

@@ -6,12 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.remoty.R;
-import com.remoty.common.other.ServerInfo;
+import com.remoty.common.datatypes.ServerInfo;
 import com.remoty.common.servicemanager.ServiceManager;
 
 import java.util.LinkedList;

@@ -6,8 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 
-import com.remoty.common.other.Constant;
-import com.remoty.gui.pages.MainActivity;
+import com.remoty.common.other.Constants;
 
 
 public class DebugActivity extends AppCompatActivity {
@@ -16,70 +15,70 @@ public class DebugActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onCreate");
+		Log.d(Constants.APP + Constants.LIFECYCLE, this.getClass().getName() + " - " + "onCreate");
 	}
 
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 
-		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onRestoreInstanceState");
+		Log.d(Constants.APP + Constants.LIFECYCLE, this.getClass().getName() + " - " + "onRestoreInstanceState");
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 
-		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onSaveInstanceState");
+		Log.d(Constants.APP + Constants.LIFECYCLE, this.getClass().getName() + " - " + "onSaveInstanceState");
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 
-		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onStart");
+		Log.d(Constants.APP + Constants.LIFECYCLE, this.getClass().getName() + " - " + "onStart");
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onResume");
+		Log.d(Constants.APP + Constants.LIFECYCLE, this.getClass().getName() + " - " + "onResume");
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 
-		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onPause");
+		Log.d(Constants.APP + Constants.LIFECYCLE, this.getClass().getName() + " - " + "onPause");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
 
-		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onStop");
+		Log.d(Constants.APP + Constants.LIFECYCLE, this.getClass().getName() + " - " + "onStop");
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
-		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onDestroy");
+		Log.d(Constants.APP + Constants.LIFECYCLE, this.getClass().getName() + " - " + "onDestroy");
 	}
 
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
 
-		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onBackPressed");
+		Log.d(Constants.APP + Constants.LIFECYCLE, this.getClass().getName() + " - " + "onBackPressed");
 	}
 
 	@Override
 	public boolean onMenuOpened(final int featureId, final Menu menu) {
 		boolean result = super.onMenuOpened(featureId, menu);
 
-		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onMenuOpened");
+		Log.d(Constants.APP + Constants.LIFECYCLE, this.getClass().getName() + " - " + "onMenuOpened");
 
 		return result;
 	}
@@ -88,6 +87,6 @@ public class DebugActivity extends AppCompatActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
-		Log.d(Constant.APP + Constant.LIFECYCLE, this.getClass().getName() + " - " + "onConfigurationChanged");
+		Log.d(Constants.APP + Constants.LIFECYCLE, this.getClass().getName() + " - " + "onConfigurationChanged");
 	}
 }

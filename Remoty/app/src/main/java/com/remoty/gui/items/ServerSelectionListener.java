@@ -1,6 +1,6 @@
 package com.remoty.gui.items;
 
-import com.remoty.common.other.ServerInfo;
+import com.remoty.common.datatypes.ServerInfo;
 
 
 public interface ServerSelectionListener {

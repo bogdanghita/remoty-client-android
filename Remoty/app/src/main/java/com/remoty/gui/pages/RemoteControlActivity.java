@@ -15,15 +15,15 @@ import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
 import com.remoty.R;
-import com.remoty.common.other.ServerInfo;
+import com.remoty.common.datatypes.ServerInfo;
 import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.events.ConnectionStateEventListener;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.ServiceManager;
 import com.remoty.services.remotecontrol.AccelerometerService;
-import com.remoty.common.other.KeysButtonInfo;
+import com.remoty.common.datatypes.KeysButtonInfo;
 import com.remoty.services.remotecontrol.ButtonService;
-import com.remoty.common.other.Message;
+import com.remoty.common.datatypes.Message;
 import com.remoty.services.remotecontrol.RemoteControlService;
 
 import java.util.LinkedList;
