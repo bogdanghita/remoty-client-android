@@ -30,9 +30,6 @@ public class SignInActivity extends IdentityActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sign_in);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-
 		configureSignInButton();
 	}
 
