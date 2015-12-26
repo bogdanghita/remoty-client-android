@@ -10,14 +10,13 @@
 		android:allowBackup="true"
 		android:icon="@mipmap/ic_launcher"
 		android:label="@string/app_name"
-		android:theme="@style/AppTheme">
+		android:theme="@style/BlueCyan">
 
 		<activity
 			android:name=".gui.pages.MainActivity"
 			android:configChanges="orientation|keyboardHidden"
 			android:label="@string/app_name"
 			android:screenOrientation="portrait">
-
 			<!-- <intent-filter> -->
 			<!-- <action android:name="android.intent.action.MAIN" /> -->
 
@@ -40,8 +39,7 @@
 		<activity
 			android:name=".gui.pages.SignInActivity"
 			android:label="@string/app_name"
-			android:screenOrientation="portrait"
-			android:theme="@style/AppTheme">
+			android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 
