@@ -64,10 +64,6 @@ public class RemoteControlActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 
-		// Keys initialization
-		List<KeysButtonInfo> buttonInfoList = generateNFSMW2012Buttons();
-		buttonService = serviceManager.getActionManager().getKeysService();
-
 		// Subscribing to connection state events
 		serviceManager.getEventManager().subscribe(connectionStateEventListener);
 
@@ -129,6 +125,9 @@ public class RemoteControlActivity extends BaseActivity {
 	}
 
 	private void initializeServices() {
+
+		// Button service initialization
+		buttonService = serviceManager.getActionManager().getKeysService();
 
 		// Accelerometer initialization
 		// TODO: Think if we want this to be done by the accelerometer service

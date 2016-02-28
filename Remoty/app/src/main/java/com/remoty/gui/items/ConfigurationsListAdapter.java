@@ -17,9 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.remoty.R;
+import com.remoty.common.datatypes.ConfigurationEntry;
 import com.remoty.common.other.Constants;
 import com.remoty.common.servicemanager.ServiceManager;
-import com.remoty.common.datatypes.ConfigurationInfo;
 import com.remoty.gui.pages.RemoteControlActivity;
 
 import java.util.LinkedList;
@@ -47,9 +47,9 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 	}
 
 	private LayoutInflater inflater;
-	private LinkedList<ConfigurationInfo> configurationList;
+	private LinkedList<ConfigurationEntry> configurationList;
 
-	Context context;
+	private Context context;
 
 	public ConfigurationsListAdapter(Context context) {
 
@@ -61,7 +61,7 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 	}
 
 	// Update dataset
-	public void setConfigurationList(List<ConfigurationInfo> s) {
+	public void setConfigurationList(List<ConfigurationEntry> s) {
 
 		configurationList.clear();
 		configurationList.addAll(s);
@@ -124,7 +124,7 @@ public class ConfigurationsListAdapter extends RecyclerView.Adapter<Configuratio
 
 		Bundle args = new Bundle();
 
-		ConfigurationInfo configuration = configurationList.get(position);
+		ConfigurationEntry configuration = configurationList.get(position);
 
 		args.putString(RemoteControlActivity.KEY_NAME, configuration.getName());
 		args.putString(RemoteControlActivity.KEY_FILE, configuration.getFile());
