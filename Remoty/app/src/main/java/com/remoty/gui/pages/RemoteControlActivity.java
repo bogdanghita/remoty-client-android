@@ -9,17 +9,21 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.util.JsonReader;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
+import com.google.gson.Gson;
 import com.remoty.R;
 import com.remoty.common.datatypes.ConfigurationData;
 import com.remoty.common.datatypes.ServerInfo;
 import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.events.ConnectionStateEventListener;
+import com.remoty.common.other.Constants;
 import com.remoty.common.servicemanager.ConnectionManager;
 import com.remoty.common.servicemanager.ServiceManager;
 import com.remoty.services.remotecontrol.AccelerometerService;
@@ -28,8 +32,13 @@ import com.remoty.services.remotecontrol.ButtonService;
 import com.remoty.common.datatypes.Message;
 import com.remoty.services.remotecontrol.RemoteControlService;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class RemoteControlActivity extends BaseActivity {
@@ -301,16 +310,34 @@ public class RemoteControlActivity extends BaseActivity {
 
 	private void loadConfigurationData(String configurationFile) {
 
-		// HERE
+		configurationData = readConfigurationFile(configurationFile);
 
-		// TODO: read configuration file and create the configuration data from it
+		if(configurationData == null) {
 
-		configurationData = new ConfigurationData();
+			// TODO: naspa...
+		}
+	}
 
-		configurationData.hasButtons = true;
-		configurationData.hasSteeringWheel = true;
+	private ConfigurationData readConfigurationFile(String filename) {
 
-		configurationData.buttons = generateNFSMW2012Buttons();
+		ConfigurationData result = null;
+
+		try {
+			InputStream is = getAssets().open(filename);
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+			Gson gson = new Gson();
+
+			result = gson.fromJson(reader, ConfigurationData.class);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+
+			Log.d(Constants.APP + Constants.CONFIG, "Error reading configuration file: " + filename);
+		}
+
+		return result;
 	}
 
 // =================================================================================================

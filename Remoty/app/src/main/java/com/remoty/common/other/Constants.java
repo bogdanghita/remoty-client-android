@@ -12,7 +12,8 @@ public class Constants {
 	public static final String SERVERS_STATE_UPDATE_SERVICE = "SRVUP-";
 	public final static String KEYS = "KEYS-";
 	public final static String MENU = "MENU-";
-	public final static String SIGN_IN = "SIGN_IN";
+	public final static String SIGN_IN = "SIGN_IN-";
+	public final static String CONFIG = "CONF-";
 
 	public final static int ASYNC_TASK_GET_TIMEOUT = 600;
 	public final static int DETECTION_RESPONSE_TIMEOUT = 500;

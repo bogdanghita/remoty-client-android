@@ -44,7 +44,7 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 		List<ConfigurationEntry> configurations = new LinkedList<>();
 
-		ConfigurationEntry c = new ConfigurationEntry("NFS Most Wanted 2012", "drive_config_file");
+		ConfigurationEntry c = new ConfigurationEntry("NFS Most Wanted 2012", "config/nfsmw2012");
 
 		configurations.add(c);
 
