@@ -1,5 +1,6 @@
 package com.remoty.gui.pages;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -15,6 +16,7 @@ import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
 import com.remoty.R;
+import com.remoty.common.datatypes.ConfigurationData;
 import com.remoty.common.datatypes.ServerInfo;
 import com.remoty.common.events.ConnectionStateEvent;
 import com.remoty.common.events.ConnectionStateEventListener;
@@ -40,6 +42,8 @@ public class RemoteControlActivity extends BaseActivity {
 	private AccelerometerService accService;
 	private ButtonService buttonService;
 
+	private ConfigurationData configurationData;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,6 +53,17 @@ public class RemoteControlActivity extends BaseActivity {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		// Retrieving configuration name and file from intent
+		Intent intent = getIntent();
+		String configurationName = intent.getStringExtra(KEY_NAME);
+		String configurationFile = intent.getStringExtra(KEY_FILE);
+
+		// Setting configuration title in the action bar
+		setTitle(configurationName);
+
+		// Reading configuration data from file
+		loadConfigurationData(configurationFile);
 
 		// Initializing services
 		serviceManager = ServiceManager.getInstance();
@@ -127,17 +142,21 @@ public class RemoteControlActivity extends BaseActivity {
 	private void initializeServices() {
 
 		// Button service initialization
-		buttonService = serviceManager.getActionManager().getKeysService();
+		if(configurationData.hasButtons) {
+			buttonService = serviceManager.getActionManager().getKeysService();
+		}
 
 		// Accelerometer initialization
-		// TODO: Think if we want this to be done by the accelerometer service
-		// TODO: Also think if this is ok to be done in onCreate() or it should be done in onStart()
-		// TODO: Do this things the right way (check if the sensor is there etc.)
-		// Obtaining accelerometer sensor
-		SensorManager mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		Sensor mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-		accService = serviceManager.getActionManager().getAccelerometerService(mSensorManager, mAccelerometerSensor, vibrator);
+		if(configurationData.hasSteeringWheel) {
+			// TODO: Think if we want this to be done by the accelerometer service
+			// TODO: Also think if this is ok to be done in onCreate() or it should be done in onStart()
+			// TODO: Do this things the right way (check if the sensor is there etc.)
+			// Obtaining accelerometer sensor
+			SensorManager mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+			Sensor mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+			accService = serviceManager.getActionManager().getAccelerometerService(mSensorManager, mAccelerometerSensor, vibrator);
+		}
 	}
 
 	private void setOnGlobalLayoutListener() {
@@ -164,19 +183,29 @@ public class RemoteControlActivity extends BaseActivity {
 					layoutHolder.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 				}
 
-				// TODO: refine this, think of it and make it safe (check if key service is ok etc.)
-				buttonService.populateLayout(getApplicationContext(), generateNFSMW2012Buttons(), keysLayout, buttonLayoutWidth, buttonLayoutHeight);
+				// Adding buttons to layout
+				if (configurationData.hasButtons) {
+					populateLayout(keysLayout, buttonLayoutWidth, buttonLayoutHeight);
+				}
 			}
 		});
+	}
+
+	private void populateLayout(RelativeLayout keysLayout, int buttonLayoutWidth, int buttonLayoutHeight) {
+
+		List<KeysButtonInfo> buttons = configurationData.buttons;
+
+		// TODO: refine this, think of it and make it safe (check if key service is ok etc.)
+		buttonService.populateLayout(getApplicationContext(), buttons, keysLayout, buttonLayoutWidth, buttonLayoutHeight);
 	}
 
 	private void startServices() {
 
 //		Toast.makeText(getActivity(), "Starting connection services", Toast.LENGTH_LONG).show();
 
-		// TODO: Review this
 		// This activity is only launched if there is a connection selected. If it is recreated and
 		// launched from a previous state then the selected connection will also be persisted
+		// For more details see RemoteControlService -> InitRemoteControlAsyncTask -> doInBackground()
 		ServerInfo server = serviceManager.getConnectionManager().getSelection();
 		Message.RemoteControlPortsMessage ports = remoteControlService.getRemoteControlPorts(server);
 
@@ -187,14 +216,18 @@ public class RemoteControlActivity extends BaseActivity {
 			return;
 		}
 
-		accService.init(server.ip, ports.accelerometerPort);
-		buttonService.init(server.ip, ports.buttonPort);
-
-		if (accService.isReady()) {
-			accService.start();
+		if(configurationData.hasButtons) {
+			buttonService.init(server.ip, ports.buttonPort);
+			if (buttonService.isReady()) {
+				buttonService.start();
+			}
 		}
-		if (buttonService.isReady()) {
-			buttonService.start();
+
+		if(configurationData.hasSteeringWheel) {
+			accService.init(server.ip, ports.accelerometerPort);
+			if (accService.isReady()) {
+				accService.start();
+			}
 		}
 	}
 
@@ -202,15 +235,14 @@ public class RemoteControlActivity extends BaseActivity {
 
 //		Toast.makeText(getActivity(), "Stopping connection services", Toast.LENGTH_LONG).show();
 
-		if (accService.isRunning()) {
+		if (configurationData.hasSteeringWheel && accService.isRunning()) {
 			accService.stop();
+			accService.clear();
 		}
-		if (buttonService.isRunning()) {
+		if (configurationData.hasButtons && buttonService.isRunning()) {
 			buttonService.stop();
+			buttonService.clear();
 		}
-
-		accService.clear();
-		buttonService.clear();
 	}
 
 // =================================================================================================
@@ -262,6 +294,24 @@ public class RemoteControlActivity extends BaseActivity {
 			});
 		}
 	};
+
+// =================================================================================================
+//	TESTING
+// =================================================================================================
+
+	private void loadConfigurationData(String configurationFile) {
+
+		// HERE
+
+		// TODO: read configuration file and create the configuration data from it
+
+		configurationData = new ConfigurationData();
+
+		configurationData.hasButtons = true;
+		configurationData.hasSteeringWheel = true;
+
+		configurationData.buttons = generateNFSMW2012Buttons();
+	}
 
 // =================================================================================================
 //	TESTING
