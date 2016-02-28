@@ -1,12 +1,12 @@
 package com.remoty.common.datatypes;
 
 
-public class ConfigurationInfo {
+public class ConfigurationEntry {
 
 	private String name;
 	private String file;
 
-	public ConfigurationInfo(String name, String file) {
+	public ConfigurationEntry(String name, String file) {
 		this.name = name;
 		this.file = file;
 	}

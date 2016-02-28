@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.remoty.R;
-import com.remoty.common.datatypes.ConfigurationInfo;
+import com.remoty.common.datatypes.ConfigurationEntry;
 import com.remoty.gui.debug.DebugFragment;
 import com.remoty.gui.items.ConfigurationsListAdapter;
 
@@ -40,15 +40,15 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 	//TEST METHODS
 
-	public List<ConfigurationInfo> generateTestConfigurations() {
+	public List<ConfigurationEntry> generateTestConfigurations() {
 
-		List<ConfigurationInfo> configurations = new LinkedList<>();
+		List<ConfigurationEntry> configurations = new LinkedList<>();
 
-		ConfigurationInfo c = new ConfigurationInfo("NFS Most Wanted 2012", "drive_config_file");
+		ConfigurationEntry c = new ConfigurationEntry("NFS Most Wanted 2012", "drive_config_file");
 
 		configurations.add(c);
 
-        ConfigurationInfo c1 = new ConfigurationInfo("Dummy", "drive_config_file");
+        ConfigurationEntry c1 = new ConfigurationEntry("Dummy", "drive_config_file");
 
         configurations.add(c1);
 //        configurations.add(c1);
