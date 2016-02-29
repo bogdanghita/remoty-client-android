@@ -48,7 +48,7 @@ public class MyConfigurationsFragment extends DebugFragment {
 
 		configurations.add(c);
 
-        ConfigurationEntry c1 = new ConfigurationEntry("Dummy", "dummy_config_file");
+        ConfigurationEntry c1 = new ConfigurationEntry("Dummy", "config/dummy_config_file");
 
         configurations.add(c1);
 

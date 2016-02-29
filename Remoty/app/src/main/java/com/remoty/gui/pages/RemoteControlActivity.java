@@ -305,7 +305,7 @@ public class RemoteControlActivity extends BaseActivity {
 	};
 
 // =================================================================================================
-//	TESTING
+//	CONFIGURATION LOADER
 // =================================================================================================
 
 	private void loadConfigurationData(String configurationFile) {
@@ -314,7 +314,8 @@ public class RemoteControlActivity extends BaseActivity {
 
 		if(configurationData == null) {
 
-			// TODO: naspa...
+			// TODO: if this happens the configuration can't be loaded...
+			// show a toast or something, and make sure the app does not crash
 		}
 	}
 
@@ -338,49 +339,5 @@ public class RemoteControlActivity extends BaseActivity {
 		}
 
 		return result;
-	}
-
-// =================================================================================================
-//	TESTING
-// =================================================================================================
-
-	// Generates the buttons configuration for NFS Most Wanted 2012
-	private List<KeysButtonInfo> generateNFSMW2012Buttons() {
-
-		List<KeysButtonInfo> list = new LinkedList<>();
-
-		KeysButtonInfo buttonInfo;
-
-		// Driving buttons
-		buttonInfo = new KeysButtonInfo("NOS", "ButtonA_", (float) 0, (float) 0, (float) 0.3, (float) 0.5);
-		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("Handbrake", "ButtonX_", (float) 0, (float) 0.5, (float) 0.3, (float) 0.5);
-		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("Acceleration", "ButtonRT_", (float) 0.7, (float) 0, (float) 0.3, (float) 0.5);
-		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("Brake/Reverse", "ButtonLT_", (float) 0.7, (float) 0.5, (float) 0.3, (float) 0.5);
-		list.add(buttonInfo);
-
-		// Menu buttons
-		buttonInfo = new KeysButtonInfo("swap", "ButtonY_", (float) 0.35, (float) 0, (float) 0.15, (float) 0.25);
-		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("back", "ButtonB_", (float) 0.35, (float) 0.25, (float) 0.15, (float) 0.25);
-		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("start", "ButtonStart_", (float) 0.5, (float) 0, (float) 0.15, (float) 0.25);
-		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("enter", "ButtonA_", (float) 0.5, (float) 0.25, (float) 0.15, (float) 0.25);
-		list.add(buttonInfo);
-
-		// Directional buttons
-		buttonInfo = new KeysButtonInfo("^", "ButtonUp_", (float) 0.45, (float) 0.5, (float) 0.10, (float) (1 / 6.));
-		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("v", "ButtonDown_", (float) 0.45, (float) (0.5 + 2 / 6.), (float) 0.10, (float) (1 / 6.));
-		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo("<", "ButtonLeft_", (float) 0.35, (float) (0.5 + 1 / 6.), (float) 0.10, (float) (1 / 6.));
-		list.add(buttonInfo);
-		buttonInfo = new KeysButtonInfo(">", "ButtonRight_", (float) 0.55, (float) (0.5 + 1 / 6.), (float) 0.10, (float) (1 / 6.));
-		list.add(buttonInfo);
-
-		return list;
 	}
 }

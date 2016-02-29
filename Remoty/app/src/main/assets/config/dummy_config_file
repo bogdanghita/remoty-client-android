@@ -1,0 +1,12 @@
+{
+  "hasSteeringWheel" : false,
+  "hasButtons" : true,
+  "buttons" : [ {
+    "name" : "NOS",
+    "action" : "ButtonA_",
+    "startXPercent" : 0.0,
+    "startYPercent" : 0.0,
+    "widthPercent" : 0.3,
+    "heightPercent" : 0.5
+  } ]
+}
