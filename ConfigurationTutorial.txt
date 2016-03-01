@@ -1,0 +1,47 @@
+Configuration tutorial
+
+- configurations are now loaded from JSON files
+- these files are under app/src/main/assets/config
+- a configuration file contains the JSON serialization of a ConfigurationData object
+
+- the configurations that will be loaded must be listed in config.json (app/src/main/assets)
+- config.json is a list of ConfigurationEntry
+
+public class ConfigurationEntry {
+
+	String name;
+	String file;
+}
+
+class ConfigurationData {
+
+	boolean hasSteeringWheel;
+	boolean hasButtons;
+
+	List<KeysButtonInfo> buttons;
+}
+
+class KeysButtonInfo {
+
+	String name;
+	String action;
+
+	float startXPercent;
+	float startYPercent;
+
+	float widthPercent;
+	float heightPercent;
+}
+
+These classes are under app/src/main/java/com/remoty/common/datatypes
+
+To add or modify a configuration:
+- add an entry in assets/config.json with the name and file of the new configuration
+- add the configuration file in assets/config
+
+To easily generate a configuration file I have created a java project (JavaRepo/ConfigurationGenerator)
+When creating a new configuration file follow these steps:
+- create a new class that implements AbstractConfiguration and implement the populate() method
+- see NFSMW2012.java for an example
+- in main(), instantiate your new class, choose the name of the file and run the program
+- it will create the specified file which you can then copy to assets/config
