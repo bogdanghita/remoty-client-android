@@ -314,8 +314,8 @@ public class RemoteControlActivity extends BaseActivity {
 
 		if(configurationData == null) {
 
-			// TODO: if this happens the configuration can't be loaded...
-			// show a toast or something, and make sure the app does not crash
+			// TODO: if this happens the configuration can't be loaded
+			// show a message, and stop the app from crashing
 		}
 	}
 
