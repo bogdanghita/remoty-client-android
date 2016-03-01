@@ -1,0 +1,14 @@
+[
+  {
+    "name": "NFS Most Wanted 2012",
+    "file": "config/nfsmw2012.json"
+  },
+  {
+    "name": "Test Config",
+    "file": "config/test_config.json"
+  },
+  {
+    "name": "No Buttons",
+    "file": "config/test2.json"
+  }
+]

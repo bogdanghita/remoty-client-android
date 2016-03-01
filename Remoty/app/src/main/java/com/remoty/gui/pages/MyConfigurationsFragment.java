@@ -3,16 +3,24 @@ package com.remoty.gui.pages;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.remoty.R;
 import com.remoty.common.datatypes.ConfigurationEntry;
+import com.remoty.common.other.Constants;
 import com.remoty.gui.debug.DebugFragment;
 import com.remoty.gui.items.ConfigurationsListAdapter;
 
-import java.util.LinkedList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.List;
 
 
@@ -31,29 +39,49 @@ public class MyConfigurationsFragment extends DebugFragment {
 		recyclerView.setLayoutManager(layoutManager);
 
 		ConfigurationsListAdapter adapter = new ConfigurationsListAdapter(getContext());
-		adapter.setConfigurationList(generateTestConfigurations());
+		adapter.setConfigurationList(loadConfigurationsList());
 
 		recyclerView.setAdapter(adapter);
 
 		return parentView;
 	}
 
-	//TEST METHODS
+	private List<ConfigurationEntry> loadConfigurationsList() {
 
-	public List<ConfigurationEntry> generateTestConfigurations() {
+		List<ConfigurationEntry> result = readConfigurationsList();
 
-		List<ConfigurationEntry> configurations = new LinkedList<>();
+		if(result == null) {
 
-		ConfigurationEntry c = new ConfigurationEntry("NFS Most Wanted 2012", "config/nfsmw2012");
+			// TODO: if this happens the configurations list can't be loaded
+			// show a message, and stop the app from crashing
+		}
 
-		configurations.add(c);
-
-        ConfigurationEntry c1 = new ConfigurationEntry("Dummy", "config/dummy_config_file");
-
-        configurations.add(c1);
-
-		return configurations;
+		return result;
 	}
 
-	//END TEST METHODS
+	private List<ConfigurationEntry> readConfigurationsList() {
+
+		List<ConfigurationEntry> result = null;
+
+		String configFile = Constants.CONFIG_FILE;
+
+		try {
+			InputStream is = getContext().getAssets().open(configFile);
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+			Gson gson = new Gson();
+
+			Type type = new TypeToken<List<ConfigurationEntry>>() {}.getType();
+
+			result = gson.fromJson(reader, type);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+
+			Log.d(Constants.APP + Constants.CONFIG, "Error reading configuration file: " + configFile);
+		}
+
+		return result;
+	}
 }

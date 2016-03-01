@@ -34,4 +34,5 @@ public class Constants {
 
 	public final static int RC_SIGN_IN = 9001;
 
+	public final static String CONFIG_FILE = "config.json";
 }
