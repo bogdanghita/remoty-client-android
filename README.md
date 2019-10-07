@@ -1,3 +1,2 @@
-# Remoty Client Android #
-
-Android client for Remoty---Desktop control with Android over LAN
+# remoty-client-android
+Android client for Remoty - Desktop control with Android over LAN
